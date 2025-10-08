@@ -1,0 +1,6 @@
+packages:
+  - apps/**/*
+  - contents/**/*
+  - packages/**/*
+  - rsx
+  - services/**/*

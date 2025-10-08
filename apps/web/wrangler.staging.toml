@@ -1,0 +1,17 @@
+name = "resettle-staging-app-web"
+main = "./build/server/index.js"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[placement]
+mode = "smart"
+
+[assets]
+directory = "./build/client/"
+binding = "ASSETS"
+
+[limits]
+cpu_ms = 1000

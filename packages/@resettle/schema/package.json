@@ -1,0 +1,21 @@
+{
+  "name": "@resettle/schema",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "zod": ">=4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

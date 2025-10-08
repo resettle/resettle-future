@@ -1,0 +1,20 @@
+{
+  "name": "@dotenvx/dotenvx-typegen",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "dotenvx-typegen": "./src/main.ts"
+  },
+  "dependencies": {
+    "commander": "14.0.1",
+    "prettier": "3.6.2"
+  },
+  "peerDependencies": {
+    "prettier": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.7.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

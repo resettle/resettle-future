@@ -1,0 +1,19 @@
+{
+  "name": "@vite-plugins/react-router-prerender",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "vite": ">=7.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.7.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.9"
+  }
+}

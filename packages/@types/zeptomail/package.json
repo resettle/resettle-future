@@ -1,0 +1,5 @@
+{
+  "name": "@types/zeptomail",
+  "private": true,
+  "types": "./index.d.ts"
+}
