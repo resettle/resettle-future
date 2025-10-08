@@ -5,13 +5,14 @@ const COOKIE_SECRET = import.meta.env.VITE_SERVER_COOKIE_SECRET
 
 export interface SessionValue {
   jwt?: string
+  utmParams?: UTMParams
 }
 
 /**
  * Get a cookie session storage
  * @returns A cookie session storage
  */
-export const getCookieSessionStorage = () =>
+export const getCookieSessionStorage = async () =>
   createCookieSessionStorage<SessionValue>({
     cookie: {
       name: '__session',

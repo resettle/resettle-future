@@ -25,8 +25,8 @@ export default [
   /**
    * Auth Routes
    */
-  route(PAGE_ROUTES.auth.signIn.path, 'auth/routes/sign-in.tsx'),
-  route(PAGE_ROUTES.auth.signOut.path, 'auth/routes/sign-out.tsx'),
+  route(PAGE_ROUTES.auth.signIn.path, 'auth/routes/auth.sign-in.tsx'),
+  route(PAGE_ROUTES.auth.signOut.path, 'auth/routes/auth.sign-out.tsx'),
 
   /**
    * Legal Routes

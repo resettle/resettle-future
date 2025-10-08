@@ -9,10 +9,12 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
-import './app.css'
+import { utmMiddleware } from './analytics/middlewares/utm.server'
 import { authMiddleware } from './auth/middlewares/auth.server'
 
-export const middleware = [authMiddleware]
+import './app.css'
+
+export const middleware = [utmMiddleware, authMiddleware]
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.font.im' },

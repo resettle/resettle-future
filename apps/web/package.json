@@ -26,12 +26,12 @@
     "react-dom": "19.2.0",
     "react-hook-form": "7.64.0",
     "react-markdown": "10.1.0",
-    "react-router": "7.9.3",
+    "react-router": "7.9.4",
     "zod": "4.1.12"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.13.11",
-    "@react-router/dev": "7.9.3",
+    "@react-router/dev": "7.9.4",
     "@tailwindcss/vite": "4.1.14",
     "@types/gtag.js": "0.0.20",
     "@types/node": "24.7.0",
