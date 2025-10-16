@@ -1,19 +1,21 @@
+import Markdown from 'react-markdown'
 import { useLoaderData } from 'react-router'
 
+import { getBlogPostById } from '../handlers/blog-post'
 import type { Route } from './+types/blog.[blogId]'
 
 export async function loader({ params }: Route.ComponentProps) {
-  const blogPost = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/items/blog_post/${params.blogId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${import.meta.env.VITE_SERVER_DIRECTUS_API_TOKEN}`,
-    },
-  })
+  const { data: blogPost } = await getBlogPostById(params.blogId)
 
-  return { blogPost: await blogPost.json<{ data: any }>() }
+  return { blogPost }
 }
 
 export default function BlogPage({ params }: Route.ComponentProps) {
   const { blogPost } = useLoaderData<typeof loader>()
-  return <div>BlogPage {params.blogId} {JSON.stringify(blogPost)}</div>
+  return (
+    <div>
+      <h1>{blogPost.title}</h1>
+      <Markdown>{blogPost.content}</Markdown>
+    </div>
+  )
 }

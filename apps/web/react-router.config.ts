@@ -1,5 +1,7 @@
 import type { Config } from '@react-router/dev/config'
 
+import { getBlogPosts } from './app/blog/handlers/blog-post'
+
 export default {
   ssr: true,
   future: {
@@ -8,14 +10,7 @@ export default {
     unstable_optimizeDeps: true,
   },
   async prerender() {
-    const blogPostsResponse = await fetch(`${process.env.VITE_DIRECTUS_URL}/items/blog_post`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.VITE_SERVER_DIRECTUS_API_TOKEN}`,
-      },
-    })
-    const blogPosts = await blogPostsResponse.json()
-    const blogPostIds = blogPosts.data.map((post: any) => post.id)
+    const { data: blogPosts } = await getBlogPosts()
 
     return [
       /**
@@ -34,7 +29,7 @@ export default {
        * Blog Routes
        */
       'blog',
-      ...blogPostIds.map((blogId: string) => `blog/${blogId}`),
+      ...blogPosts.map(blogPost => `blog/${blogPost.id}`),
     ]
   },
 } satisfies Config
