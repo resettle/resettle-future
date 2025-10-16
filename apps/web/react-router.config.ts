@@ -8,6 +8,15 @@ export default {
     unstable_optimizeDeps: true,
   },
   async prerender() {
+    const blogPostsResponse = await fetch(`${process.env.VITE_DIRECTUS_URL}/items/blog_post`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.VITE_SERVER_DIRECTUS_API_TOKEN}`,
+      },
+    })
+    const blogPosts = await blogPostsResponse.json()
+    const blogPostIds = blogPosts.data.map((post: any) => post.id)
+
     return [
       /**
        * SEO Routes
@@ -20,6 +29,12 @@ export default {
        */
       'terms',
       'privacy',
+
+      /**
+       * Blog Routes
+       */
+      'blog',
+      ...blogPostIds.map((blogId: string) => `blog/${blogId}`),
     ]
   },
 } satisfies Config
