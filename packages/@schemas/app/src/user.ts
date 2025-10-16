@@ -1,5 +1,4 @@
 import { z } from 'zod'
-
 import {
   dateNullableSchema,
   dateOptionalSchema,
@@ -13,7 +12,7 @@ import {
   stringSchema,
   uuidSchema,
   workExperienceArrayOptionalSchema,
-} from './common'
+} from '../../common/src'
 
 export const USER_ROLE_OPTIONS = ['admin', 'mod', 'user'] as const
 

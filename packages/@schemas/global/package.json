@@ -1,5 +1,5 @@
 {
-  "name": "@vite-plugins/react-router-prerender",
+  "name": "@schemas/global",
   "private": true,
   "type": "module",
   "exports": {
@@ -8,12 +8,15 @@
       "require": "./src/index.ts"
     }
   },
+  "scripts": {},
+  "dependencies": {
+    "@schemas/common": "workspace:^",
+    "zod": "4.1.12"
+  },
   "peerDependencies": {
-    "vite": ">=7.1.0"
+    "zod": ">=4.0.0"
   },
   "devDependencies": {
-    "@types/node": "24.8.0",
-    "typescript": "5.9.3",
-    "vite": "7.1.10"
+    "typescript": "5.9.3"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@resettle/schema",
+  "name": "@schemas/common",
   "private": true,
   "type": "module",
   "exports": {
