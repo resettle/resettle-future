@@ -1,0 +1,33 @@
+{
+  "name": "@resettle/schema",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./app": {
+      "import": "./src/app/index.ts",
+      "require": "./src/app/index.ts"
+    },
+    "./common": {
+      "import": "./src/common/index.ts",
+      "require": "./src/common/index.ts"
+    },
+    "./directus": {
+      "import": "./src/directus/index.ts",
+      "require": "./src/directus/index.ts"
+    },
+    "./global": {
+      "import": "./src/global/index.ts",
+      "require": "./src/global/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "zod": ">=4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

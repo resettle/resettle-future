@@ -1,0 +1,33 @@
+{
+  "name": "@resettle/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./app": {
+      "import": "./src/app/index.ts",
+      "require": "./src/app/index.ts"
+    },
+    "./common": {
+      "import": "./src/common/index.ts",
+      "require": "./src/common/index.ts"
+    },
+    "./global": {
+      "import": "./src/global/index.ts",
+      "require": "./src/global/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^",
+    "ky": "1.12.0",
+    "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "ky": ">=1.12.0",
+    "zod": ">=4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

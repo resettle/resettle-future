@@ -20,7 +20,7 @@
     "@dotenvx/dotenvx-cloudflare": "workspace:^",
     "@dotenvx/dotenvx-typegen": "workspace:^",
     "prettier": "3.6.2",
-    "prettier-plugin-tailwindcss": "0.7.0",
+    "prettier-plugin-tailwindcss": "0.7.1",
     "tsx": "4.20.6",
     "wrangler": "4.43.0"
   },

@@ -1,5 +1,6 @@
+import type { BlogTag } from '@resettle/schema/directus'
+
 import { directusFetch } from '../libs/directus'
-import type { BlogTag } from '../libs/types'
 
 /**
  * Get the blog tags from the Directus API

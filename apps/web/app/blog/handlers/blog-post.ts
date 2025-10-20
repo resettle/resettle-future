@@ -1,5 +1,6 @@
+import type { BlogPost } from '@resettle/schema/directus'
+
 import { directusFetch } from '../libs/directus'
-import type { BlogPost } from '../libs/types'
 
 /**
  * Get the blog posts from the Directus API

@@ -1,4 +1,4 @@
-import type { UserAuth } from '@resettle/schema'
+import type { UserAuth } from '@resettle/schema/app'
 import { jwtDecode } from 'jwt-decode'
 import type { MiddlewareFunction } from 'react-router'
 

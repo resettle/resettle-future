@@ -1,0 +1,44 @@
+{
+  "name": "@services/_common",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typegen": "dotenvx-typegen -f ../../.env -e 'DOTENV_|VITE_'",
+    "typegen:staging": "dotenvx-typegen -f ../../.env.staging -e 'DOTENV_|VITE_'",
+    "typegen:production": "dotenvx-typegen -f ../../.env.production -e 'DOTENV_|VITE_'"
+  },
+  "dependencies": {
+    "@3rd-party-clients/s3": "workspace:^",
+    "@resettle/api": "workspace:^",
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^",
+    "@types/jsonwebtoken": "9.0.10",
+    "hono": "4.10.1",
+    "jsonwebtoken": "9.0.2",
+    "kysely": "0.28.8",
+    "openai": "6.6.0",
+    "pg": "8.16.3",
+    "stripe": "19.1.0",
+    "zeptomail": "6.2.1",
+    "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "hono": ">=4.8.0",
+    "kysely": ">=0.28.0",
+    "pg": ">=8.16.0",
+    "zod": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20251014.0",
+    "@types/node": "24.9.0",
+    "@types/pg": "8.15.5",
+    "@types/zeptomail": "workspace:^",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,4 +1,4 @@
-import type { UserAuth } from '@resettle/schema'
+import type { UserAuth } from '@resettle/schema/app'
 import { createContext } from 'react-router'
 
 export type AuthServerContextValue = {
