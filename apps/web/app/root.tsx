@@ -11,10 +11,22 @@ import {
 import type { Route } from './+types/root'
 import { utmMiddleware } from './analytics/middlewares/utm.server'
 import { authMiddleware } from './auth/middlewares/auth.server'
+import NavigationProgressBar from './common/components/NavigationProgressBar'
 
 import './app.css'
+import { authServerContext } from './auth/contexts/auth.server'
 
 export const middleware = [utmMiddleware, authMiddleware]
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const { isAuthenticated, jwt, currentUser } = context.get(authServerContext)
+
+  return {
+    isAuthenticated,
+    jwt,
+    currentUser,
+  }
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.font.im' },
@@ -87,7 +99,12 @@ export function Layout({ children }: React.PropsWithChildren) {
 }
 
 export default function App() {
-  return <Outlet />
+  return (
+    <>
+      <NavigationProgressBar />
+      <Outlet />
+    </>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

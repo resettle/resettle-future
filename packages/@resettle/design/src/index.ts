@@ -1,5 +1,3 @@
-export * as Icons from 'lucide-react'
-
 export * from './components/Accordion'
 export * from './components/Alert'
 export * from './components/AlertDialog'

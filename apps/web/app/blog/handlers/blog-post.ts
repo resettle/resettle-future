@@ -1,13 +1,13 @@
 import type { BlogPost } from '@resettle/schema/directus'
 
-import { directusFetch } from '../libs/directus'
+import { directusClient } from '../libs/directus'
 
 /**
  * Get the blog posts from the Directus API
  * @returns The blog posts from the Directus API
  */
 export async function getBlogPosts() {
-  return directusFetch<{ data: BlogPost[] }>('/items/blog_post')
+  return directusClient.request<{ data: BlogPost[] }>('/items/blog_post')
 }
 
 /**
@@ -16,5 +16,7 @@ export async function getBlogPosts() {
  * @returns The blog post from the Directus API
  */
 export async function getBlogPostById(blogId: string) {
-  return directusFetch<{ data: BlogPost }>(`/items/blog_post/${blogId}`)
+  return directusClient.request<{ data: BlogPost }>(
+    `/items/blog_post/${blogId}`,
+  )
 }

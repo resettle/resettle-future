@@ -2,7 +2,7 @@ import {
   APIError,
   apiErrorResponse,
   COMMON_API_ERROR_CODES,
-} from '@resettle/api/common'
+} from '@resettle/api'
 import type { ErrorHandler } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { ZodError } from 'zod'

@@ -57,13 +57,14 @@
   },
   "peerDependencies": {
     "date-fns": ">=4.1.0",
+    "lucide-react": ">=0.546.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "react-hook-form": ">=7.54.0"
   },
   "devDependencies": {
     "@types/json-schema": "7.0.15",
-    "@types/node": "24.9.0",
+    "@types/node": "24.9.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@types/react-virtualized": "9.22.3",

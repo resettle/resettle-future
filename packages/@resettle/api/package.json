@@ -3,13 +3,13 @@
   "private": true,
   "type": "module",
   "exports": {
+    ".": {
+      "import": "./src/common/index.ts",
+      "require": "./src/common/index.ts"
+    },
     "./app": {
       "import": "./src/app/index.ts",
       "require": "./src/app/index.ts"
-    },
-    "./common": {
-      "import": "./src/common/index.ts",
-      "require": "./src/common/index.ts"
     },
     "./global": {
       "import": "./src/global/index.ts",

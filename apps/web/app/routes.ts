@@ -1,4 +1,9 @@
-import { index, route, type RouteConfig } from '@react-router/dev/routes'
+import {
+  index,
+  layout,
+  route,
+  type RouteConfig,
+} from '@react-router/dev/routes'
 
 import { PAGE_ROUTES } from './common/routes'
 
@@ -12,7 +17,9 @@ export default [
   /**
    * Landing Page Routes
    */
-  index('landing/routes/_index.tsx'),
+  layout('common/components/NavigationLayout.tsx', [
+    index('landing/routes/_index.tsx'),
+  ]),
 
   /**
    * Blog Routes

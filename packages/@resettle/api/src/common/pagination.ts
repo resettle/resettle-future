@@ -3,7 +3,7 @@ import {
   intSchema,
   stringNullableSchema,
   stringSchema,
-} from '@resettle/schema/common'
+} from '@resettle/schema'
 import { z } from 'zod'
 
 const orderByDirectionSchema = z.enum(['asc', 'desc'])
