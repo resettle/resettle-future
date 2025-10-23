@@ -1,22 +1,12 @@
-import { APIClient, type APIRequestInput, type APISchema } from '@resettle/api'
-import { useMemo } from 'react'
-import { unstable_useRoute } from 'react-router'
+import type { APIRequestInput, APISchema } from '@resettle/api'
 import useSWRMutation from 'swr/mutation'
+
+import useAPIClient from './useAPIClient'
 
 export default function useMutation<
   T extends APISchema<any, any, any, any, any, any>,
 >(key: string, apiSchema: T) {
-  const { loaderData } = unstable_useRoute('root')
-  const { jwt } = loaderData || {}
-
-  const client = useMemo(
-    () =>
-      new APIClient({
-        baseURL: import.meta.env.VITE_API_URL,
-        authorization: jwt ? `Bearer ${jwt}` : undefined,
-      }),
-    [jwt],
-  )
+  const client = useAPIClient()
 
   return useSWRMutation(
     key,

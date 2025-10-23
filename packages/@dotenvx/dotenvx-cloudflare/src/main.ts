@@ -10,6 +10,13 @@ interface RunOptions {
   include?: string
 }
 
+interface SyncOptions {
+  file: string
+  name: string
+  exclude?: string
+  include?: string
+}
+
 const OUTPUT_FILE = '.dev.vars'
 
 const program = new Command()
@@ -125,6 +132,81 @@ program
           `[dotenvx-cloudflare] No command specified, only generated ${OUTPUT_FILE}`,
         )
       }
+    } catch (error) {
+      console.error('[dotenvx-cloudflare] Error:', error)
+      process.exit(1)
+    }
+  })
+
+program
+  .command('sync')
+  .description('Sync environment variables to Cloudflare Worker secrets')
+  .requiredOption('-n, --name <worker>', 'Cloudflare Worker name')
+  .option('-f, --file <path>', 'Path to .env file', '.env')
+  .option(
+    '-e, --exclude <patterns>',
+    'Pipe-separated exclude patterns (e.g., "DOTENV_|VITE_")',
+  )
+  .option(
+    '-i, --include <patterns>',
+    'Pipe-separated include patterns (e.g., "PUBLIC_|API_")',
+  )
+  .action(async (options: SyncOptions) => {
+    const envFilePath = path.resolve(process.cwd(), options.file)
+
+    // Check that -i and -e are mutually exclusive
+    if (options.include && options.exclude) {
+      console.error(
+        '[dotenvx-cloudflare] Error: -i (include) and -e (exclude) are mutually exclusive',
+      )
+      process.exit(1)
+    }
+
+    // Build the jq filter based on include or exclude
+    let jqFilter: string
+    if (options.include) {
+      // Include: only keep keys matching the patterns
+      const includePattern = `^(${options.include.split('|').join('|')})`
+      jqFilter = `jq 'to_entries | map(select(.key | test("${includePattern}"))) | from_entries'`
+    } else if (options.exclude) {
+      // Exclude: remove keys matching the patterns
+      const excludePattern = `^(${options.exclude.split('|').join('|')})`
+      jqFilter = `jq 'to_entries | map(select(.key | test("${excludePattern}") | not)) | from_entries'`
+    } else {
+      // No filtering
+      jqFilter = 'cat'
+    }
+
+    try {
+      console.log(
+        `[dotenvx-cloudflare] Syncing secrets to Cloudflare Worker: ${options.name}`,
+      )
+
+      await new Promise<void>((resolve, reject) => {
+        const syncProcess = spawn(
+          'sh',
+          [
+            '-c',
+            `dotenvx get -f ${envFilePath} --overload | ${jqFilter} | dotenvx run -f ${envFilePath} --overload -- wrangler secret bulk --name=${options.name}`,
+          ],
+          { stdio: 'inherit' },
+        )
+
+        syncProcess.on('close', (code: number | null) => {
+          if (code !== 0) {
+            reject(new Error(`Sync process exited with code ${code}`))
+          } else {
+            console.log(
+              `[dotenvx-cloudflare] Successfully synced secrets to ${options.name}`,
+            )
+            resolve()
+          }
+        })
+
+        syncProcess.on('error', (err: Error) => {
+          reject(err)
+        })
+      })
     } catch (error) {
       console.error('[dotenvx-cloudflare] Error:', error)
       process.exit(1)

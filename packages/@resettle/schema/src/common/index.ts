@@ -1,6 +1,7 @@
 export * from './address'
 export * from './duration'
 export * from './education'
+export * from './geolocation'
 export * from './iso'
 export * from './monetary'
 export * from './personal'

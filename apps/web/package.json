@@ -34,17 +34,17 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.13.14",
+    "@cloudflare/vite-plugin": "1.13.15",
     "@react-router/dev": "7.9.4",
-    "@tailwindcss/vite": "4.1.15",
+    "@tailwindcss/vite": "4.1.16",
     "@types/gtag.js": "0.0.20",
     "@types/node": "24.9.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@vite-plugins/react-router-prerender": "workspace:^",
-    "tailwindcss": "4.1.15",
+    "tailwindcss": "4.1.16",
     "typescript": "5.9.3",
-    "vite": "7.1.11",
+    "vite": "7.1.12",
     "vite-plugin-svgr": "4.5.0",
     "vite-tsconfig-paths": "5.1.4"
   }

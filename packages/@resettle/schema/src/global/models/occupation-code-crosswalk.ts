@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
-import { uuidSchema } from '../../common'
+import { stringSchema } from '../../common'
 
 export const occupationCodeCrosswalkSchema = z.object({
-  source_id: uuidSchema,
-  target_id: uuidSchema,
+  source_id: stringSchema,
+  target_id: stringSchema,
 })
 
 export type OccupationCodeCrosswalk = z.infer<

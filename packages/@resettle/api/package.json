@@ -20,7 +20,7 @@
   "dependencies": {
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
-    "ky": "1.12.0",
+    "ky": "1.13.0",
     "zod": "4.1.12"
   },
   "peerDependencies": {

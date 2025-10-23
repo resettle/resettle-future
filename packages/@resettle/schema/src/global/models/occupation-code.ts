@@ -1,11 +1,6 @@
 import { z } from 'zod'
 
-import {
-  intSchema,
-  stringSchema,
-  uuidNullableSchema,
-  uuidSchema,
-} from '../../common'
+import { stringSchema } from '../../common'
 
 const OCCUPATION_CODE_CLASSIFICATIONS = [
   'isco-2008',
@@ -20,35 +15,27 @@ const OCCUPATION_CODE_CLASSIFICATIONS = [
   'anzsco-2022',
 ] as const
 
-const occupationCodeClassificationsSchema = z.enum(
+export const occupationCodeClassificationsSchema = z.enum(
   OCCUPATION_CODE_CLASSIFICATIONS,
 )
 
 export const occupationCodeSchema = z.object({
-  id: uuidSchema,
-  canonical_id: uuidNullableSchema,
-  slug: stringSchema,
+  id: stringSchema,
   classification: occupationCodeClassificationsSchema,
   code: stringSchema,
-  level: intSchema,
   label: stringSchema,
 })
 
-export const occupationCodeResponseSchema = occupationCodeSchema
-  .pick({
-    slug: true,
-    classification: true,
-    code: true,
-    label: true,
-  })
-  .extend({
-    id: uuidNullableSchema,
-  })
+export const occupationCodeRefSchema = z.union([
+  stringSchema,
+  z.object({
+    classification: occupationCodeClassificationsSchema,
+    code: stringSchema,
+  }),
+])
 
 export type OccupationCodeClassification = z.infer<
   typeof occupationCodeClassificationsSchema
 >
 export type OccupationCode = z.infer<typeof occupationCodeSchema>
-export type OccupationCodeResponse = z.infer<
-  typeof occupationCodeResponseSchema
->
+export type OccupationCodeRef = z.infer<typeof occupationCodeRefSchema>

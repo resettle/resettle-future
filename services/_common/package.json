@@ -19,7 +19,7 @@
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@types/jsonwebtoken": "9.0.10",
-    "hono": "4.10.1",
+    "hono": "4.10.2",
     "jsonwebtoken": "9.0.2",
     "kysely": "0.28.8",
     "openai": "6.6.0",

@@ -1,0 +1,18 @@
+name = "resettle-staging-service-app"
+main = "./src/index.ts"
+minify = true
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "f74ff713079246d4bb224306dbe0442c"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
+
+[limits]
+cpu_ms = 5000

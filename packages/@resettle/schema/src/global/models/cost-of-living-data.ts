@@ -8,8 +8,8 @@ import {
 } from '../../common'
 
 export const costOfLivingDataSchema = z.object({
-  entity_id: uuidSchema,
-  currency: currencyCodeSchema,
+  place_id: uuidSchema,
+  currency_code: currencyCodeSchema,
   restaurants_meal_inexpensive: numberNullableSchema,
   restaurants_meal_2_people: numberNullableSchema,
   restaurants_mc_meal: numberNullableSchema,
@@ -68,14 +68,9 @@ export const costOfLivingDataSchema = z.object({
   created_at: dateSchema,
 })
 
-export const costOfLivingDataResponseSchema = costOfLivingDataSchema
-  .omit({
-    entity_id: true,
-    created_at: true,
-  })
-  .extend({
-    id: uuidSchema,
-  })
+export const costOfLivingDataResponseSchema = costOfLivingDataSchema.omit({
+  created_at: true,
+})
 
 export type CostOfLivingData = z.infer<typeof costOfLivingDataSchema>
 export type CostOfLivingDataResponse = z.infer<

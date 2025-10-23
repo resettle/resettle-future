@@ -9,7 +9,7 @@
     }
   },
   "dependencies": {
-    "@babel/core": "7.28.4",
+    "@babel/core": "7.28.5",
     "@babel/plugin-syntax-jsx": "7.27.1",
     "@babel/plugin-syntax-typescript": "7.27.1",
     "@lingui/babel-plugin-lingui-macro": "5.5.1",
@@ -25,6 +25,6 @@
     "@types/babel__core": "7.20.5",
     "@types/node": "24.9.1",
     "typescript": "5.9.3",
-    "vite": "7.1.11"
+    "vite": "7.1.12"
   }
 }
