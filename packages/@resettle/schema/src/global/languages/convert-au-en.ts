@@ -1,4 +1,4 @@
-import type { CountryAlpha2Code } from '../../common'
+import type { CountryAlpha2Code } from '../../_common'
 import {
   ieltsScoreGe,
   type LanguageCertificateInput,

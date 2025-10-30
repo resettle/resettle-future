@@ -5,7 +5,7 @@ import {
   dateSchema,
   numberNullableSchema,
   uuidSchema,
-} from '../../common'
+} from '../../_common'
 
 export const costOfLivingDataSchema = z.object({
   place_id: uuidSchema,

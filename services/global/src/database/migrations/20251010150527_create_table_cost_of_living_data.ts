@@ -1,0 +1,87 @@
+import { sql, type Kysely } from 'kysely'
+
+export async function up(db: Kysely<any>): Promise<void> {
+  await db.schema
+    .createTable('cost_of_living_data')
+    .addColumn('place_id', 'uuid', col => col.notNull())
+    .addColumn('currency_code', 'varchar', col => col.notNull())
+    .addColumn('restaurants_meal_inexpensive', 'float8')
+    .addColumn('restaurants_meal_2_people', 'float8')
+    .addColumn('restaurants_mc_meal', 'float8')
+    .addColumn('restaurants_domestic_beer', 'float8')
+    .addColumn('restaurants_imported_beer', 'float8')
+    .addColumn('restaurants_cappuccino', 'float8')
+    .addColumn('restaurants_coke_pepsi', 'float8')
+    .addColumn('restaurants_water', 'float8')
+    .addColumn('markets_milk', 'float8')
+    .addColumn('markets_loaf_of_fresh_white_bread', 'float8')
+    .addColumn('markets_rice', 'float8')
+    .addColumn('markets_eggs', 'float8')
+    .addColumn('markets_local_cheese', 'float8')
+    .addColumn('markets_chicken_fillets', 'float8')
+    .addColumn('markets_beef_round', 'float8')
+    .addColumn('markets_apples', 'float8')
+    .addColumn('markets_banana', 'float8')
+    .addColumn('markets_oranges', 'float8')
+    .addColumn('markets_tomato', 'float8')
+    .addColumn('markets_potato', 'float8')
+    .addColumn('markets_onion', 'float8')
+    .addColumn('markets_lettuce', 'float8')
+    .addColumn('markets_water', 'float8')
+    .addColumn('markets_bottle_of_wine', 'float8')
+    .addColumn('markets_domestic_beer', 'float8')
+    .addColumn('markets_imported_beer', 'float8')
+    .addColumn('markets_cigarettes', 'float8')
+    .addColumn('transportation_one_way_ticket', 'float8')
+    .addColumn('transportation_monthly_pass', 'float8')
+    .addColumn('transportation_taxi_start', 'float8')
+    .addColumn('transportation_taxi_1_km', 'float8')
+    .addColumn('transportation_taxi_1_hour_waiting', 'float8')
+    .addColumn('transportation_gasoline', 'float8')
+    .addColumn('transportation_volkswagen', 'float8')
+    .addColumn('transportation_toyota', 'float8')
+    .addColumn('utilities_basic', 'float8')
+    .addColumn('utilities_mobile', 'float8')
+    .addColumn('utilities_internet', 'float8')
+    .addColumn('sports_fitness_club', 'float8')
+    .addColumn('sports_tennis_court', 'float8')
+    .addColumn('sports_cinema', 'float8')
+    .addColumn('childcare_preschool', 'float8')
+    .addColumn('childcare_international_primary_school', 'float8')
+    .addColumn('clothing_jeans', 'float8')
+    .addColumn('clothing_summer_dress', 'float8')
+    .addColumn('clothing_running_shoes', 'float8')
+    .addColumn('clothing_business_shoes', 'float8')
+    .addColumn('rent_in_city_centre_1_bedroom', 'float8')
+    .addColumn('rent_outside_of_center_1_bedroom', 'float8')
+    .addColumn('rent_in_city_centre_3_bedrooms', 'float8')
+    .addColumn('rent_outside_of_center_3_bedrooms', 'float8')
+    .addColumn('buy_apartment_in_city_centre', 'float8')
+    .addColumn('buy_apartment_outside_of_centre', 'float8')
+    .addColumn('salary_average_monthly_net_salary', 'float8')
+    .addColumn('salary_mortgage_interest_rate', 'float8')
+    .addColumn('created_at', 'timestamptz', col =>
+      col.notNull().defaultTo(sql`now()`),
+    )
+    .addPrimaryKeyConstraint('cost_of_living_data_pkey', [
+      'place_id',
+      'created_at',
+    ])
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('cost_of_living_data_place_id_created_at_desc_key')
+    .on('cost_of_living_data')
+    .columns(['place_id', 'created_at desc'])
+    .ifNotExists()
+    .execute()
+}
+
+export async function down(db: Kysely<any>): Promise<void> {
+  await db.schema
+    .dropIndex('cost_of_living_data_place_id_created_at_desc_key')
+    .ifExists()
+    .execute()
+  await db.schema.dropTable('cost_of_living_data').ifExists().execute()
+}

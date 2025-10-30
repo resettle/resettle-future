@@ -13,7 +13,7 @@ import {
   stringSchema,
   uuidSchema,
   workExperienceArrayOptionalSchema,
-} from '../../common'
+} from '../../_common'
 
 export const USER_ROLE_OPTIONS = ['admin', 'mod', 'user'] as const
 

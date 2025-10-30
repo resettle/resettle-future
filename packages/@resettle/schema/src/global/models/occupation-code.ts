@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { stringSchema } from '../../common'
+import { stringSchema } from '../../_common'
 
 const OCCUPATION_CODE_CLASSIFICATIONS = [
   'isco-2008',

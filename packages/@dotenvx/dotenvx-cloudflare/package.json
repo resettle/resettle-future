@@ -6,10 +6,10 @@
     "dotenvx-cloudflare": "./src/main.ts"
   },
   "dependencies": {
-    "commander": "14.0.1"
+    "commander": "14.0.2"
   },
   "devDependencies": {
-    "@types/node": "24.9.1",
+    "@types/node": "24.9.2",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   }

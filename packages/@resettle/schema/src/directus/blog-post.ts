@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { dateSchema, stringSchema } from '../common'
+import { dateSchema, stringSchema } from '../_common'
 
 export const blogPostSchema = z.object({
   id: stringSchema,

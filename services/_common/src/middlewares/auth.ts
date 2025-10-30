@@ -1,14 +1,17 @@
-import { API_ERROR_CODES, APIError } from '@resettle/api'
-import type { UserJWTPayload, UserRole } from '@resettle/common'
+import type { UserAuth, UserRole } from '@resettle/schema/app'
 import { env } from 'hono/adapter'
 import { bearerAuth } from 'hono/bearer-auth'
+import {
+  API_ERROR_CODES,
+  APIError,
+} from '../../../../packages/@resettle/api/src/_common'
 
 import { verifyJWT } from '../libs/jwt'
 
 declare module 'hono' {
   interface ContextVariableMap {
     isInternalCall: boolean
-    user: UserJWTPayload
+    user: UserAuth
   }
 }
 
@@ -33,16 +36,16 @@ export const auth = (options: AuthOptions = {}) => {
         return true
       }
 
-      let user: UserJWTPayload
+      let user: UserAuth
 
       try {
-        user = await verifyJWT<UserJWTPayload>(token, [
+        user = await verifyJWT<UserAuth>(token, [
           JWT_SECRET,
           JWT_SECRET_PREVIOUS,
         ])
       } catch {
         throw new APIError({
-          code: API_ERROR_CODES.USER_NOT_AUTHORIZED,
+          code: API_ERROR_CODES.UNAUTHORIZED,
           message: 'Unauthorized: Invalid JWT token',
           statusCode: 401,
         })
@@ -53,7 +56,7 @@ export const auth = (options: AuthOptions = {}) => {
       if (options.roles) {
         if (!options.roles.includes(user.role)) {
           throw new APIError({
-            code: API_ERROR_CODES.USER_PERMISSION_DENIED,
+            code: API_ERROR_CODES.FORBIDDEN,
             message: 'Forbidden: User does not have the required role',
             statusCode: 403,
           })

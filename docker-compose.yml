@@ -8,11 +8,20 @@ volumes:
 
 services:
   psql:
-    image: postgres:16
+    image: pgvector/pgvector:pg17
     environment:
       POSTGRES_USER: resettler
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: resettle
+      POSTGRES_INITDB_ARGS: --encoding=UTF8
+    command: >
+      bash -c "
+      docker-entrypoint.sh postgres &
+      PID=$$!;
+      until pg_isready -U resettler; do sleep 1; done;
+      psql -U resettler -d postgres -c 'CREATE DATABASE resettle;';
+      psql -U resettler -d postgres -c 'CREATE DATABASE resettle_global';
+      wait $$PID
+      "
     volumes:
       - psql:/var/lib/postgresql/data
     ports:

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { currencyCodeSchema, dateSchema, numberSchema } from '../../common'
+import { currencyCodeSchema, dateSchema, numberSchema } from '../../_common'
 
 export const exchangeRateDataSchema = z.object({
   currency_code: currencyCodeSchema,

@@ -6,22 +6,29 @@
     "typegen": "dotenvx-cloudflare run -f ../../.env -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.toml",
     "typegen:staging": "dotenvx-cloudflare run -f ../../.env.staging -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.staging.toml",
     "typegen:production": "dotenvx-cloudflare run -f ../../.env.production -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.production.toml",
-    "dev": "dotenvx-cloudflare run -f ../../.env --overload -- wrangler dev --config wrangler.toml --port 3000 --inspector-port 9240",
-    "deploy:staging": "dotenvx run -f ../../.env.staging --overload -- wrangler deploy --config wrangler.staging.toml",
-    "deploy:production": "dotenvx run -f ../../.env.production --overload -- wrangler deploy --config wrangler.production.toml",
+    "dev": "dotenvx-cloudflare run -f ../../.env -e 'DOTENV_|VITE_' -- wrangler dev --config wrangler.toml --port 3000 --inspector-port 9240",
+    "deploy:staging": "dotenvx run -f ../../.env.staging -- wrangler deploy --config wrangler.staging.toml",
+    "deploy:production": "dotenvx run -f ../../.env.production -- wrangler deploy --config wrangler.production.toml",
     "secrets:staging": "dotenvx-cloudflare sync -f ../../.env.staging -e 'DOTENV_|VITE_' -n resettle-staging-service-global",
-    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'DOTENV_|VITE_' -n resettle-production-service-global"
+    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'DOTENV_|VITE_' -n resettle-production-service-global",
+    "kysely": "dotenvx run -f ../../.env --overload -- kysely",
+    "kysely:staging": "dotenvx run -f ../../.env.staging --overload -- kysely",
+    "kysely:production": "dotenvx run -f ../../.env.production --overload -- kysely"
   },
   "dependencies": {
+    "@resettle/api": "workspace:^",
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@services/_common": "workspace:^",
+    "hono": "4.10.4",
     "kysely": "0.28.8",
-    "pg": "8.16.3"
+    "pg": "8.16.3",
+    "zod": "4.1.12"
   },
   "devDependencies": {
-    "@types/node": "24.9.1",
-    "@types/pg": "8.15.5",
+    "@types/node": "24.9.2",
+    "@types/pg": "8.15.6",
+    "kysely-ctl": "0.19.0",
     "typescript": "5.9.3"
   }
 }

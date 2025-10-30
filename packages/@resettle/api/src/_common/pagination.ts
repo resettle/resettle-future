@@ -1,10 +1,9 @@
+import { z } from 'zod'
 import {
   intNullableSchema,
   intSchema,
   stringNullableSchema,
-  stringSchema,
-} from '@resettle/schema'
-import { z } from 'zod'
+} from '../../../schema/src/_common'
 
 const orderByDirectionSchema = z.enum(['asc', 'desc'])
 
@@ -37,11 +36,14 @@ export const getOffsetPaginationSchema = <const T, const O>(
  * @param dataSchema - The schema for the data items
  * @returns A schema object with metadata and data array
  */
-export const getCursorPaginationSchema = <const T>(dataSchema: z.ZodType<T>) =>
+export const getCursorPaginationSchema = <const T, const O>(
+  dataSchema: z.ZodType<T>,
+  orderBySchema: z.ZodType<O>,
+) =>
   z.object({
     metadata: z.object({
       limit: intSchema,
-      order_by: stringSchema,
+      order_by: orderBySchema,
       order_by_direction: orderByDirectionSchema,
       cursor: stringNullableSchema,
       next_cursor: stringNullableSchema,

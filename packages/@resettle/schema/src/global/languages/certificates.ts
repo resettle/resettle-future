@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { intSchema } from '../../common'
+import { intSchema } from '../../_common'
 import { validCefrLevelsSchema, validClbLevelsSchema } from './levels'
 
 const integerScoreSchema = intSchema

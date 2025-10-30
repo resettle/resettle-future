@@ -1,6 +1,6 @@
-import type { CountryAlpha2Code } from '@resettle/schema'
 import type { PlaceScope, PlaceSearch } from '@resettle/schema/global'
 import { sql, type Kysely } from 'kysely'
+import type { CountryAlpha2Code } from '../../../../../packages/@resettle/schema/src/_common'
 
 import type { Database } from '../db'
 
@@ -93,10 +93,12 @@ export const fuzzySearchPlaces = async (
         (select max(similarity(an, ${sql.lit(opts.where.q)})) from unnest(${sql.ref('alternate_names')}) AS an)
       )`.as('score'),
     ])
-    .where(eb =>
-      (eb('name', '%', opts.where.q) as any).or(
-        eb('alternate_names', '%', opts.where.q as any),
-      ),
+    .where(
+      sql<boolean>`${sql.ref('name')} % ${sql.lit(opts.where.q)} OR EXISTS (
+        SELECT 1
+        FROM unnest(${sql.ref('alternate_names')}) AS an
+        WHERE an % ${sql.lit(opts.where.q)}
+      )`,
     )
     .$if(opts.where.country_code !== undefined, qb =>
       qb.where('country_code', '=', opts.where.country_code!),

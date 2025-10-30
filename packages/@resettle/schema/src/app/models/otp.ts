@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { dateSchema, stringSchema, uuidSchema } from '../../common'
+import { dateSchema, stringSchema, uuidSchema } from '../../_common'
 
 export const OTP_TYPE_OPTIONS = ['email', 'sms'] as const
 

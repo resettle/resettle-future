@@ -1,5 +1,7 @@
 import { S3Client } from '@3rd-party-clients/s3'
+import { Kysely, PostgresDialect } from 'kysely'
 import { OpenAI } from 'openai'
+import pg from 'pg'
 import { Stripe } from 'stripe'
 import { SendMailClient } from 'zeptomail'
 
@@ -7,6 +9,29 @@ let openai: OpenAI
 let r2: S3Client
 let stripe: Stripe
 let zeptoMail: SendMailClient
+
+/**
+ * Get a database and pool
+ * @template T - The database type
+ * @param env - The environment
+ * @param env.POSTGRES_CONNECTION_STRING - The Postgres connection string
+ * @returns The database and pool
+ */
+export const getDB = <T>(env: { POSTGRES_CONNECTION_STRING: string }) => {
+  if (!env.POSTGRES_CONNECTION_STRING) {
+    throw new Error('POSTGRES_CONNECTION_STRING is not set')
+  }
+
+  const pool = new pg.Pool({
+    connectionString: env.POSTGRES_CONNECTION_STRING,
+  })
+
+  const db = new Kysely<T>({
+    dialect: new PostgresDialect({ pool }),
+  })
+
+  return { db, pool }
+}
 
 /**
  * Get an OpenAI instance

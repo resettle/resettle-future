@@ -19,13 +19,13 @@
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@types/jsonwebtoken": "9.0.10",
-    "hono": "4.10.2",
+    "hono": "4.10.4",
     "jsonwebtoken": "9.0.2",
     "kysely": "0.28.8",
-    "openai": "6.6.0",
+    "openai": "6.7.0",
     "pg": "8.16.3",
-    "stripe": "19.1.0",
-    "zeptomail": "6.2.1",
+    "stripe": "19.2.0",
+    "zeptomail": "7.0.0",
     "zod": "4.1.12"
   },
   "peerDependencies": {
@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20251014.0",
-    "@types/node": "24.9.1",
-    "@types/pg": "8.15.5",
+    "@types/node": "24.9.2",
+    "@types/pg": "8.15.6",
     "@types/zeptomail": "workspace:^",
     "typescript": "5.9.3"
   }

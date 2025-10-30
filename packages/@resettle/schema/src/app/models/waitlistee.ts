@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { dateSchema, emailSchema, uuidSchema } from '../../common'
+import { dateSchema, emailSchema, uuidSchema } from '../../_common'
 
 export const WAITLISTEE_STATUS_OPTIONS = [
   'pending',

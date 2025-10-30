@@ -4,8 +4,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/common/index.ts",
-      "require": "./src/common/index.ts"
+      "import": "./src/_common/index.ts",
+      "require": "./src/_common/index.ts"
     },
     "./app": {
       "import": "./src/app/index.ts",

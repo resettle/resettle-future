@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { dateSchema } from '../../common'
+import { dateSchema } from '../../_common'
 
 export const metadataSchema = z.object({
   geonames_updated_at: dateSchema,

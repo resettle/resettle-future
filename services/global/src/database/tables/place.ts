@@ -1,4 +1,3 @@
-import type { CountryAlpha2Code } from '@resettle/schema'
 import type {
   NumbeoReference,
   Place,
@@ -6,6 +5,7 @@ import type {
 } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type { GeneratedAlways, JSONColumnType, Selectable } from 'kysely'
+import type { CountryAlpha2Code } from '../../../../../packages/@resettle/schema/src/_common'
 
 export interface PlaceTable {
   id: GeneratedAlways<string>

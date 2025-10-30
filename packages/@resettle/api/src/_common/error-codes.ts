@@ -1,4 +1,4 @@
-export const COMMON_API_ERROR_CODES = {
+export const API_ERROR_CODES = {
   UNAUTHORIZED: 1000,
   FORBIDDEN: 1001,
   NOT_FOUND: 1002,

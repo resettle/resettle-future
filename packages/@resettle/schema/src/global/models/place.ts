@@ -7,7 +7,7 @@ import {
   stringArraySchema,
   stringSchema,
   uuidSchema,
-} from '../../common'
+} from '../../_common'
 
 export const PLACE_FEATURE_CODES = [
   'ADM1',

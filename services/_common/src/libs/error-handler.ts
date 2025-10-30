@@ -1,11 +1,11 @@
-import {
-  APIError,
-  apiErrorResponse,
-  COMMON_API_ERROR_CODES,
-} from '@resettle/api'
 import type { ErrorHandler } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { ZodError } from 'zod'
+import {
+  API_ERROR_CODES,
+  APIError,
+  apiErrorResponse,
+} from '../../../../packages/@resettle/api/src/_common'
 
 /**
  * API error handler for Hono
@@ -20,7 +20,7 @@ export const apiErrorHandler: ErrorHandler = (err, c) => {
     if (err.status === 401) {
       return apiErrorResponse({
         message: 'Unauthorized',
-        code: COMMON_API_ERROR_CODES.UNAUTHORIZED,
+        code: API_ERROR_CODES.UNAUTHORIZED,
         statusCode: 401,
       })
     }
@@ -31,7 +31,7 @@ export const apiErrorHandler: ErrorHandler = (err, c) => {
   if (err instanceof ZodError) {
     return apiErrorResponse({
       message: 'Invalid request',
-      code: COMMON_API_ERROR_CODES.VALIDATION_ERROR,
+      code: API_ERROR_CODES.VALIDATION_ERROR,
       statusCode: 400,
       data: {
         issues: err.issues,

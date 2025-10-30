@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { stringSchema } from '../../common'
+import { stringSchema } from '../../_common'
 
 export const occupationCodeCrosswalkSchema = z.object({
   source_id: stringSchema,

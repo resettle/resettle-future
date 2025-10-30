@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { stringNullishSchema, stringSchema } from '../common'
+import { stringNullishSchema, stringSchema } from '../_common'
 
 export const blogTagSchema = z.object({
   id: stringSchema,
