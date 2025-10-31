@@ -1,3 +1,4 @@
+import type { CountryAlpha2Code } from '@resettle/schema'
 import type {
   NumbeoReference,
   Place,
@@ -5,13 +6,12 @@ import type {
 } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type { GeneratedAlways, JSONColumnType, Selectable } from 'kysely'
-import type { CountryAlpha2Code } from '../../../../../packages/@resettle/schema/src/_common'
 
 export interface PlaceTable {
   id: GeneratedAlways<string>
   external_id: number
   name: string
-  alternate_names: string[]
+  aliases: string[]
   latitude: number
   longitude: number
   feature_code: PlaceFeatureCode
@@ -23,6 +23,14 @@ export interface PlaceTable {
   population: string // bigint
   elevation: number
   numbeo_reference: JSONColumnType<NumbeoReference> | null
+}
+
+// materialized view of `place`
+export interface PlaceNameOrAliasTable {
+  id: string
+  name: string
+  country_code: CountryAlpha2Code
+  has_numbeo_reference: boolean
 }
 
 assert<Equals<Place, Selectable<PlaceTable>>>

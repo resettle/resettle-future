@@ -1,9 +1,9 @@
-import { z } from 'zod'
 import {
   intNullableSchema,
   intSchema,
   stringNullableSchema,
-} from '../../../schema/src/_common'
+} from '@resettle/schema'
+import { z } from 'zod'
 
 const orderByDirectionSchema = z.enum(['asc', 'desc'])
 

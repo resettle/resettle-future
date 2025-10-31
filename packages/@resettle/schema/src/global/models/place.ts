@@ -58,7 +58,7 @@ export const placeSchema = z.object({
   id: uuidSchema,
   external_id: intSchema,
   name: stringSchema,
-  alternate_names: stringArraySchema,
+  aliases: stringArraySchema,
   latitude: numberSchema,
   longitude: numberSchema,
   feature_code: placeFeatureCodesSchema,
@@ -75,7 +75,7 @@ export const placeSchema = z.object({
 export const placeSearchSchema = placeSchema.pick({
   id: true,
   name: true,
-  alternate_names: true,
+  aliases: true,
   country_code: true,
   numbeo_reference: true,
 })
@@ -83,7 +83,7 @@ export const placeSearchSchema = placeSchema.pick({
 export const placeSearchResponseSchema = placeSchema
   .pick({
     name: true,
-    alternate_names: true,
+    aliases: true,
     country_code: true,
   })
   .extend({
@@ -94,7 +94,7 @@ export const placeSearchResponseSchema = placeSchema
 export const placeGeneralInfoResponseSchema = placeSchema
   .pick({
     name: true,
-    alternate_names: true,
+    aliases: true,
     country_code: true,
     latitude: true,
     longitude: true,

@@ -4,6 +4,7 @@ import type {
   MetadataTable,
   OccupationCodeCrosswalkTable,
   OccupationCodeTable,
+  PlaceNameOrAliasTable,
   PlaceTable,
 } from './tables'
 
@@ -14,4 +15,5 @@ export interface Database {
   occupation_code: OccupationCodeTable
   occupation_code_crosswalk: OccupationCodeCrosswalkTable
   place: PlaceTable
+  place_name_or_alias: PlaceNameOrAliasTable
 }

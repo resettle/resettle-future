@@ -1,15 +1,15 @@
 import {
+  countryAlpha2CodeOptionalSchema,
+  currencyCodeOptionalSchema,
+  uuidSchema,
+} from '@resettle/schema'
+import {
   costOfLivingDataResponseSchema,
   placeGeneralInfoResponseSchema,
   placeScopesSchema,
   placeSearchResponseSchema,
 } from '@resettle/schema/global'
 import { z } from 'zod'
-import {
-  countryAlpha2CodeOptionalSchema,
-  currencyCodeOptionalSchema,
-  uuidSchema,
-} from '../../../../schema/src/_common'
 
 import { defineAPISchema } from '../../_common'
 import { GLOBAL_API_ROUTES } from '../routes'

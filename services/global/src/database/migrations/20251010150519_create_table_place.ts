@@ -11,7 +11,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     )
     .addColumn('external_id', 'integer', col => col.notNull())
     .addColumn('name', 'varchar', col => col.notNull())
-    .addColumn('alternate_names', sql`text[]`, col => col.notNull())
+    .addColumn('aliases', sql`text[]`, col => col.notNull())
     .addColumn('latitude', 'float8', col => col.notNull())
     .addColumn('longitude', 'float8', col => col.notNull())
     .addColumn('feature_code', 'varchar', col => col.notNull())
@@ -28,23 +28,55 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute()
 
   await db.schema
-    .createIndex('place_name_skey')
-    .on('place')
-    .column('name')
-    .using('gin')
-    .ifNotExists()
+    .createView('place_name_or_alias')
+    .materialized()
+    .orReplace()
+    .as(
+      db
+        .with('expanded', db =>
+          db
+            .selectFrom('place')
+            .select([
+              'id',
+              'name',
+              'country_code',
+              sql<boolean>(`numbeo_reference is not null` as any).as(
+                'has_numbeo_reference',
+              ),
+            ])
+            .unionAll(
+              db
+                .selectFrom(['place', sql`unnest(aliases)`.as('alias')])
+                .select([
+                  'id',
+                  'alias as name',
+                  'country_code',
+                  sql<boolean>(`numbeo_reference is not null` as any).as(
+                    'has_numbeo_reference',
+                  ),
+                ]),
+            ),
+        )
+        .selectFrom('expanded')
+        .select(['id', 'name', 'country_code', 'has_numbeo_reference'])
+        .distinct()
+        .where('name', 'is not', null),
+    )
     .execute()
+
   await db.schema
-    .createIndex('place_alternate_names_skey')
-    .on('place')
-    .column('alternate_names')
+    .createIndex('place_name_or_alias_name_skey')
+    .on('place_name_or_alias')
     .using('gin')
+    .expression(sql`name gin_trgm_ops`)
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropIndex('place_alternate_names_skey').ifExists().execute()
-  await db.schema.dropIndex('place_name_skey').ifExists().execute()
+  await db.schema
+    .dropIndex('place_name_or_alias_name_skey')
+    .ifExists()
+    .execute()
   await db.schema.dropTable('place').ifExists().execute()
 }

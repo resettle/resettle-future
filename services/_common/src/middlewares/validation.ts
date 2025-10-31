@@ -1,9 +1,6 @@
+import { API_ERROR_CODES, APIError } from '@resettle/api'
 import { validator } from 'hono/validator'
 import type { z } from 'zod'
-import {
-  API_ERROR_CODES,
-  APIError,
-} from '../../../../packages/@resettle/api/src/_common'
 
 /**
  * Get a validate function

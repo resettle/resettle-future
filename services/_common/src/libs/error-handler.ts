@@ -1,11 +1,7 @@
+import { API_ERROR_CODES, APIError, apiErrorResponse } from '@resettle/api'
 import type { ErrorHandler } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { ZodError } from 'zod'
-import {
-  API_ERROR_CODES,
-  APIError,
-  apiErrorResponse,
-} from '../../../../packages/@resettle/api/src/_common'
 
 /**
  * API error handler for Hono

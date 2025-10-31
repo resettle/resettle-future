@@ -1,10 +1,10 @@
+import { stringOptionalSchema } from '@resettle/schema'
 import {
   occupationCodeClassificationsSchema,
   occupationCodeRefSchema,
   occupationCodeSchema,
 } from '@resettle/schema/global'
 import { z } from 'zod'
-import { stringOptionalSchema } from '../../../../schema/src/_common'
 
 import { defineAPISchema, getCursorPaginationSchema } from '../../_common'
 import { GLOBAL_API_ROUTES } from '../routes'

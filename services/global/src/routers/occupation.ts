@@ -1,3 +1,4 @@
+import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
 import type {
   OccupationCode,
@@ -5,11 +6,6 @@ import type {
 } from '@resettle/schema/global'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
-import {
-  API_ERROR_CODES,
-  APIError,
-  apiSuccessResponse,
-} from '../../../../packages/@resettle/api/src/_common'
 
 import {
   exactSearchOccupationCodes,

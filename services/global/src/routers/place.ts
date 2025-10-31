@@ -1,18 +1,13 @@
+import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
 import type {
   CostOfLivingDataResponse,
   PlaceScope,
-  PlaceSearch,
 } from '@resettle/schema/global'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
-import {
-  API_ERROR_CODES,
-  APIError,
-  apiSuccessResponse,
-} from '../../../../packages/@resettle/api/src/_common'
 
-import { exactSearchPlaces, fuzzySearchPlaces } from '../database/repositories'
+import { searchPlaces } from '../database/repositories'
 
 export const placeRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
@@ -29,22 +24,13 @@ placeRouter.get(
       limit = 100,
     } = ctx.req.valid('query')
 
-    let results: PlaceSearch[]
-
-    if (!fuzzy) {
-      results = await exactSearchPlaces(db, {
+    const results = await db.transaction().execute(async tx => {
+      return await searchPlaces(tx, {
         limit,
         orderByDirection: 'desc',
-        orderBy: 'id',
-        where: { q, country_code, scope },
+        where: { q, fuzzy, country_code, scope },
       })
-    } else {
-      results = await fuzzySearchPlaces(db, {
-        limit,
-        orderByDirection: 'desc',
-        where: { q, country_code, scope },
-      })
-    }
+    })
 
     return apiSuccessResponse(
       GLOBAL_API_SCHEMAS.place.search.responseData,
@@ -52,7 +38,7 @@ placeRouter.get(
         place_id: r.id,
         country_code: r.country_code,
         name: r.name,
-        alternate_names: r.alternate_names,
+        aliases: r.aliases,
         scopes:
           r.numbeo_reference === null
             ? (['general-info'] as PlaceScope[])
@@ -163,7 +149,7 @@ placeRouter.get(
       {
         place_id: data.id,
         name: data.name,
-        alternate_names: data.alternate_names,
+        aliases: data.aliases,
         country_code: data.country_code,
         latitude: data.latitude,
         longitude: data.longitude,
