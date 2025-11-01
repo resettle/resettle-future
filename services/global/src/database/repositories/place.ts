@@ -36,13 +36,17 @@ export const searchPlaces = async (
     .select('id')
     .$if(Boolean(opts.where.fuzzy), qb =>
       qb.where(
-        sql<number>`${sql.ref('name')} <<-> ${sql.lit(opts.where.q)}`,
+        sql<number>`lower(name) <<-> lower(${sql.lit(opts.where.q)})`,
         '<',
         0.3,
       ),
     )
     .$if(!Boolean(opts.where.fuzzy), qb =>
-      qb.where('name', 'ilike', `%${opts.where.q}%`),
+      qb.where(
+        sql`lower(name)`,
+        'like',
+        sql<string>`lower(${sql.lit(`%${opts.where.q}%`)})`,
+      ),
     )
     .$if(opts.where.country_code !== undefined, qb =>
       qb.where('country_code', '=', opts.where.country_code!),
@@ -50,11 +54,17 @@ export const searchPlaces = async (
     .$if(opts.where.scope === 'cost-of-living', qb =>
       qb.where('has_numbeo_reference', '=', true),
     )
-    .orderBy(
-      opts.where.fuzzy
-        ? sql`${sql.ref('name')} <<-> ${sql.lit(opts.where.q)}`
-        : sql`${sql.ref('name')} ilike ${sql.lit(`%${opts.where.q}%`)}`,
-      opts.orderByDirection,
+    .$if(Boolean(opts.where.fuzzy), qb =>
+      qb.orderBy(
+        sql<number>`lower(name) <<-> lower(${sql.lit(opts.where.q)})`,
+        opts.orderByDirection,
+      ),
+    )
+    .$if(!Boolean(opts.where.fuzzy), qb =>
+      qb.orderBy(
+        sql<number>`lower(name) like lower(${sql.lit(`%${opts.where.q}%`)})`,
+        opts.orderByDirection,
+      ),
     )
     .limit(opts.limit)
     .execute()

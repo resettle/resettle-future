@@ -68,7 +68,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createIndex('place_name_or_alias_name_skey')
     .on('place_name_or_alias')
     .using('gin')
-    .expression(sql`name gin_trgm_ops`)
+    .expression(sql`lower(name) gin_trgm_ops`)
     .ifNotExists()
     .execute()
 }
