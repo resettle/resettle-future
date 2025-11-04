@@ -8,7 +8,7 @@ import type {
   PlaceTable,
 } from './tables'
 
-export interface Database {
+export interface GlobalDatabase {
   cost_of_living_data: CostOfLivingDataTable
   exchange_rate_data: ExchangeRateDataTable
   metadata: MetadataTable

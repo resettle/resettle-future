@@ -83,5 +83,6 @@ export async function down(db: Kysely<any>): Promise<void> {
     .dropIndex('cost_of_living_data_place_id_created_at_desc_key')
     .ifExists()
     .execute()
+
   await db.schema.dropTable('cost_of_living_data').ifExists().execute()
 }

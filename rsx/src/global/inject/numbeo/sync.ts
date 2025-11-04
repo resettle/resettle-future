@@ -1,0 +1,24 @@
+import { processNumbeo } from '@resettle/processors'
+import { Command } from 'commander'
+
+import { getGlobalDB, getR2 } from '../../../_common/context'
+
+export const syncCommand = new Command()
+  .name('sync')
+  .description('Sync mapped numbeo data')
+  .option('--directory <directory>', 'The local directory containing the files')
+  .action(async (options: { directory?: string }) => {
+    const r2 = getR2(process.env)
+    const { db, pool } = getGlobalDB(process.env)
+
+    try {
+      await processNumbeo(
+        { s3: r2, db },
+        options.directory
+          ? { type: 'fs', directory: options.directory }
+          : { type: 's3', bucket: process.env.DATA_SNAPSHOTS_BUCKET },
+      )
+    } finally {
+      await pool.end()
+    }
+  })

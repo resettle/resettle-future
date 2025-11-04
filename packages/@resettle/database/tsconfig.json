@@ -21,5 +21,5 @@
     "noUnusedParameters": true,
     "noEmit": true
   },
-  "include": ["src/**/*", "node-env.d.ts"]
+  "include": ["src/**/*", "node-env.d.ts", "kysely.config.ts"]
 }

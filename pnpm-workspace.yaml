@@ -1,4 +1,6 @@
 packages:
   - apps/**/*
+  - databases/**/*
   - packages/**/*
+  - rsx
   - services/**/*

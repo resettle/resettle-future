@@ -1,0 +1,47 @@
+{
+  "name": "@resettle/database",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/_common/index.ts",
+      "require": "./src/_common/index.ts"
+    },
+    "./app": {
+      "import": "./src/app/index.ts",
+      "require": "./src/app/index.ts"
+    },
+    "./global": {
+      "import": "./src/global/index.ts",
+      "require": "./src/global/index.ts"
+    }
+  },
+  "scripts": {
+    "typegen": "dotenvx-typegen -f ../../../.env -e 'DOTENV_|VITE_'",
+    "typegen:staging": "dotenvx-typegen -f ../../../.env.staging -e 'DOTENV_|VITE_'",
+    "typegen:production": "dotenvx-typegen -f ../../../.env.production -e 'DOTENV_|VITE_'",
+    "db:app": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e app' --",
+    "db:app:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e app' --",
+    "db:app:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e app' --",
+    "db:global": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e global' --",
+    "db:global:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e global' --",
+    "db:global:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e global' --"
+  },
+  "dependencies": {
+    "@resettle/utils": "workspace:^",
+    "kysely": "0.28.8",
+    "pg": "8.16.3",
+    "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "kysely": ">=0.28.0",
+    "pg": ">=8.16.0",
+    "zod": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/pg": "8.15.6",
+    "kysely-ctl": "0.19.0",
+    "typescript": "5.9.3"
+  }
+}

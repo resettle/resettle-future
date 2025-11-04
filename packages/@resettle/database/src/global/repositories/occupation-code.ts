@@ -1,12 +1,12 @@
+import { executeWithCursorPagination } from '@databases/_common'
 import type {
   OccupationCode,
   OccupationCodeClassification,
 } from '@resettle/schema/global'
 import type { CursorPagination } from '@resettle/utils'
-import { executeWithCursorPagination } from '@services/_common'
 import { sql, type Kysely } from 'kysely'
 
-import type { Database } from '../db'
+import type { Database } from '../database'
 
 /**
  * Exact search for occupation codes

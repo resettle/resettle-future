@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@resettle/api": "workspace:^",
+    "@resettle/database": "workspace:^",
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@services/_common": "workspace:^",
@@ -26,7 +27,7 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "@types/node": "24.9.2",
+    "@types/node": "24.10.0",
     "@types/pg": "8.15.6",
     "kysely-ctl": "0.19.0",
     "typescript": "5.9.3"

@@ -21,23 +21,17 @@
     "@types/jsonwebtoken": "9.0.10",
     "hono": "4.10.4",
     "jsonwebtoken": "9.0.2",
-    "kysely": "0.28.8",
-    "openai": "6.7.0",
-    "pg": "8.16.3",
+    "openai": "6.8.0",
     "stripe": "19.2.0",
     "zeptomail": "7.0.0",
     "zod": "4.1.12"
   },
   "peerDependencies": {
     "hono": ">=4.8.0",
-    "kysely": ">=0.28.0",
-    "pg": ">=8.16.0",
     "zod": ">=4.0.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20251014.0",
-    "@types/node": "24.9.2",
-    "@types/pg": "8.15.6",
+    "@types/node": "24.10.0",
     "@types/zeptomail": "workspace:^",
     "typescript": "5.9.3"
   }

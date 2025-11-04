@@ -13,16 +13,20 @@
     "build": "pnpm --filter='./apps/*' build",
     "build:staging": "pnpm --filter='./apps/*' build:staging",
     "build:production": "pnpm --filter='./apps/*' build:production",
-    "dev": "pnpm --filter='./apps/*' dev"
+    "dev": "pnpm --filter='./apps/*' dev",
+    "rsx": "dotenvx run -f .env --overload -- rsx",
+    "rsx:staging": "dotenvx run -f .env.staging --overload -- rsx",
+    "rsx:production": "dotenvx run -f .env.production --overload -- rsx"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.51.0",
+    "@dotenvx/dotenvx": "1.51.1",
     "@dotenvx/dotenvx-cloudflare": "workspace:^",
     "@dotenvx/dotenvx-typegen": "workspace:^",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "0.7.1",
+    "rsx": "workspace:^",
     "tsx": "4.20.6",
-    "wrangler": "4.45.3"
+    "wrangler": "4.45.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

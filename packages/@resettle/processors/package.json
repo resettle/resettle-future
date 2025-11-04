@@ -1,0 +1,31 @@
+{
+  "name": "@resettle/processors",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@3rd-party-clients/s3": "workspace:^",
+    "@resettle/country-region": "workspace:^",
+    "@resettle/database": "workspace:^",
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^",
+    "cheerio": "1.1.2",
+    "csv-parse": "6.1.0",
+    "date-fns": "4.1.0",
+    "header-generator": "2.1.76",
+    "kysely": "0.28.8",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/unzipper": "0.10.11",
+    "typescript": "5.9.3",
+    "unzipper": "0.12.3"
+  }
+}

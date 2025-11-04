@@ -28,5 +28,6 @@ export async function down(db: Kysely<any>): Promise<void> {
     .dropIndex('exchange_rate_data_currency_code_created_at_desc_key')
     .ifExists()
     .execute()
+
   await db.schema.dropTable('exchange_rate_data').ifExists().execute()
 }

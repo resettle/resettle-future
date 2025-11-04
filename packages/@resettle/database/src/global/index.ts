@@ -1,3 +1,3 @@
-export * from './db'
+export * from './database'
 export * from './repositories'
 export * from './tables'

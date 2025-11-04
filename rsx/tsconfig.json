@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "lib": ["ES2021"],
+    "target": "ES2019",
+    "lib": ["ES2019", "DOM"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,

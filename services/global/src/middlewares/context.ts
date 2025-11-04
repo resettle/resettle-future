@@ -1,13 +1,13 @@
-import { getDB } from '@services/_common'
+import type { GlobalDatabase } from '@resettle/database/global'
 import type { MiddlewareHandler } from 'hono'
 import { env } from 'hono/adapter'
 import type { Kysely } from 'kysely'
 
-import type { Database } from '../database'
+import { getGlobalDB } from '../libs/context'
 
 declare module 'hono' {
   interface ContextVariableMap {
-    db: Kysely<Database>
+    db: Kysely<GlobalDatabase>
   }
 }
 
@@ -19,8 +19,8 @@ export const context = (): MiddlewareHandler<{ Bindings: Cloudflare.Env }> => {
   return async (ctx, next) => {
     const { HYPERDRIVE, POSTGRES_CONNECTION_STRING_GLOBAL } = env(ctx)
 
-    const { db, pool } = getDB<Database>({
-      POSTGRES_CONNECTION_STRING: HYPERDRIVE
+    const { db, pool } = getGlobalDB({
+      POSTGRES_CONNECTION_STRING_GLOBAL: HYPERDRIVE
         ? HYPERDRIVE.connectionString
         : POSTGRES_CONNECTION_STRING_GLOBAL,
     })

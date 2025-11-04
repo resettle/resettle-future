@@ -1,0 +1,28 @@
+{
+  "name": "rsx",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "rsx": "./src/main.ts"
+  },
+  "scripts": {
+    "typegen": "dotenvx-typegen -f ../.env -e 'DOTENV_|VITE_'",
+    "typegen:staging": "dotenvx-typegen -f ../.env.staging -e 'DOTENV_|VITE_'",
+    "typegen:production": "dotenvx-typegen -f ../.env.production -e 'DOTENV_|VITE_'"
+  },
+  "dependencies": {
+    "@3rd-party-clients/s3": "workspace:^",
+    "@resettle/database": "workspace:^",
+    "@resettle/processors": "workspace:^",
+    "commander": "14.0.2",
+    "kysely": "0.28.8",
+    "pg": "8.16.3",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/pg": "8.15.6",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

@@ -2,7 +2,7 @@ import type { CountryAlpha2Code } from '@resettle/schema'
 import type { PlaceScope, PlaceSearch } from '@resettle/schema/global'
 import { sql, type Kysely } from 'kysely'
 
-import type { Database } from '../db'
+import type { Database } from '../database'
 
 /**
  * Exact search for places
