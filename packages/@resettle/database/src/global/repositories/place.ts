@@ -2,7 +2,7 @@ import type { CountryAlpha2Code } from '@resettle/schema'
 import type { PlaceScope, PlaceSearch } from '@resettle/schema/global'
 import { sql, type Kysely } from 'kysely'
 
-import type { Database } from '../database'
+import type { GlobalDatabase } from '../database'
 
 /**
  * Exact search for places
@@ -19,7 +19,7 @@ import type { Database } from '../database'
  * @returns The places
  */
 export const searchPlaces = async (
-  db: Kysely<Database>,
+  db: Kysely<GlobalDatabase>,
   opts: {
     limit: number
     orderByDirection: 'asc' | 'desc'

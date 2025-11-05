@@ -13,7 +13,7 @@
     "build": "pnpm --filter='./apps/*' build",
     "build:staging": "pnpm --filter='./apps/*' build:staging",
     "build:production": "pnpm --filter='./apps/*' build:production",
-    "dev": "pnpm --filter='./apps/*' dev",
+    "dev": "pnpm --parallel --filter='./apps/*' --filter='./services/*' dev",
     "rsx": "dotenvx run -f .env --overload -- rsx",
     "rsx:staging": "dotenvx run -f .env.staging --overload -- rsx",
     "rsx:production": "dotenvx run -f .env.production --overload -- rsx"

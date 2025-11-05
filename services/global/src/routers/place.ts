@@ -1,13 +1,12 @@
 import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
+import { searchPlaces } from '@resettle/database/global'
 import type {
   CostOfLivingDataResponse,
   PlaceScope,
 } from '@resettle/schema/global'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
-
-import { searchPlaces } from '../database/repositories'
 
 export const placeRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 

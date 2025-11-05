@@ -28,6 +28,7 @@
     "db:global:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e global' --"
   },
   "dependencies": {
+    "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "kysely": "0.28.8",
     "pg": "8.16.3",

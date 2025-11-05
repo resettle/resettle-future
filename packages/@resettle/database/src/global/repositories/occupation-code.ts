@@ -1,4 +1,3 @@
-import { executeWithCursorPagination } from '@databases/_common'
 import type {
   OccupationCode,
   OccupationCodeClassification,
@@ -6,7 +5,8 @@ import type {
 import type { CursorPagination } from '@resettle/utils'
 import { sql, type Kysely } from 'kysely'
 
-import type { Database } from '../database'
+import { executeWithCursorPagination } from '../../_common'
+import type { GlobalDatabase } from '../database'
 
 /**
  * Exact search for occupation codes
@@ -21,7 +21,7 @@ import type { Database } from '../database'
  * @returns The occupation codes
  */
 export const exactSearchOccupationCodes = async (
-  db: Kysely<Database>,
+  db: Kysely<GlobalDatabase>,
   opts: {
     limit: number
     orderBy: 'id'
@@ -56,7 +56,7 @@ export const exactSearchOccupationCodes = async (
  * @returns The occupation codes
  */
 export const fuzzySearchOccupationCodes = async (
-  db: Kysely<Database>,
+  db: Kysely<GlobalDatabase>,
   opts: {
     limit: number
     orderByDirection: 'asc' | 'desc'
@@ -100,7 +100,7 @@ export const fuzzySearchOccupationCodes = async (
  * @returns The occupation codes
  */
 export const listOccupationCodes = async (
-  db: Kysely<Database>,
+  db: Kysely<GlobalDatabase>,
   opts: {
     limit: number
     cursor: string | null

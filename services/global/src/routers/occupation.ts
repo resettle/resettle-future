@@ -1,5 +1,10 @@
 import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
+import {
+  exactSearchOccupationCodes,
+  fuzzySearchOccupationCodes,
+  listOccupationCodes,
+} from '@resettle/database/global'
 import type {
   OccupationCode,
   OccupationCodeClassification,
@@ -7,11 +12,6 @@ import type {
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
 
-import {
-  exactSearchOccupationCodes,
-  fuzzySearchOccupationCodes,
-  listOccupationCodes,
-} from '../database/repositories'
 import { getCrosswalkPairs } from '../libs/occupation'
 
 export const occupationRouter = new Hono<{ Bindings: Cloudflare.Env }>()
@@ -92,6 +92,7 @@ occupationRouter.get(
         )
         .execute()
     }
+
     return apiSuccessResponse(
       GLOBAL_API_SCHEMAS.occupation.crosswalk.responseData,
       results,
