@@ -20,7 +20,9 @@
       "require": "./src/global/index.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "test": "tsc"
+  },
   "dependencies": {
     "zod": "4.1.12"
   },

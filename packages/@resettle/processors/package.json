@@ -8,6 +8,9 @@
       "require": "./src/index.ts"
     }
   },
+  "scripts": {
+    "test": "tsc"
+  },
   "dependencies": {
     "@3rd-party-clients/s3": "workspace:^",
     "@resettle/country-region": "workspace:^",

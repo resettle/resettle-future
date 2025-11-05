@@ -153,7 +153,7 @@ const processModifications = async (
     const parts = row.split('\t')
     const id = parseInt(parts[0])
     const name = parts[1]
-    const alternates = parts[3].length === 0 ? [] : parts[3].split(',')
+    const aliases = parts[3].length === 0 ? [] : parts[3].split(',')
     const latitude = parseFloat(parts[4])
     const longitude = parseFloat(parts[5])
     const featureCode = parts[7]
@@ -169,7 +169,7 @@ const processModifications = async (
       const row = {
         external_id: id,
         name,
-        alternate_names: alternates,
+        aliases,
         latitude,
         longitude,
         feature_code: featureCode as PlaceFeatureCode,
@@ -188,7 +188,7 @@ const processModifications = async (
         .onConflict(oc =>
           oc.column('external_id').doUpdateSet(eb => ({
             name: eb.ref('excluded.name'),
-            alternate_names: eb.ref('excluded.alternate_names'),
+            aliases: eb.ref('excluded.aliases'),
             latitude: eb.ref('excluded.latitude'),
             longitude: eb.ref('excluded.longitude'),
             feature_code: eb.ref('excluded.feature_code'),
@@ -320,7 +320,7 @@ const processGeonamesCompletely = async (
     const parts = line.split('\t')
     const id = parseInt(parts[0])
     const name = parts[1]
-    const alternates = parts[2].length === 0 ? [] : parts[2].split(',')
+    const aliases = parts[2].length === 0 ? [] : parts[2].split(',')
     const latitude = parseFloat(parts[3])
     const longitude = parseFloat(parts[4])
     const featureCode = parts[5] as PlaceFeatureCode
@@ -335,7 +335,7 @@ const processGeonamesCompletely = async (
     rows.push({
       external_id: id,
       name,
-      alternate_names: alternates,
+      aliases,
       latitude,
       longitude,
       feature_code: featureCode,
@@ -364,7 +364,7 @@ const processGeonamesCompletely = async (
       .onConflict(oc =>
         oc.column('external_id').doUpdateSet(eb => ({
           name: eb.ref('excluded.name'),
-          alternate_names: eb.ref('excluded.alternate_names'),
+          aliases: eb.ref('excluded.aliases'),
           latitude: eb.ref('excluded.latitude'),
           longitude: eb.ref('excluded.longitude'),
           feature_code: eb.ref('excluded.feature_code'),

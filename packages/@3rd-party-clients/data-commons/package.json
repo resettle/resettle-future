@@ -8,6 +8,9 @@
       "require": "./src/index.ts"
     }
   },
+  "scripts": {
+    "test": "tsc"
+  },
   "dependencies": {
     "zod": "4.1.12"
   },

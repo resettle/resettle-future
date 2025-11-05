@@ -16,7 +16,8 @@
     "dev": "pnpm --parallel --filter='./apps/*' --filter='./services/*' dev",
     "rsx": "dotenvx run -f .env --overload -- rsx",
     "rsx:staging": "dotenvx run -f .env.staging --overload -- rsx",
-    "rsx:production": "dotenvx run -f .env.production --overload -- rsx"
+    "rsx:production": "dotenvx run -f .env.production --overload -- rsx",
+    "test": "pnpm --filter '*' test"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.51.1",
