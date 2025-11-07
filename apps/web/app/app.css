@@ -1,4 +1,6 @@
-@import '@resettle/design/styles' source('.');
+@import '@resettle/design/styles';
+
+@source '.';
 
 @theme {
   --font-sans:

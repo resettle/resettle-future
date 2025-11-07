@@ -1,0 +1,8 @@
+{
+  "name": "@apps/directus",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-env": "./build-env.sh"
+  }
+}

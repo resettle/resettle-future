@@ -69,22 +69,6 @@ export function Layout({ children }: React.PropsWithChildren) {
         />
         <Meta />
         <Links />
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_MEASUREMENT_ID}`}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined') {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${import.meta.env.VITE_GA_MEASUREMENT_ID}');
-              }
-            `,
-          }}
-        />
       </head>
       <body>
         <ToastProvider>

@@ -1,6 +1,5 @@
 'use client'
 
-import { Loader2Icon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   useDialog,
   type DialogProps,
 } from './Dialog'
+import { Spinner } from './Spinner'
 import { VisuallyHidden } from './VisuallyHidden'
 
 interface LoadingDialogProps extends DialogProps {
@@ -28,7 +28,7 @@ function LoadingDialog(props: LoadingDialogProps) {
         <VisuallyHidden asChild>
           <DialogDescription>{props.message}</DialogDescription>
         </VisuallyHidden>
-        <Loader2Icon className="size-6 animate-spin" />
+        <Spinner className="size-6" />
         <div>{props.message ?? 'Loading...'}</div>
       </DialogContent>
     </Dialog>

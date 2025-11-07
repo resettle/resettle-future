@@ -1,9 +1,9 @@
 import { Slot } from '@radix-ui/react-slot'
-import { Loader2Icon } from 'lucide-react'
 import * as React from 'react'
 import { tv, type VariantProps } from 'tailwind-variants'
 
 import { cn } from '../utils/cn'
+import { Spinner } from './Spinner'
 
 const buttonVariants = tv({
   base: 'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap lining-nums transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -57,7 +57,7 @@ function Button({
       disabled={isLoading || disabled}
       {...props}
     >
-      {isLoading ? <Loader2Icon className="animate-spin" /> : children}
+      {isLoading ? <Spinner /> : children}
     </Comp>
   )
 }

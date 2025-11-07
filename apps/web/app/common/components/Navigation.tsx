@@ -1,3 +1,5 @@
+import { Button } from '@resettle/design'
+import { ArrowRightIcon } from 'lucide-react'
 import { Link } from 'react-router'
 
 import Logo from './Logo'
@@ -9,6 +11,10 @@ export default function Navigation() {
         <Link aria-label="Go to Resettle" to="/">
           <Logo className="h-[20px] pr-1" />
         </Link>
+        <Button>
+          Get Started
+          <ArrowRightIcon />
+        </Button>
       </div>
     </div>
   )

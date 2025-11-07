@@ -1,7 +1,9 @@
 @import 'react-image-crop/dist/ReactCrop.css';
 
-@import 'tailwindcss' source('.');
+@import 'tailwindcss';
 @import 'tw-animate-css';
+
+@source '.';
 
 @custom-variant dark (&:is(.dark *));
 

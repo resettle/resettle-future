@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+
+# Upload directories
+staging/uploads/*
+!staging/uploads/.gitkeep
+production/uploads/*
+!production/uploads/.gitkeep
+
+# Extensions directories
+staging/extensions/*
+!staging/extensions/.gitkeep
+production/extensions/*
+!production/extensions/.gitkeep
+
+# Docker volumes
+volumes/
+
+# Logs
+*.log
+logs/
+
