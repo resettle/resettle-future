@@ -34,6 +34,7 @@ export const scrapeCommand = new Command()
           ? { type: 'fs', directory: options.directory }
           : { type: 's3', bucket: process.env.DATA_SNAPSHOTS_BUCKET },
       )
+      console.log(`${countries.length} countries loaded`)
       const cities = await downloadCitySlugs(
         { s3: r2 },
         options.directory
@@ -41,11 +42,16 @@ export const scrapeCommand = new Command()
           : { type: 's3', bucket: process.env.DATA_SNAPSHOTS_BUCKET },
         5000,
       )
+      console.log(
+        `${Object.values(cities)
+          .map(c => c.length)
+          .reduce((p, c) => p + c, 0)} cities loaded`,
+      )
       const amount = Object.values(cities)
         .map(collection => collection.length)
         .reduce((p, c) => p + c, 0)
       const maxPage = Math.ceil(amount / PAGE_SIZE) - 1
-      const validator = z.int().min(0).max(maxPage)
+      const validator = z.coerce.number().int().min(0).max(maxPage)
       let startPage = options.startPage ?? '0'
       let endPage = options.endPage ?? maxPage.toString()
       const startParsed = validator.safeParse(startPage)

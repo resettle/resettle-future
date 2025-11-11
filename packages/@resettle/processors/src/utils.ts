@@ -7,8 +7,8 @@ import {
 } from '@3rd-party-clients/s3'
 import { format, startOfMonth, subDays } from 'date-fns'
 import { createReadStream, createWriteStream, existsSync } from 'node:fs'
-import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
 import { createInterface } from 'node:readline'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
@@ -53,12 +53,12 @@ async function loadFromFileSystem(
   opts: LoadOptions,
 ): LoadResult {
   try {
-    if (!opts.stream) {
-      return { success: true, data: await readFile(ref.path) }
-    }
-
     if (!existsSync(ref.path)) {
       return { success: false }
+    }
+
+    if (!opts.stream) {
+      return { success: true, data: await readFile(ref.path) }
     }
 
     const reader = createInterface({
@@ -193,6 +193,7 @@ async function saveToFileSystem(
   ref: FileSystemRef,
   content: ByteStream | string,
 ) {
+  await mkdir(dirname(ref.path), { recursive: true })
   if (typeof content === 'string') {
     await writeFile(ref.path, content)
     return

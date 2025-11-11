@@ -37,6 +37,7 @@ type NumbeoCityRestaurantsData = z.infer<typeof numbeoCityRestaurantsDataSchema>
 
 const numbeoCityMarketsDataSchema = z.object({
   milk: optionalNumber,
+  milk1Liter: optionalNumber,
   loafOfFreshWhiteBread: optionalNumber,
   rice: optionalNumber,
   eggs: optionalNumber,
@@ -66,6 +67,7 @@ const numbeoCityTransportationDataSchema = z.object({
   taxi1Km: optionalNumber,
   taxi1HourWaiting: optionalNumber,
   gasoline: optionalNumber,
+  gasoline1Liter: optionalNumber,
   volkswagen: optionalNumber,
   toyota: optionalNumber,
 })
@@ -178,80 +180,130 @@ export type PostprocessedCityData = CityData & { originalCity: string }
 
 const restaurantsKeyMapping = {
   'Meal, Inexpensive Restaurant': 'mealInexpensive',
+  'Meal at an Inexpensive Restaurant': 'mealInexpensive',
   'Meal for 2 People, Mid-range Restaurant, Three-course': 'meal2People',
+  'Meal for Two at a Mid-Range Restaurant (Three Courses, Without Drinks)':
+    'meal2People',
   'McMeal at McDonalds (or Equivalent Combo Meal)': 'mcMeal',
+  "Combo Meal at McDonald's (or Equivalent Fast-Food Meal)": 'mcMeal',
   'Domestic Beer (1 pint draught)': 'domesticBeer',
+  'Domestic Draft Beer (1 Pint)': 'domesticBeer',
   'Imported Beer (12 oz small bottle)': 'importedBeer',
+  'Imported Beer (12 oz Small Bottle)': 'importedBeer',
   'Cappuccino (regular)': 'cappuccino',
+  'Cappuccino (Regular Size)': 'cappuccino',
   'Coke/Pepsi (12 oz small bottle)': 'cokePepsi',
+  'Soft Drink (Coca-Cola or Pepsi, 12 oz Small Bottle)': 'cokePepsi',
   'Water (12 oz small bottle)': 'water',
+  'Bottled Water (12 oz)': 'water',
 } as const
 
 const marketsKeyMapping = {
   'Milk (regular), (1 gallon)': 'milk',
+  'Milk (Regular, 1 Liter)': 'milk1Liter',
   'Loaf of Fresh White Bread (1 lb)': 'loafOfFreshWhiteBread',
+  'Fresh White Bread (1 lb Loaf)': 'loafOfFreshWhiteBread',
   'Rice (white), (1 lb)': 'rice',
+  'White Rice (1 lb)': 'rice',
   'Eggs (regular) (12)': 'eggs',
+  'Eggs (12, Large Size)': 'eggs',
   'Local Cheese (1 lb)': 'localCheese',
   'Chicken Fillets (1 lb)': 'chickenFillets',
   'Beef Round (1 lb) (or Equivalent Back Leg Red Meat)': 'beefRound',
+  'Beef Round or Equivalent Back Leg Red Meat (1 lb)': 'beefRound',
   'Apples (1 lb)': 'apples',
   'Banana (1 lb)': 'banana',
+  'Bananas (1 lb)': 'banana',
   'Oranges (1 lb)': 'oranges',
   'Tomato (1 lb)': 'tomato',
+  'Tomatoes (1 lb)': 'tomato',
   'Potato (1 lb)': 'potato',
+  'Potatoes (1 lb)': 'potato',
   'Onion (1 lb)': 'onion',
+  'Onions (1 lb)': 'onion',
   'Lettuce (1 head)': 'lettuce',
+  'Lettuce (1 Head)': 'lettuce',
   'Water (1.5 liter bottle)': 'water',
+  'Bottled Water (50 oz)': 'water',
   'Bottle of Wine (Mid-Range)': 'bottleOfWine',
   'Domestic Beer (0.5 liter bottle)': 'domesticBeer',
+  'Domestic Beer (16.9 oz Bottle)': 'domesticBeer',
   'Imported Beer (12 oz small bottle)': 'importedBeer',
+  'Imported Beer (12 oz Small Bottle)': 'importedBeer',
   'Cigarettes 20 Pack (Marlboro)': 'cigarettes',
+  'Cigarettes (Pack of 20, Marlboro)': 'cigarettes',
 } as const
 
 const transportationKeyMapping = {
   'One-way Ticket (Local Transport)': 'oneWayTicket',
+  'One-Way Ticket (Local Transport)': 'oneWayTicket',
   'Monthly Pass (Regular Price)': 'monthlyPass',
+  'Monthly Public Transport Pass (Regular Price)': 'monthlyPass',
   'Taxi Start (Normal Tariff)': 'taxiStart',
+  'Taxi Start (Standard Tariff)': 'taxiStart',
   'Taxi 1 mile (Normal Tariff)': 'taxi1Km',
+  'Taxi 1 mile (Standard Tariff)': 'taxi1Km',
   'Taxi 1hour Waiting (Normal Tariff)': 'taxi1HourWaiting',
+  'Taxi 1 Hour Waiting (Standard Tariff)': 'taxi1HourWaiting',
   'Gasoline (1 gallon)': 'gasoline',
+  'Gasoline (1 Liter)': 'gasoline1Liter',
   'Volkswagen Golf 1.4 90 KW Trendline (Or Equivalent New Car)': 'volkswagen',
+  'Volkswagen Golf 1.5 (or Equivalent New Compact Car)': 'volkswagen',
   'Toyota Corolla Sedan 1.6l 97kW Comfort (Or Equivalent New Car)': 'toyota',
+  'Toyota Corolla Sedan 1.6 (or Equivalent New Mid-Size Car)': 'toyota',
 } as const
 
 const utilitiesKeyMapping = {
   'Basic (Electricity, Heating, Cooling, Water, Garbage) for 915 sq ft Apartment':
     'basic',
+  'Basic Utilities for 915 Square Feet Apartment (Electricity, Heating, Cooling, Water, Garbage)':
+    'basic',
   'Mobile Phone Monthly Plan with Calls and 10GB+ Data': 'mobile',
+  'Mobile Phone Plan (Monthly, with Calls and 10GB+ Data)': 'mobile',
   'Internet (60 Mbps or More, Unlimited Data, Cable/ADSL)': 'internet',
+  'Broadband Internet (Unlimited Data, 60 Mbps or Higher)': 'internet',
 } as const
 
 const sportsKeyMapping = {
   'Fitness Club, Monthly Fee for 1 Adult': 'fitnessClub',
+  'Monthly Fitness Club Membership': 'fitnessClub',
   'Tennis Court Rent (1 Hour on Weekend)': 'tennisCourt',
+  'Tennis Court Rental (1 Hour, Weekend)': 'tennisCourt',
   'Cinema, International Release, 1 Seat': 'cinema',
+  'Cinema Ticket (International Release)': 'cinema',
 } as const
 
 const childcareKeyMapping = {
   'Preschool (or Kindergarten), Full Day, Private, Monthly for 1 Child':
     'preschool',
+  'Private Full-Day Preschool or Kindergarten, Monthly Fee per Child':
+    'preschool',
   'International Primary School, Yearly for 1 Child':
+    'internationalPrimarySchool',
+  'International Primary School, Annual Tuition per Child':
     'internationalPrimarySchool',
 } as const
 
 const clothingKeyMapping = {
   '1 Pair of Jeans (Levis 501 Or Similar)': 'jeans',
+  "Jeans (Levi's 501 or Similar)": 'jeans',
   '1 Summer Dress in a Chain Store (Zara, H&M, ...)': 'summerDress',
+  'Summer Dress in a Chain Store (e.g. Zara or H&M)': 'summerDress',
   '1 Pair of Nike Running Shoes (Mid-Range)': 'runningShoes',
+  'Nike Running Shoes (Mid-Range)': 'runningShoes',
   '1 Pair of Men Leather Business Shoes': 'businessShoes',
+  "Men's Leather Business Shoes": 'businessShoes',
 } as const
 
 const rentKeyMapping = {
   'Apartment (1 bedroom) in City Centre': 'inCityCentre1Bedroom',
+  '1 Bedroom Apartment in City Centre': 'inCityCentre1Bedroom',
   'Apartment (1 bedroom) Outside of Centre': 'outsideOfCenter1Bedroom',
+  '1 Bedroom Apartment Outside of City Centre': 'outsideOfCenter1Bedroom',
   'Apartment (3 bedrooms) in City Centre': 'inCityCentre3Bedrooms',
+  '3 Bedroom Apartment in City Centre': 'inCityCentre3Bedrooms',
   'Apartment (3 bedrooms) Outside of Centre': 'outsideOfCenter3Bedrooms',
+  '3 Bedroom Apartment Outside of City Centre': 'outsideOfCenter3Bedrooms',
 } as const
 
 const buyApartmentKeyMapping = {
@@ -263,6 +315,7 @@ const salaryKeyMapping = {
   'Average Monthly Net Salary (After Tax)': 'averageMonthlyNetSalary',
   'Mortgage Interest Rate in Percentages (%), Yearly, for 20 Years Fixed-Rate':
     'mortgageInterestRate',
+  'Annual Mortgage Interest Rate (20-Year Fixed, in %)': 'mortgageInterestRate',
 } as const
 
 const parsePrice = (value: string) => {
@@ -327,7 +380,12 @@ const getCitySlugs = async (countries: CountrySlugRow[], timeout: number) => {
       }
     })
 
+    if (cities.length === 0) {
+      throw new Error(`No cities in ${country.name} scraped, something is off`)
+    }
+
     results[country.code as CountryAlpha2Code] = cities
+    console.log(`${cities.length} cities of ${country.name} scraped`)
     await sleepMs(timeout)
   }
 
@@ -349,6 +407,19 @@ export const downloadCitySlugs = async (
     await saveFile(ctx, computedRef, JSON.stringify(content, null, 2), {})
   } else {
     content = JSON.parse(result.data.toString('utf-8'))
+    const missingCountries: CountryAlpha2Code[] = []
+    for (const [country, cities] of Object.entries(content)) {
+      if (cities.length === 0) {
+        missingCountries.push(country as CountryAlpha2Code)
+      }
+    }
+
+    if (missingCountries.length > 0) {
+      let countries = await downloadCountrySlugs(ctx, ref)
+      countries = countries.filter(c => missingCountries.includes(c.code))
+      content = { ...content, ...(await getCitySlugs(countries, timeout)) }
+      await saveFile(ctx, computedRef, JSON.stringify(content, null, 2), {})
+    }
   }
 
   return content
@@ -607,11 +678,13 @@ export const downloadData = async (
         rows[update.index] = newItem
       }
       console.log(`${update.index}: ${item.country} - ${item.city} scraped`)
-      await saveFile(ctx, computedRef, JSON.stringify(result, null, 2), {})
+      if (ref.type === 'fs') {
+        await saveFile(ctx, computedRef, JSON.stringify(rows, null, 2), {})
+      }
       await sleepMs(timeout)
     }
 
-    await saveFile(ctx, computedRef, JSON.stringify(result, null, 2), {})
+    await saveFile(ctx, computedRef, JSON.stringify(rows, null, 2), {})
   }
 }
 
@@ -1022,7 +1095,11 @@ export const processNumbeo = async (
             restaurants_cappuccino: found.restaurantsData.cappuccino ?? null,
             restaurants_coke_pepsi: found.restaurantsData.cokePepsi ?? null,
             restaurants_water: found.restaurantsData.water ?? null,
-            markets_milk: found.marketsData.milk ?? null,
+            markets_milk: found.marketsData.milk
+              ? found.marketsData.milk
+              : found.marketsData.milk1Liter
+                ? found.marketsData.milk1Liter / 0.2642
+                : null,
             markets_loaf_of_fresh_white_bread:
               found.marketsData.loafOfFreshWhiteBread ?? null,
             markets_rice: found.marketsData.rice ?? null,
@@ -1051,7 +1128,11 @@ export const processNumbeo = async (
             transportation_taxi_1_km: found.transportationData.taxi1Km ?? null,
             transportation_taxi_1_hour_waiting:
               found.transportationData.taxi1HourWaiting ?? null,
-            transportation_gasoline: found.transportationData.gasoline ?? null,
+            transportation_gasoline: found.transportationData.gasoline
+              ? found.transportationData.gasoline
+              : found.transportationData.gasoline1Liter
+                ? found.transportationData.gasoline1Liter / 0.2642
+                : null,
             transportation_volkswagen:
               found.transportationData.volkswagen ?? null,
             transportation_toyota: found.transportationData.toyota ?? null,

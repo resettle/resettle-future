@@ -6,6 +6,9 @@
     "rsx": "./src/main.ts"
   },
   "scripts": {
+    "rsx": "dotenvx run -f ../.env --overload -- tsx src/main.ts",
+    "rsx:staging": "dotenvx run -f ../.env.staging --overload -- tsx src/main.ts",
+    "rsx:production": "dotenvx run -f ../.env.production --overload -- tsx src/main.ts",
     "typegen": "dotenvx-typegen -f ../.env -e 'DOTENV_|VITE_'",
     "typegen:staging": "dotenvx-typegen -f ../.env.staging -e 'DOTENV_|VITE_'",
     "typegen:production": "dotenvx-typegen -f ../.env.production -e 'DOTENV_|VITE_'"
