@@ -18,7 +18,7 @@ import {
   refDirToRef,
   saveFile,
   type RefDir,
-} from './utils'
+} from '../utils'
 
 const optionalNumber = z.number().optional()
 
@@ -602,7 +602,9 @@ export const downloadData = async (
     }[] = []
 
     const computedRef = refDirToRef(ref, key)
-    let updates: { index: number; action: 'insert' | 'replace' }[] = Array(100)
+    let updates: { index: number; action: 'insert' | 'replace' }[] = Array(
+      targetPage.length,
+    )
       .fill(null)
       .map((_, i) => ({ index: i, action: 'insert' }))
     const result = await loadFile(ctx, computedRef, { stream: false })

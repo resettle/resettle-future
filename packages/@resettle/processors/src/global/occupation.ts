@@ -8,7 +8,7 @@ import { parse } from 'csv-parse/sync'
 import type { Insertable, Kysely } from 'kysely'
 import { read, type WorkSheet } from 'xlsx'
 
-import { loadFile, refDirToRef, type RefDir } from './utils'
+import { loadFile, refDirToRef, type RefDir } from '../utils'
 
 type Anzsco2013InputDataRow = {
   Code: string

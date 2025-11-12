@@ -1,5 +1,2 @@
-export * from './exchange-rate'
-export * from './geonames'
-export * from './numbeo'
-export * from './occupation'
+export * from './global'
 export * from './utils'

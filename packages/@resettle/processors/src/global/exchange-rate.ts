@@ -10,7 +10,7 @@ import {
   refDirToRef,
   saveFile,
   type RefDir,
-} from './utils'
+} from '../utils'
 
 type Content = {
   success: boolean

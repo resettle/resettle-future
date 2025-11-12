@@ -19,7 +19,7 @@ import {
   saveFile,
   type Ref,
   type RefDir,
-} from './utils'
+} from '../utils'
 
 const ALL_COUNTRIES_FILENAME = `allCountries.zip`
 
@@ -423,4 +423,9 @@ export const processGeonames = async (
   } else {
     console.log('Geonames is already of the latest version, skipping...')
   }
+
+  await ctx.db.schema
+    .refreshMaterializedView('place_name_or_alias')
+    .concurrently()
+    .execute()
 }
