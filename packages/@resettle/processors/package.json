@@ -22,11 +22,17 @@
     "date-fns": "4.1.0",
     "header-generator": "2.1.76",
     "kysely": "0.28.8",
+    "markdown-it": "14.1.0",
+    "openai": "6.8.1",
+    "pgvector": "0.2.1",
+    "slug": "11.0.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "4.1.12"
   },
   "devDependencies": {
+    "@types/markdown-it": "14.1.2",
     "@types/node": "24.10.0",
+    "@types/slug": "5.0.9",
     "@types/unzipper": "0.10.11",
     "typescript": "5.9.3",
     "unzipper": "0.12.3"

@@ -286,3 +286,49 @@ export async function listFiles(
       return listFilesInS3(ctx.s3, ref, options)
   }
 }
+
+export const conditionalInMemoryDownload = async (
+  s3: S3Client,
+  ref: Ref,
+  url: string,
+) => {
+  const result = await loadFile({ s3 }, ref, { stream: false })
+  if (!result.success) {
+    const resp = await fetch(url)
+
+    if (!resp.body) {
+      throw new Error(
+        `Error fetching ${url} - ${resp.status}: ${resp.statusText}`,
+      )
+    }
+
+    await saveFile({ s3 }, ref, resp.body, {})
+    const secondResult = await loadFile({ s3 }, ref, { stream: false })
+    if (!secondResult.success) {
+      throw new Error(`Error loading ${url}`)
+    }
+
+    return secondResult.data
+  }
+
+  return result.data
+}
+
+export const conditionalStreamDownload = async (
+  s3: S3Client,
+  ref: Ref,
+  url: string,
+) => {
+  const result = await loadFile({ s3 }, ref, { stream: true })
+  if (!result.success) {
+    const resp = await fetch(url)
+
+    if (!resp.body) {
+      throw new Error(
+        `Error fetching ${url} - ${resp.status}: ${resp.statusText}`,
+      )
+    }
+
+    await saveFile({ s3 }, ref, resp.body, { contentType: 'application/zip' })
+  }
+}
