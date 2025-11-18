@@ -34,9 +34,15 @@ export default function Index() {
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-hidden">
       <Metadata
-        title="Resettle - The Opportunity Search Engine"
-        description="Find your dream job, lifestyle and residency in your new country"
-        keywords={['resettle', 'job', 'lifestyle', 'residency', 'opportunity']}
+        title="Resettle - The World AI for Superindividuals"
+        description="The most powerful AI agent for superindividuals to find the best opportunities around the world"
+        keywords={[
+          'resettle',
+          'superindividual',
+          'ai',
+          'adventure',
+          'recommendations',
+        ]}
       />
 
       {/* Animated Background */}

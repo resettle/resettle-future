@@ -11,7 +11,7 @@ import { educationLevelOptionalSchema } from './education-level'
 
 export const educationExperienceSchema = z.object({
   id: uuidSchema,
-  institution: stringOptionalSchema,
+  institution_name: stringOptionalSchema,
   institution_country: countryAlpha2CodeOptionalSchema,
   level: educationLevelOptionalSchema,
   field_of_study: stringOptionalSchema,

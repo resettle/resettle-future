@@ -50,6 +50,14 @@ export const userSchema = z.object({
   deleted_at: dateNullableSchema,
 })
 
+export const userResponseSchema = userSchema.pick({
+  id: true,
+  username: true,
+  profile: true,
+  created_at: true,
+  updated_at: true,
+})
+
 export const userAuthSchema = userSchema.pick({
   id: true,
   email: true,
@@ -61,4 +69,5 @@ export type User = z.infer<typeof userSchema>
 export type UserRole = z.infer<typeof userRoleSchema>
 export type UserMetadata = z.infer<typeof userMetadataSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
+export type UserResponse = z.infer<typeof userResponseSchema>
 export type UserAuth = z.infer<typeof userAuthSchema>

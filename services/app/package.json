@@ -9,14 +9,24 @@
     "dev": "dotenvx-cloudflare run -f ../../.env -e 'DOTENV_|VITE_' -- wrangler dev --config wrangler.toml --port 3000 --inspector-port 9240",
     "deploy:staging": "dotenvx run -f ../../.env.staging --overload -- wrangler deploy --config wrangler.staging.toml",
     "deploy:production": "dotenvx run -f ../../.env.production --overload -- wrangler deploy --config wrangler.production.toml",
-    "secrets:staging": "dotenvx-cloudflare sync -f ../../.env.staging -e 'DOTENV_|VITE_' -n resettle-staging-service-global",
-    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'DOTENV_|VITE_' -n resettle-production-service-global"
+    "secrets:staging": "dotenvx-cloudflare sync -f ../../.env.staging -e 'DOTENV_|VITE_' -n resettle-staging-service-app",
+    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'DOTENV_|VITE_' -n resettle-production-service-app"
   },
   "dependencies": {
-    "hono": "4.10.4"
+    "@resettle/api": "workspace:^",
+    "@resettle/database": "workspace:^",
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^",
+    "@services/_common": "workspace:^",
+    "hono": "4.10.6",
+    "kysely": "0.28.8",
+    "openai": "6.9.1",
+    "pg": "8.16.3",
+    "zod": "4.1.12"
   },
   "devDependencies": {
-    "@types/node": "24.10.0",
+    "@types/node": "24.10.1",
+    "@types/pg": "8.15.6",
     "typescript": "5.9.3"
   }
 }
