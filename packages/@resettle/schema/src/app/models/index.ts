@@ -1,4 +1,5 @@
 export * from './opportunity'
+export * from './organization'
 export * from './otp'
 export * from './session'
 export * from './short-link'

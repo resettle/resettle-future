@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import {
+  dateNullableSchema,
   dateSchema,
   numberSchema,
   stringSchema,
@@ -15,6 +16,7 @@ export const skillTagMetadataSchema = z.object({
   namespace: z.literal('skill'),
   category: stringSchema,
   sub_category: stringSchema,
+  external_id: stringSchema,
 })
 
 export const interestTagMetadataSchema = z.object({
@@ -34,6 +36,7 @@ export const tagTemplateSchema = z.object({
   embedding: z.array(numberSchema),
   metadata: tagMetadataSchema,
   created_at: dateSchema,
+  deprecated_at: dateNullableSchema,
 })
 
 export type TagNamespace = z.infer<typeof tagNamespaceSchema>

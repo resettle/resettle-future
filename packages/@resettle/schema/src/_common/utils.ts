@@ -49,3 +49,5 @@ export const dateSchema = z.coerce.date<Date | string>()
 export const dateOptionalSchema = dateSchema.optional()
 export const dateNullableSchema = dateSchema.nullable()
 export const dateNullishSchema = dateSchema.nullish()
+
+export const anySchema = z.any()

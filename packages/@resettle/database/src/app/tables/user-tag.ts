@@ -5,4 +5,5 @@ export interface UserTagTable {
   tag_template_id: string
   data: JSONColumnType<any>
   created_at: Generated<Date>
+  updated_at: Generated<Date>
 }

@@ -2,11 +2,15 @@ import { z } from 'zod'
 
 import { dateNullableSchema, dateSchema, uuidSchema } from '../../_common'
 
-export const SESSION_TYPES = ['calculate', 'message'] as const
+export const SESSION_TYPES = [
+  'opportunity-process',
+  'recommendation-process',
+  'message',
+] as const
 
 export const sessionTypeSchema = z.enum(SESSION_TYPES)
 
-export const SESSION_STATUSES = ['processing', 'error', 'done'] as const
+export const SESSION_STATUSES = ['ongoing', 'error', 'done'] as const
 
 export const sessionStatusSchema = z.enum(SESSION_STATUSES)
 

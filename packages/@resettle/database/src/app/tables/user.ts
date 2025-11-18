@@ -24,7 +24,7 @@ export interface UserTable {
   preferences: JSONColumnType<UserPreferences>
   settings: JSONColumnType<UserSettings>
   created_at: Generated<Date>
-  updated_at: Date
+  updated_at: Generated<Date>
   deleted_at: Date | null
 }
 

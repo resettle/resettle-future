@@ -5,7 +5,7 @@ import type { Generated, Selectable } from 'kysely'
 export interface ShortLinkTable {
   token: string
   user_id: string
-  opportunity_id: string
+  canonical_opportunity_id: string
   session_id: string
   created_at: Generated<Date>
 }

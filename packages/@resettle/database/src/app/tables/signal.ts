@@ -11,7 +11,7 @@ export interface SignalTable {
   id: GeneratedAlways<string>
   type: SignalType
   user_id: string
-  opportunity_id: string
+  canonical_opportunity_id: string
   data: JSONColumnType<SignalData> | null
   created_at: Generated<Date>
 }

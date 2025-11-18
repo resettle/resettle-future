@@ -19,6 +19,7 @@ export interface TagTemplateTable {
   embedding: JSONColumnType<number[]>
   metadata: JSONColumnType<TagMetadata>
   created_at: Generated<Date>
+  deprecated_at: Date | null
 }
 
 assert<Equals<TagTemplate, Selectable<TagTemplateTable>>>

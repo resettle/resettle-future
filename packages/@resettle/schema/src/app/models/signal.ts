@@ -37,7 +37,7 @@ export const signalSchema = z.object({
   id: stringSchema,
   type: signalTypeSchema,
   user_id: uuidSchema,
-  opportunity_id: uuidSchema,
+  canonical_opportunity_id: uuidSchema,
   data: signalDataSchema.nullable(),
   created_at: dateSchema,
 })
