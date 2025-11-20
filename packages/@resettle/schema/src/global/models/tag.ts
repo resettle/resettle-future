@@ -39,6 +39,15 @@ export const tagTemplateSchema = z.object({
   deprecated_at: dateNullableSchema,
 })
 
+export const tagTemplateResponseSchema = tagTemplateSchema.pick({
+  id: true,
+  slug: true,
+  name: true,
+  namespace: true,
+  metadata: true,
+})
+
 export type TagNamespace = z.infer<typeof tagNamespaceSchema>
 export type TagTemplate = z.infer<typeof tagTemplateSchema>
 export type TagMetadata = z.infer<typeof tagMetadataSchema>
+export type TagTemplateResponse = z.infer<typeof tagTemplateResponseSchema>

@@ -1,7 +1,4 @@
-import type {
-  CanonicalOpportunity,
-  OpportunityType,
-} from '@resettle/schema/app'
+import type { CanonicalJob } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type {
   Generated,
@@ -10,9 +7,8 @@ import type {
   Selectable,
 } from 'kysely'
 
-export interface CanonicalOpportunityTable {
+export interface CanonicalJobTable {
   id: GeneratedAlways<string>
-  type: OpportunityType
   canonical_organization_id: string | null
   title: string
   description: string
@@ -30,4 +26,4 @@ export interface CanonicalOpportunityTable {
   updated_at: Generated<Date>
 }
 
-assert<Equals<CanonicalOpportunity, Selectable<CanonicalOpportunityTable>>>
+assert<Equals<CanonicalJob, Selectable<CanonicalJobTable>>>

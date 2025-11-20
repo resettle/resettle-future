@@ -1,5 +1,5 @@
 import type { MergeActionType } from '@resettle/schema'
-import type { OrganizationMergeAction } from '@resettle/schema/app'
+import type { JobMergeAction } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type {
   Generated,
@@ -8,7 +8,7 @@ import type {
   Selectable,
 } from 'kysely'
 
-export interface OrganizationMergeActionTable {
+export interface JobMergeActionTable {
   id: GeneratedAlways<string>
   raw_id: string
   canonical_id: string
@@ -18,6 +18,4 @@ export interface OrganizationMergeActionTable {
   created_at: Generated<Date>
 }
 
-assert<
-  Equals<OrganizationMergeAction, Selectable<OrganizationMergeActionTable>>
->
+assert<Equals<JobMergeAction, Selectable<JobMergeActionTable>>>

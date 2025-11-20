@@ -2,7 +2,7 @@ import type { CountryAlpha2Code } from '@resettle/schema'
 import type {
   CanonicalOrganization,
   OrganizationType,
-} from '@resettle/schema/app'
+} from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type {
   Generated,

@@ -13,13 +13,8 @@ import {
   uuidSchema,
 } from '../../_common'
 
-export const OPPORTUNITY_TYPES = ['job'] as const
-
-export const opportunityTypeSchema = z.enum(OPPORTUNITY_TYPES)
-
-export const rawOpportunitySchema = z.object({
+export const rawJobSchema = z.object({
   id: uuidSchema,
-  type: opportunityTypeSchema,
   raw_organization_id: uuidNullableSchema,
   source: stringSchema,
   external_id: stringSchema,
@@ -32,9 +27,8 @@ export const rawOpportunitySchema = z.object({
   updated_at: dateSchema,
 })
 
-export const canonicalOpportunitySchema = z.object({
+export const canonicalJobSchema = z.object({
   id: uuidSchema,
-  type: opportunityTypeSchema,
   canonical_organization_id: uuidNullableSchema,
   title: stringSchema,
   description: stringSchema,
@@ -52,7 +46,13 @@ export const canonicalOpportunitySchema = z.object({
   updated_at: dateSchema,
 })
 
-export const opportunityMergeActionSchema = z.object({
+export const canonicalJobResponseSchema = canonicalJobSchema.omit({
+  is_original: true,
+  sources: true,
+  processed_at: true,
+})
+
+export const jobMergeActionSchema = z.object({
   id: stringSchema,
   raw_id: uuidSchema,
   canonical_id: uuidSchema,
@@ -62,9 +62,7 @@ export const opportunityMergeActionSchema = z.object({
   created_at: dateSchema,
 })
 
-export type OpportunityType = z.infer<typeof opportunityTypeSchema>
-export type RawOpportunity = z.infer<typeof rawOpportunitySchema>
-export type CanonicalOpportunity = z.infer<typeof canonicalOpportunitySchema>
-export type OpportunityMergeAction = z.infer<
-  typeof opportunityMergeActionSchema
->
+export type RawJob = z.infer<typeof rawJobSchema>
+export type CanonicalJob = z.infer<typeof canonicalJobSchema>
+export type CanonicalJobResponse = z.infer<typeof canonicalJobResponseSchema>
+export type JobMergeAction = z.infer<typeof jobMergeActionSchema>

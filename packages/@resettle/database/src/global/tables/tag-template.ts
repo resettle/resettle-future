@@ -2,7 +2,7 @@ import type {
   TagMetadata,
   TagNamespace,
   TagTemplate,
-} from '@resettle/schema/app'
+} from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type {
   Generated,

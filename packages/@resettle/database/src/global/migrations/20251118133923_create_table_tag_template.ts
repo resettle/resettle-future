@@ -1,7 +1,6 @@
 import { sql, type Kysely } from 'kysely'
 
 export async function up(db: Kysely<any>): Promise<void> {
-  await sql`CREATE EXTENSION IF NOT EXISTS vector`.execute(db)
   await db.schema
     .createTable('tag_template')
     .addColumn('id', 'uuid', col =>

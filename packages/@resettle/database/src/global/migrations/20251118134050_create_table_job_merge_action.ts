@@ -2,7 +2,7 @@ import { sql, type Kysely } from 'kysely'
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createTable('opportunity_merge_action')
+    .createTable('job_merge_action')
     .addColumn('id', 'bigserial', col => col.primaryKey().notNull())
     .addColumn('raw_id', 'uuid', col => col.notNull())
     .addColumn('canonical_id', 'uuid', col => col.notNull())
@@ -17,5 +17,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('opportunity_merge_action').ifExists().execute()
+  await db.schema.dropTable('job_merge_action').ifExists().execute()
 }

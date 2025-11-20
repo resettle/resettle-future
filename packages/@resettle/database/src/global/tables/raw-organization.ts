@@ -1,5 +1,5 @@
 import type { CountryAlpha2Code } from '@resettle/schema'
-import type { OrganizationType, RawOrganization } from '@resettle/schema/app'
+import type { OrganizationType, RawOrganization } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type { Generated, GeneratedAlways, Selectable } from 'kysely'
 

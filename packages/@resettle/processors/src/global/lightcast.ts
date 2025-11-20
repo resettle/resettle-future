@@ -124,9 +124,9 @@ export const processSkillsIncrementally = async (
         oldSkills.push({
           category: category.name,
           sub_category: subCategory.name,
+          slug: slug(`skill-${item.name}`),
           name: item.name,
           id: item.id,
-          slug: slug(`skill-${item.name}`),
           embedding: item.embedding!,
         })
       }
@@ -151,9 +151,9 @@ export const processSkillsIncrementally = async (
         newSkills.push({
           category: category.name,
           sub_category: subCategory.name,
+          slug: slug(`skill-${item.name}`),
           name: item.name,
           id: item.id,
-          slug: slug(`skill-${item.name}`),
         })
         const foundOldSkill = oldSkills.find(s => s.name === item.name)
         if (!foundOldSkill) {
@@ -254,8 +254,8 @@ export const processSkillsIncrementally = async (
       category: string
       sub_category: string
       id: string
-      slug: string
       from: string
+      slug: string
       to: string
       embedding?: number[]
     }[] = []
@@ -298,8 +298,8 @@ export const processSkillsIncrementally = async (
     for (const rename of renameNames) {
       await ctx.db
         .updateTable('tag_template')
-        .set('name', rename.to)
         .set('slug', rename.slug)
+        .set('name', rename.to)
         .set('embedding', toSql(rename.embedding!))
         .where('name', '=', rename.from)
         .execute()
@@ -320,7 +320,7 @@ export const processSkillsIncrementally = async (
           category: found.category,
           sub_category: found.sub_category,
           id: found.id,
-          slug: found.slug,
+          slug: slug(`skill-${found.name}`),
           name: found.name,
         })
       }
@@ -389,8 +389,8 @@ export const processSkillsCompletely = async (
   const skills: {
     category: string
     sub_category: string
-    slug: string
     name: string
+    slug: string
     id: string
     embedding?: number[]
   }[] = []
@@ -401,8 +401,8 @@ export const processSkillsCompletely = async (
           category: category.name,
           sub_category: subCategory.name,
           name: item.name,
-          id: item.id,
           slug: slug(`skill-${item.name}`),
+          id: item.id,
           embedding: item.embedding,
         })
       }

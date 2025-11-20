@@ -47,6 +47,12 @@ export const canonicalOrganizationSchema = z.object({
   updated_at: dateSchema,
 })
 
+export const canonicalOrganizationResponseSchema =
+  canonicalOrganizationSchema.omit({
+    sources: true,
+    is_original: true,
+  })
+
 export const organizationMergeActionSchema = z.object({
   id: stringSchema,
   raw_id: uuidSchema,
@@ -60,6 +66,9 @@ export const organizationMergeActionSchema = z.object({
 export type OrganizationType = z.infer<typeof organizationTypeSchema>
 export type RawOrganization = z.infer<typeof rawOrganizationSchema>
 export type CanonicalOrganization = z.infer<typeof canonicalOrganizationSchema>
+export type CanonicalOrganizationResponse = z.infer<
+  typeof canonicalOrganizationResponseSchema
+>
 export type OrganizationMergeAction = z.infer<
   typeof organizationMergeActionSchema
 >

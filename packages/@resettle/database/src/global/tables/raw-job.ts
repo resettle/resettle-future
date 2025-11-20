@@ -1,10 +1,9 @@
-import type { OpportunityType, RawOpportunity } from '@resettle/schema/app'
+import type { RawJob } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
 import type { Generated, GeneratedAlways, Selectable } from 'kysely'
 
-export interface RawOpportunityTable {
+export interface RawJobTable {
   id: GeneratedAlways<string>
-  type: OpportunityType
   raw_organization_id: string | null
   source: string
   external_id: string
@@ -17,4 +16,4 @@ export interface RawOpportunityTable {
   updated_at: Generated<Date>
 }
 
-assert<Equals<RawOpportunity, Selectable<RawOpportunityTable>>>
+assert<Equals<RawJob, Selectable<RawJobTable>>>
