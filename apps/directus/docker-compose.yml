@@ -15,7 +15,7 @@ services:
       - directus-network
 
   directus-staging:
-    image: directus/directus:11.13
+    image: directus/directus:11.5.1
     container_name: directus-staging
     restart: unless-stopped
     expose:
