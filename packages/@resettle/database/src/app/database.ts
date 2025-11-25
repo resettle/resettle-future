@@ -1,8 +1,7 @@
-import type { OTPTable, ShortLinkTable, SignalTable, UserTable } from './tables'
+import type { OTPTable, ResumeTable, UserTable } from './tables'
 
 export interface AppDatabase {
   otp: OTPTable
-  short_link: ShortLinkTable
-  signal: SignalTable
+  resume: ResumeTable
   user: UserTable
 }

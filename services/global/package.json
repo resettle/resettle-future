@@ -21,7 +21,7 @@
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@services/_common": "workspace:^",
-    "hono": "4.10.4",
+    "hono": "4.10.6",
     "kysely": "0.28.8",
     "openai": "6.8.1",
     "pgvector": "0.2.1",
@@ -29,7 +29,7 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "@types/node": "24.10.0",
+    "@types/node": "24.10.1",
     "@types/pg": "8.15.6",
     "kysely-ctl": "0.19.0",
     "typescript": "5.9.3"

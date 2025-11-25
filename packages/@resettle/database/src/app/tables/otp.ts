@@ -4,7 +4,7 @@ import type { Generated, GeneratedAlways, Selectable } from 'kysely'
 
 export interface OTPTable {
   id: GeneratedAlways<string>
-  action_id: Generated<string>
+  action_id: string
   type: OTPType
   recipient: string
   code: string

@@ -12,10 +12,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('email', 'varchar', col => col.notNull())
     .addColumn('username', 'varchar', col => col.notNull())
     .addColumn('role', 'varchar', col => col.notNull())
-    .addColumn('metadata', 'jsonb', col => col.notNull())
-    .addColumn('profile', 'jsonb', col => col.notNull())
-    .addColumn('preferences', 'jsonb', col => col.notNull())
-    .addColumn('settings', 'jsonb', col => col.notNull())
+    .addColumn('metadata', 'jsonb', col =>
+      col.notNull().defaultTo(sql`'{}'::jsonb`),
+    )
+    .addColumn('profile', 'jsonb', col =>
+      col.notNull().defaultTo(sql`'{}'::jsonb`),
+    )
     .addColumn('created_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`now()`),
     )
@@ -27,16 +29,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addUniqueConstraint('user_username_ukey', ['username'])
     .ifNotExists()
     .execute()
-
-  await db.schema
-    .createIndex('user_role_key')
-    .on('user')
-    .column('role')
-    .ifNotExists()
-    .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropIndex('user_role_key').ifExists().execute()
   await db.schema.dropTable('user').ifExists().execute()
 }

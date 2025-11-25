@@ -38,12 +38,6 @@ export const userProfileSchema = z.object({
   spare_savings: monetaryOptionalSchema,
 })
 
-export const userPreferencesSchema = z.object({
-  job: z.object({}),
-})
-
-export const userSettingsSchema = z.object({})
-
 export const userSchema = z.object({
   id: uuidSchema,
   email: emailSchema,
@@ -51,11 +45,17 @@ export const userSchema = z.object({
   role: userRoleSchema,
   metadata: userMetadataSchema,
   profile: userProfileSchema,
-  preferences: userPreferencesSchema,
-  settings: userSettingsSchema,
   created_at: dateSchema,
   updated_at: dateSchema,
   deleted_at: dateNullableSchema,
+})
+
+export const userResponseSchema = userSchema.pick({
+  id: true,
+  username: true,
+  profile: true,
+  created_at: true,
+  updated_at: true,
 })
 
 export const userAuthSchema = userSchema.pick({
@@ -69,6 +69,5 @@ export type User = z.infer<typeof userSchema>
 export type UserRole = z.infer<typeof userRoleSchema>
 export type UserMetadata = z.infer<typeof userMetadataSchema>
 export type UserProfile = z.infer<typeof userProfileSchema>
-export type UserPreferences = z.infer<typeof userPreferencesSchema>
-export type UserSettings = z.infer<typeof userSettingsSchema>
+export type UserResponse = z.infer<typeof userResponseSchema>
 export type UserAuth = z.infer<typeof userAuthSchema>

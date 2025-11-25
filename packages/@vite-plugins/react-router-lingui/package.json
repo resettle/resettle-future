@@ -12,9 +12,9 @@
     "@babel/core": "7.28.5",
     "@babel/plugin-syntax-jsx": "7.27.1",
     "@babel/plugin-syntax-typescript": "7.27.1",
-    "@lingui/babel-plugin-lingui-macro": "5.5.2",
-    "@lingui/cli": "5.5.2",
-    "@lingui/conf": "5.5.2"
+    "@lingui/babel-plugin-lingui-macro": "5.6.0",
+    "@lingui/cli": "5.6.0",
+    "@lingui/conf": "5.6.0"
   },
   "peerDependencies": {
     "@lingui/cli": ">=5.0.0",
@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "@types/babel__core": "7.20.5",
-    "@types/node": "24.10.0",
+    "@types/node": "24.10.1",
     "typescript": "5.9.3",
-    "vite": "7.2.1"
+    "vite": "7.2.2"
   }
 }
