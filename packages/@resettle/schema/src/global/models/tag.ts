@@ -4,6 +4,7 @@ import {
   dateNullableSchema,
   dateSchema,
   numberSchema,
+  recordSchema,
   stringSchema,
   uuidSchema,
 } from '../../_common'
@@ -47,7 +48,43 @@ export const tagTemplateResponseSchema = tagTemplateSchema.pick({
   metadata: true,
 })
 
+export const userTagSchema = z.object({
+  user_id: uuidSchema,
+  tag_template_id: uuidSchema,
+  data: recordSchema,
+  created_at: dateSchema,
+  updated_at: dateSchema,
+})
+
+export const userTagBodySchema = z.object({
+  user_id: uuidSchema,
+  tag_id: uuidSchema,
+})
+
+export const userTagResponseSchema = userTagSchema
+  .pick({
+    user_id: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .extend({
+    tag_id: uuidSchema,
+  })
+
+export const skillTagSchema = tagTemplateSchema
+  .omit({
+    created_at: true,
+    deprecated_at: true,
+    metadata: true,
+  })
+  .extend(skillTagMetadataSchema.shape)
+
 export type TagNamespace = z.infer<typeof tagNamespaceSchema>
 export type TagTemplate = z.infer<typeof tagTemplateSchema>
 export type TagMetadata = z.infer<typeof tagMetadataSchema>
+export type SkillTagMetadata = z.infer<typeof skillTagMetadataSchema>
 export type TagTemplateResponse = z.infer<typeof tagTemplateResponseSchema>
+export type UserTag = z.infer<typeof userTagSchema>
+export type UserTagBody = z.infer<typeof userTagBodySchema>
+export type UserTagResponse = z.infer<typeof userTagResponseSchema>
+export type SkillTag = z.infer<typeof skillTagSchema>

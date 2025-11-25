@@ -46,6 +46,12 @@ export const canonicalJobSchema = z.object({
   updated_at: dateSchema,
 })
 
+export const canonicalJobBodySchema = canonicalJobSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+})
+
 export const canonicalJobResponseSchema = canonicalJobSchema.omit({
   is_original: true,
   sources: true,
@@ -64,5 +70,6 @@ export const jobMergeActionSchema = z.object({
 
 export type RawJob = z.infer<typeof rawJobSchema>
 export type CanonicalJob = z.infer<typeof canonicalJobSchema>
+export type CanonicalJobBody = z.infer<typeof canonicalJobBodySchema>
 export type CanonicalJobResponse = z.infer<typeof canonicalJobResponseSchema>
 export type JobMergeAction = z.infer<typeof jobMergeActionSchema>

@@ -25,6 +25,14 @@ export async function up(db: Kysely<any>): Promise<void> {
     ])
     .ifNotExists()
     .execute()
+
+  await db.schema
+    .createIndex('tag_template_name_skey')
+    .on('tag_template')
+    .using('gin')
+    .expression(sql`lower(name) gin_trgm_ops`)
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<any>): Promise<void> {

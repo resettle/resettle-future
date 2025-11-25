@@ -1,4 +1,4 @@
-import { type Kysely } from 'kysely'
+import { sql, type Kysely } from 'kysely'
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
@@ -17,8 +17,8 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createIndex('occupation_code_label_skey')
     .on('occupation_code')
-    .column('label')
     .using('gin')
+    .expression(sql`lower(label) gin_trgm_ops`)
     .ifNotExists()
     .execute()
 }

@@ -10,6 +10,7 @@ import type {
   MetadataTable,
   OccupationCodeCrosswalkTable,
   OccupationCodeTable,
+  OpportunityTable,
   OrganizationMergeActionTable,
   PlaceNameOrAliasTable,
   PlaceTable,
@@ -34,6 +35,7 @@ export interface GlobalDatabase {
   metadata: MetadataTable
   occupation_code: OccupationCodeTable
   occupation_code_crosswalk: OccupationCodeCrosswalkTable
+  opportunity: OpportunityTable
   organization_merge_action: OrganizationMergeActionTable
   place: PlaceTable
   place_name_or_alias: PlaceNameOrAliasTable

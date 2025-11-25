@@ -1,6 +1,6 @@
 import { stringSchema, uuidSchema } from '@resettle/schema'
 import {
-  opportunitySchema,
+  opportunityResponseSchema,
   opportunityTypeSchema,
 } from '@resettle/schema/global'
 import z from 'zod'
@@ -13,14 +13,11 @@ export const recommend = defineAPISchema({
   route: GLOBAL_API_ROUTES.recommend,
   body: z.object({
     types: z.array(opportunityTypeSchema).optional(),
-    target: z.union([
-      z.object({
-        tags: z.array(stringSchema),
-      }),
-      z.object({
-        user_id: uuidSchema,
-      }),
-    ]),
+    target: z.object({
+      user_id: uuidSchema,
+      tags: z.array(stringSchema).optional(),
+    }),
+    limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
-  responseData: z.array(opportunitySchema),
+  responseData: z.array(opportunityResponseSchema),
 })

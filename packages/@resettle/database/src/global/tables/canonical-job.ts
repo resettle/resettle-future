@@ -1,14 +1,9 @@
 import type { CanonicalJob } from '@resettle/schema/global'
 import { assert, type Equals } from '@resettle/utils'
-import type {
-  Generated,
-  GeneratedAlways,
-  JSONColumnType,
-  Selectable,
-} from 'kysely'
+import type { Generated, JSONColumnType, Selectable } from 'kysely'
 
 export interface CanonicalJobTable {
-  id: GeneratedAlways<string>
+  id: Generated<string>
   canonical_organization_id: string | null
   title: string
   description: string

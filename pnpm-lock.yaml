@@ -689,9 +689,15 @@ importers:
       kysely:
         specifier: 0.28.8
         version: 0.28.8
+      openai:
+        specifier: 6.8.1
+        version: 6.8.1(ws@8.18.0)(zod@4.1.12)
       pg:
         specifier: 8.16.3
         version: 8.16.3
+      pgvector:
+        specifier: 0.2.1
+        version: 0.2.1
       zod:
         specifier: 4.1.12
         version: 4.1.12

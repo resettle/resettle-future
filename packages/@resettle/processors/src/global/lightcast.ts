@@ -1,5 +1,5 @@
 import type { S3Client } from '@3rd-party-clients/s3'
-import type { AppDatabase } from '@resettle/database/app'
+import type { GlobalDatabase } from '@resettle/database/global'
 import { load } from 'cheerio'
 import { sql, type Kysely } from 'kysely'
 import markdownIt from 'markdown-it'
@@ -93,7 +93,7 @@ const parseRemoveItem = (value: string): RemoveAction => {
 }
 
 export const processSkillsIncrementally = async (
-  ctx: { s3: S3Client; db: Kysely<AppDatabase>; openai: OpenAI },
+  ctx: { s3: S3Client; db: Kysely<GlobalDatabase>; openai: OpenAI },
   ref: RefDir,
 ) => {
   const deltaFilename = `skills-delta-${getCurrentMonth()}.md`
@@ -242,8 +242,9 @@ export const processSkillsIncrementally = async (
           .set('tag_template_id', newTag.id)
           .where('tag_template_id', '=', oldTag.id)
           .execute()
+        // TODO: More opportunity types
         await tx
-          .updateTable('opportunity_tag')
+          .updateTable('job_tag')
           .set('tag_template_id', newTag.id)
           .where('tag_template_id', '=', oldTag.id)
           .execute()
@@ -373,7 +374,7 @@ export const processSkillsIncrementally = async (
 }
 
 export const processSkillsCompletely = async (
-  ctx: { s3: S3Client; db: Kysely<AppDatabase>; openai: OpenAI },
+  ctx: { s3: S3Client; db: Kysely<GlobalDatabase>; openai: OpenAI },
   ref: RefDir,
 ) => {
   const filename = `skills.json`

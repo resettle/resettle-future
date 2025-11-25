@@ -19,7 +19,10 @@ export async function up(db: Kysely<any>): Promise<void> {
       col.notNull().defaultTo(sql`now()`),
     )
     .addColumn('deleted_at', 'timestamptz')
-    .addUniqueConstraint('user_username_ukey', ['username'])
+    .addUniqueConstraint('user_tenant_id_username_ukey', [
+      'tenant_id',
+      'username',
+    ])
     .ifNotExists()
     .execute()
 }
