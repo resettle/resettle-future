@@ -1,2 +1,6 @@
+export * from './label'
 export * from './occupation-code'
+export * from './opportunity'
 export * from './place'
+export * from './tag'
+export * from './user'

@@ -59,3 +59,9 @@ export const jsonObjectSchema = z.looseObject({})
 export const jsonObjectOptionalSchema = jsonObjectSchema.optional()
 export const jsonObjectNullableSchema = jsonObjectSchema.nullable()
 export const jsonObjectNullishSchema = jsonObjectSchema.nullish()
+
+export const anySchema = z.any()
+export const recordSchema = z.record(stringSchema, z.any())
+export const recordWithLimit100Schema = z
+  .record(stringSchema, z.any())
+  .refine(v => Object.entries(v).length <= 100)

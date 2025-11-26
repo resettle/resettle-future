@@ -12,80 +12,15 @@ import { createInterface } from 'node:readline'
 import { Open } from 'unzipper'
 
 import {
+  conditionalInMemoryDownload,
+  conditionalStreamDownload,
   getPreviousDay,
   getTheDayBeforePreviousDay,
-  loadFile,
   refDirToRef,
-  saveFile,
-  type Ref,
   type RefDir,
 } from '../utils'
 
 const ALL_COUNTRIES_FILENAME = `allCountries.zip`
-
-/**
- * Conditional in memory download
- * @param s3 - The S3 client
- * @param ref - The reference
- * @param filename - The filename
- * @returns The content
- */
-const conditionalInMemoryDownload = async (
-  s3: S3Client,
-  ref: Ref,
-  filename: string,
-) => {
-  const result = await loadFile({ s3 }, ref, { stream: false })
-  if (!result.success) {
-    const resp = await fetch(
-      `https://download.geonames.org/export/dump/${filename}`,
-    )
-
-    if (!resp.body) {
-      throw new Error(
-        `Error fetching ${filename} - ${resp.status}: ${resp.statusText}`,
-      )
-    }
-
-    await saveFile({ s3 }, ref, resp.body, {})
-    const secondResult = await loadFile({ s3 }, ref, { stream: false })
-    if (!secondResult.success) {
-      throw new Error(`Error loading ${filename}`)
-    }
-
-    return secondResult.data
-  }
-
-  return result.data
-}
-
-/**
- * Conditional stream download
- * @param s3 - The S3 client
- * @param ref - The reference
- * @param filename - The filename
- * @returns The content
- */
-const conditionalStreamDownload = async (
-  s3: S3Client,
-  ref: Ref,
-  filename: string,
-) => {
-  const result = await loadFile({ s3 }, ref, { stream: true })
-  if (!result.success) {
-    const resp = await fetch(
-      `https://download.geonames.org/export/dump/${filename}`,
-    )
-
-    if (!resp.body) {
-      throw new Error(
-        `Error fetching ${filename} - ${resp.status}: ${resp.statusText}`,
-      )
-    }
-
-    await saveFile({ s3 }, ref, resp.body, { contentType: 'application/zip' })
-  }
-}
 
 /**
  * Process deletes
@@ -106,7 +41,7 @@ const processDeletes = async (
     await conditionalInMemoryDownload(
       ctx.s3,
       refDirToRef(ref, `geonames/${filename}`),
-      filename,
+      `https://download.geonames.org/export/dump/${filename}`,
     )
   ).toString('utf-8')
   for (const row of content.split('\n')) {
@@ -145,7 +80,7 @@ const processModifications = async (
     await conditionalInMemoryDownload(
       ctx.s3,
       refDirToRef(ref, `geonames/${filename}`),
-      filename,
+      `https://download.geonames.org/export/dump/${filename}`,
     )
   ).toString('utf-8')
 
@@ -248,7 +183,11 @@ const processGeonamesCompletely = async (
   const filename = `geonames/all-countries-${getPreviousDay()}.zip`
   const computedRef = refDirToRef(ref, filename)
 
-  await conditionalStreamDownload(ctx.s3, computedRef, ALL_COUNTRIES_FILENAME)
+  await conditionalStreamDownload(
+    ctx.s3,
+    computedRef,
+    `https://download.geonames.org/export/dump/${ALL_COUNTRIES_FILENAME}`,
+  )
 
   const directory =
     computedRef.type === 'fs'

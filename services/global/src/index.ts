@@ -4,8 +4,11 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 
 import { context } from './middlewares/context'
+import { labelRouter } from './routers/label'
 import { occupationRouter } from './routers/occupation'
 import { placeRouter } from './routers/place'
+import { tagRouter } from './routers/tag'
+import { userRouter } from './routers/user'
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>()
 
@@ -20,7 +23,10 @@ const app = new Hono<{ Bindings: Cloudflare.Env }>()
   /**
    * Routes
    */
+  .route('/', labelRouter)
   .route('/', occupationRouter)
   .route('/', placeRouter)
+  .route('/', tagRouter)
+  .route('/', userRouter)
 
 export default app

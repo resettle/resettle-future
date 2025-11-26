@@ -1,4 +1,5 @@
 export * from './exchange-rate'
 export * from './geonames'
+export * from './lightcast'
 export * from './numbeo'
 export * from './occupation'

@@ -13,6 +13,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('numbeo_updated_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`TIMESTAMP WITH TIME ZONE 'epoch'`),
     )
+    .addColumn('lightcast_updated_at', 'timestamptz', col =>
+      col.notNull().defaultTo(sql`TIMESTAMP WITH TIME ZONE 'epoch'`),
+    )
     .ifNotExists()
     .execute()
 }

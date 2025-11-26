@@ -2,7 +2,7 @@ import type { Route } from '@resettle/utils'
 import type { z } from 'zod'
 
 type ZodQuery = z.ZodObject
-type ZodBody = z.ZodUnion<z.ZodObject[]> | z.ZodObject
+type ZodBody = z.ZodUnion<z.ZodObject[]> | z.ZodObject | z.ZodArray
 type ZodResponse = z.ZodType
 
 type ExtractPathParamArray<T extends string> =
