@@ -71,13 +71,6 @@ export const deleteUsers = async (
       .where('tenant_id', '=', tenantId)
       .returningAll()
       .executeTakeFirst()
-    // NOTE: It's possible that we want to remove the user-tag mapping, depends on the tenant.
-    await db
-      .deleteFrom('score')
-      .innerJoin('user', 'user.id', 'score.user_id')
-      .where('user.id', '=', userId)
-      .where('user.tenant_id', '=', tenantId)
-      .execute()
     if (deleted) {
       deletedUsers.push(deleted.id)
     }

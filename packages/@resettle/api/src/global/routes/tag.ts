@@ -1,6 +1,7 @@
 import { route } from '@resettle/utils'
 
 export const tag = route('tag', {
-  assign: route('assign'),
+  attach: route('attach'),
+  detach: route('detach'),
   search: route('search'),
 })

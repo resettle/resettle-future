@@ -133,3 +133,18 @@ export const createObjectHash = async (
 ) => {
   return await createHash(JSON.stringify(sortObject(obj, nullable)), algorithm)
 }
+
+export const createUUIDSetHash = async (
+  uuidSet: string[],
+  algorithm: 'SHA-256' | 'SHA-512' = 'SHA-256',
+) => {
+  const uuidBuffers = uuidSet.map(u => {
+    const hex = u.replace(/-/g, '')
+    if (hex.length !== 32) throw new Error('Invalid UUID')
+    return Buffer.from(hex, 'hex')
+  })
+
+  uuidBuffers.sort(Buffer.compare)
+  const hash = await crypto.subtle.digest(algorithm, Buffer.concat(uuidBuffers))
+  return Buffer.from(hash).toString('hex')
+}

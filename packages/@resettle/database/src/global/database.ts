@@ -5,22 +5,24 @@ import type {
   ExchangeRateDataTable,
   JobMergeActionTable,
   JobPlaceTable,
-  JobTagTable,
   LabelTable,
   MetadataTable,
+  ModifiedScoreTable,
   OccupationCodeCrosswalkTable,
   OccupationCodeTable,
   OpportunityTable,
   OrganizationMergeActionTable,
   PlaceNameOrAliasTable,
   PlaceTable,
+  ProfileTagTable,
   RawJobTable,
   RawOrganizationTable,
-  ScoreTable,
+  RawScoreTable,
+  TagProfileTable,
   TagTemplateTable,
+  TenantLabelRuleTable,
   TenantTable,
   UserTable,
-  UserTagTable,
 } from './tables'
 
 export interface GlobalDatabase {
@@ -30,20 +32,22 @@ export interface GlobalDatabase {
   exchange_rate_data: ExchangeRateDataTable
   job_merge_action: JobMergeActionTable
   job_place: JobPlaceTable
-  job_tag: JobTagTable
   label: LabelTable
   metadata: MetadataTable
+  modified_score: ModifiedScoreTable
   occupation_code: OccupationCodeTable
   occupation_code_crosswalk: OccupationCodeCrosswalkTable
   opportunity: OpportunityTable
   organization_merge_action: OrganizationMergeActionTable
   place: PlaceTable
   place_name_or_alias: PlaceNameOrAliasTable
+  profile_tag: ProfileTagTable
   raw_job: RawJobTable
   raw_organization: RawOrganizationTable
-  score: ScoreTable
+  raw_score: RawScoreTable
+  tag_profile: TagProfileTable
   tag_template: TagTemplateTable
   tenant: TenantTable
-  user_tag: UserTagTable
+  tenant_label_rule: TenantLabelRuleTable
   user: UserTable
 }

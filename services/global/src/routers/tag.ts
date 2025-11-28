@@ -1,6 +1,6 @@
 import { apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
-import { assignTags, searchTags } from '@resettle/database/global'
+import { attachTags, detachTags, searchTags } from '@resettle/database/global'
 import { jsonValidator, queryValidator } from '@services/_common'
 import { Hono } from 'hono'
 
@@ -36,24 +36,38 @@ tagRouter.get(
 )
 
 tagRouter.post(
-  GLOBAL_API_SCHEMAS.tag.assign.route.path,
-  jsonValidator(GLOBAL_API_SCHEMAS.tag.assign.body),
+  GLOBAL_API_SCHEMAS.tag.attach.route.path,
+  jsonValidator(GLOBAL_API_SCHEMAS.tag.attach.body),
   async ctx => {
     const db = ctx.get('db')
     const body = ctx.req.valid('json')
 
     const results = await db.transaction().execute(async tx => {
-      return await assignTags(tx, DUMMY_TENANT_ID, body)
+      return await attachTags(tx, DUMMY_TENANT_ID, body)
     })
 
     return apiSuccessResponse(
-      GLOBAL_API_SCHEMAS.tag.assign.responseData,
-      results.map(r => ({
-        user_id: r.user_id,
-        tag_id: r.tag_template_id,
-        created_at: r.created_at,
-        updated_at: r.updated_at,
-      })),
+      GLOBAL_API_SCHEMAS.tag.attach.responseData,
+      results,
+      200,
+    )
+  },
+)
+
+tagRouter.post(
+  GLOBAL_API_SCHEMAS.tag.detach.route.path,
+  jsonValidator(GLOBAL_API_SCHEMAS.tag.detach.body),
+  async ctx => {
+    const db = ctx.get('db')
+    const body = ctx.req.valid('json')
+
+    const results = await db.transaction().execute(async tx => {
+      return await detachTags(tx, DUMMY_TENANT_ID, body)
+    })
+
+    return apiSuccessResponse(
+      GLOBAL_API_SCHEMAS.tag.detach.responseData,
+      results,
       200,
     )
   },

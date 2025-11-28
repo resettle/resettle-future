@@ -3,7 +3,9 @@ import type { Kysely } from 'kysely'
 
 import type { GlobalDatabase } from '../database'
 
-export const createJob = async (
+export type CanonicalJobCursor = { date: Date; id?: string }
+
+export const createCanonicalJob = async (
   db: Kysely<GlobalDatabase>,
   job: CanonicalJobBody,
 ) => {

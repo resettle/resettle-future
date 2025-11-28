@@ -40,7 +40,11 @@ labelRouter.post(
 
     return apiSuccessResponse(
       GLOBAL_API_SCHEMAS.label.deleteLabels.responseData,
-      results,
+      results.map(r => ({
+        user_id: r.user_id,
+        opportunity_id: r.opportunity_id,
+        name: r.name,
+      })),
       200,
     )
   },

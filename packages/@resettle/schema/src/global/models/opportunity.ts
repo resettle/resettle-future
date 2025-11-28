@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-import { uuidSchema } from '../../_common'
+import {
+  countryAlpha2CodeNullableSchema,
+  stringNullableSchema,
+  stringSchema,
+  uuidSchema,
+} from '../../_common'
 import { canonicalJobSchema } from './job'
 
 export const OPPORTUNITY_TYPES = ['job'] as const
@@ -13,9 +18,20 @@ export const opportunitySchema = z.object({
 })
 
 export const opportunityResponseSchema = z.discriminatedUnion('type', [
-  canonicalJobSchema.extend({
-    type: z.literal('job'),
-  }),
+  canonicalJobSchema
+    .omit({
+      canonical_organization_id: true,
+      tag_profile_id: true,
+      is_original: true,
+      sources: true,
+      processed_at: true,
+    })
+    .extend({
+      type: z.literal('job'),
+      organization_name: stringSchema,
+      organization_domain: stringNullableSchema,
+      organization_country_code: countryAlpha2CodeNullableSchema,
+    }),
 ])
 
 export type OpportunityType = z.infer<typeof opportunityTypeSchema>

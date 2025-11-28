@@ -21,7 +21,7 @@ export const createLabels = async (
       .selectFrom('opportunity')
       .selectAll()
       .where('id', '=', label.opportunity_id)
-      .execute()
+      .executeTakeFirst()
     if (user && opportunity) {
       validLabels.push(label)
     }
@@ -58,7 +58,12 @@ export const deleteLabels = async (
       .where('id', '=', label.user_id)
       .where('deleted_at', 'is not', null)
       .executeTakeFirst()
-    if (user) {
+    const opportunity = await db
+      .selectFrom('opportunity')
+      .selectAll()
+      .where('id', '=', label.opportunity_id)
+      .executeTakeFirst()
+    if (user && opportunity) {
       validLabels.push(label)
     }
   }

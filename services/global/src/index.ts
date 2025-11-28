@@ -8,6 +8,7 @@ import { labelRouter } from './routers/label'
 import { occupationRouter } from './routers/occupation'
 import { placeRouter } from './routers/place'
 import { tagRouter } from './routers/tag'
+import { tenantRouter } from './routers/tenant'
 import { userRouter } from './routers/user'
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>()
@@ -27,6 +28,7 @@ const app = new Hono<{ Bindings: Cloudflare.Env }>()
   .route('/', occupationRouter)
   .route('/', placeRouter)
   .route('/', tagRouter)
+  .route('/', tenantRouter)
   .route('/', userRouter)
 
 export default app

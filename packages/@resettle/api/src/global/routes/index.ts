@@ -3,6 +3,7 @@ import { occupation } from './occupation'
 import { place } from './place'
 import { recommend } from './recommend'
 import { tag } from './tag'
+import { tenant } from './tenant'
 import { user } from './user'
 
 export const GLOBAL_API_ROUTES = {
@@ -11,5 +12,6 @@ export const GLOBAL_API_ROUTES = {
   place,
   recommend,
   tag,
+  tenant,
   user,
 }

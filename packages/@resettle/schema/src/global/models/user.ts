@@ -6,16 +6,19 @@ import {
   recordWithLimit100Schema,
   stringOptionalSchema,
   stringSchema,
+  uuidNullableSchema,
   uuidSchema,
 } from '../../_common'
 
 export const userSchema = z.object({
   id: uuidSchema,
   tenant_id: uuidSchema,
+  tag_profile_id: uuidNullableSchema,
   username: stringSchema,
   metadata: recordWithLimit100Schema,
   created_at: dateSchema,
   updated_at: dateSchema,
+  computed_at: dateNullableSchema,
   deleted_at: dateNullableSchema,
 })
 
@@ -32,6 +35,8 @@ export const userUpdateBodySchema = z.object({
 
 export const userResponseSchema = userSchema.omit({
   tenant_id: true,
+  tag_profile_id: true,
+  computed_at: true,
   deleted_at: true,
 })
 

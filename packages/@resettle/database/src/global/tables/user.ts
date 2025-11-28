@@ -10,10 +10,12 @@ import type {
 export interface UserTable {
   id: GeneratedAlways<string>
   tenant_id: string
+  tag_profile_id: string | null
   username: string
   metadata: JSONColumnType<Record<string, any>>
   created_at: Generated<Date>
   updated_at: Generated<Date>
+  computed_at: Date | null
   deleted_at: Date | null
 }
 

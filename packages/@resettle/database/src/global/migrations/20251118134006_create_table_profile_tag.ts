@@ -2,8 +2,8 @@ import { sql, type Kysely } from 'kysely'
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createTable('job_tag')
-    .addColumn('canonical_job_id', 'uuid', col => col.notNull())
+    .createTable('profile_tag')
+    .addColumn('tag_profile_id', 'uuid', col => col.notNull())
     .addColumn('tag_template_id', 'uuid', col => col.notNull())
     .addColumn('data', 'jsonb', col => col.notNull())
     .addColumn('created_at', 'timestamptz', col =>
@@ -12,8 +12,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('updated_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`now()`),
     )
-    .addPrimaryKeyConstraint('job_tag_pkey', [
-      'canonical_job_id',
+    .addPrimaryKeyConstraint('profile_tag_pkey', [
+      'tag_profile_id',
       'tag_template_id',
     ])
     .ifNotExists()
@@ -21,5 +21,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable('job_tag').ifExists().execute()
+  await db.schema.dropTable('profile_tag').ifExists().execute()
 }
