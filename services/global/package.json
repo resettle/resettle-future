@@ -21,6 +21,7 @@
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@services/_common": "workspace:^",
+    "date-fns": "4.1.0",
     "hono": "4.10.6",
     "kysely": "0.28.8",
     "openai": "6.8.1",

@@ -5,7 +5,6 @@ import type { Generated, JSONColumnType, Selectable } from 'kysely'
 export interface CanonicalJobTable {
   id: Generated<string>
   canonical_organization_id: string | null
-  tag_profile_id: string | null
   title: string
   description: string
   url: string | null

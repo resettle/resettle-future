@@ -30,7 +30,6 @@ export const rawJobSchema = z.object({
 export const canonicalJobSchema = z.object({
   id: uuidSchema,
   canonical_organization_id: uuidNullableSchema,
-  tag_profile_id: uuidNullableSchema,
   title: stringSchema,
   description: stringSchema,
   url: urlNullableSchema,

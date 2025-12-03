@@ -713,6 +713,9 @@ importers:
       '@services/_common':
         specifier: workspace:^
         version: link:../_common
+      date-fns:
+        specifier: 4.1.0
+        version: 4.1.0
       hono:
         specifier: 4.10.6
         version: 4.10.6

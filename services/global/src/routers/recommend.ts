@@ -1,4 +1,4 @@
-import { apiSuccessResponse } from '@resettle/api'
+import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { GLOBAL_API_SCHEMAS } from '@resettle/api/global'
 import { jsonValidator } from '@services/_common'
 import { Hono } from 'hono'
@@ -29,6 +29,14 @@ recommendRouter.post(
       )
     })
 
+    if (!results) {
+      throw new APIError({
+        statusCode: 404,
+        code: API_ERROR_CODES.NOT_FOUND,
+        message: 'User not found',
+      })
+    }
+
     return apiSuccessResponse(
       GLOBAL_API_SCHEMAS.recommend.recommendByUser.responseData,
       results as any,
@@ -45,12 +53,18 @@ recommendRouter.post(
     const { types = [], tags, limit = 100 } = ctx.req.valid('json')
 
     const results = await db.transaction().execute(async tx => {
-      return await getRecommendationByTags(tx, tags, types, limit)
+      return await getRecommendationByTags(
+        tx,
+        DUMMY_TENANT_ID,
+        tags,
+        types,
+        limit,
+      )
     })
 
     return apiSuccessResponse(
       GLOBAL_API_SCHEMAS.recommend.recommendByTags.responseData,
-      results as any,
+      results,
       200,
     )
   },

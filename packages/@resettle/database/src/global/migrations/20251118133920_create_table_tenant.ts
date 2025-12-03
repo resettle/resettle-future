@@ -10,6 +10,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         .defaultTo(sql`gen_random_uuid()`),
     )
     .addColumn('name', 'varchar', col => col.notNull())
+    .addColumn('configuration', 'jsonb', col => col.notNull())
     .addColumn('created_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`now()`),
     )

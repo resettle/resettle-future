@@ -1,154 +1,186 @@
 import { type GlobalDatabase } from '@resettle/database/global'
 import type {
+  OpportunityResponse,
   OpportunityType,
-  SkillTag,
-  SkillTagMetadata,
+  RecommendationSources,
 } from '@resettle/schema/global'
 import { createUUIDSetHash } from '@resettle/utils'
+import { differenceInDays } from 'date-fns'
 import type { Kysely } from 'kysely'
 
-const cosineSimilarity = (a: number[], b: number[]) => {
-  if (a.length !== b.length) {
-    throw new Error('Vectors must be of same length')
+const getOpportunities = async (
+  db: Kysely<GlobalDatabase>,
+  opportunitiesByType: Map<OpportunityType, { id: string; index: number }[]>,
+): Promise<OpportunityResponse[]> => {
+  const results: OpportunityResponse[] = []
+  for (const [type, opportunities] of opportunitiesByType) {
+    switch (type) {
+      case 'job':
+        const jobs = await db
+          .selectFrom('canonical_job')
+          .innerJoin(
+            'canonical_organization',
+            'canonical_job.canonical_organization_id',
+            'canonical_organization.id',
+          )
+          .select([
+            'canonical_job.id',
+            'canonical_job.created_at',
+            'canonical_job.description',
+            'canonical_job.posted_at',
+            'canonical_job.title',
+            'canonical_job.updated_at',
+            'canonical_job.url',
+            'canonical_organization.country_code as organization_country_code',
+            'canonical_organization.domain as organization_domain',
+            'canonical_organization.name as organization_name',
+            'canonical_organization.type as organization_type',
+          ])
+          .where(
+            'id',
+            'in',
+            opportunities.map(o => o.id),
+          )
+          .execute()
+        for (const job of jobs) {
+          results[opportunities.find(o => o.id === job.id)!.index] = {
+            ...job,
+            type: 'job',
+          }
+        }
+    }
   }
 
-  let dot = 0
-  let normA = 0
-  let normB = 0
-
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i]
-    normA += a[i] * a[i]
-    normB += b[i] * b[i]
-  }
-
-  if (normA === 0 || normB === 0) {
-    return 0
-  }
-
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB))
+  return results
 }
 
-// TODO: Differentiate by data.
-// The range is [0, 3]
-const skillDistance = (a: SkillTag, b: SkillTag) => {
-  if (a.name === b.name) return 0
-  const cosineDistance = 1 - cosineSimilarity(a.embedding, b.embedding)
-  if (a.sub_category === b.sub_category) return cosineDistance
-  if (a.category === b.category) return 1 + cosineDistance
-  return 2 + cosineDistance
-}
+const getLatestRecommendation = async (
+  db: Kysely<GlobalDatabase>,
+  types: OpportunityType[],
+  limit: number,
+): Promise<OpportunityResponse[]> => {
+  const opportunities = await db
+    .selectFrom('opportunity')
+    .selectAll()
+    .$if(types.length > 0, qb =>
+      qb.where(eb => eb.or(types.map(t => eb('type', '=', t)))),
+    )
+    .orderBy('updated_at', 'desc')
+    .limit(limit)
+    .execute()
 
-const skillCollectionDistance = (a: SkillTag[], b: SkillTag[]) => {
-  const largerLength = Math.max(a.length, b.length)
-  let small = a
-  let large = b
-  if (largerLength === a.length) {
-    small = b
-    large = a
-  }
-
-  const used = new Array(largerLength).fill(false)
-  let total = 0
-
-  for (const tag of small) {
-    let best = Infinity
-    let bestIdx = -1
-
-    for (let j = 0; j < large.length; j++) {
-      if (used[j]) continue
-      const d = skillDistance(tag, large[j])
-      if (d < best) {
-        best = d
-        bestIdx = j
-      }
+  const opportunitiesByType = new Map<
+    OpportunityType,
+    { id: string; index: number }[]
+  >()
+  for (let i = 0; i < opportunities.length; i++) {
+    const opportunity = opportunities[i]
+    if (!opportunitiesByType.has(opportunity.type)) {
+      opportunitiesByType.set(opportunity.type, [])
     }
 
-    if (bestIdx === -1) break
-    used[bestIdx] = true
-    total += best
+    opportunitiesByType.set(opportunity.type, [
+      ...opportunitiesByType.get(opportunity.type)!,
+      { id: opportunity.id, index: i },
+    ])
   }
 
-  return total
+  return await getOpportunities(db, opportunitiesByType)
 }
 
-export const calculateScore = async (
+const getSimilarityRecommendationByTags = async (
   db: Kysely<GlobalDatabase>,
-  tagProfileId1: string,
-  tagProfileId2: string,
-) => {
-  const tags1 = await db
-    .selectFrom('profile_tag')
-    .innerJoin('tag_template', 'profile_tag.tag_template_id', 'tag_template.id')
-    .select([
-      'profile_tag.data',
-      'tag_template.embedding',
-      'tag_template.id',
-      'tag_template.name',
-      'tag_template.namespace',
-      'tag_template.slug',
-      'tag_template.metadata',
-    ])
-    .where('profile_tag.tag_profile_id', '=', tagProfileId1)
-    .where('tag_template.namespace', '=', 'skill')
-    .where('tag_template.deprecated_at', 'is not', null)
-    .execute()
-  const tags2 = await db
-    .selectFrom('profile_tag')
-    .innerJoin('tag_template', 'profile_tag.tag_template_id', 'tag_template.id')
-    .select([
-      'profile_tag.data',
-      'tag_template.embedding',
-      'tag_template.id',
-      'tag_template.name',
-      'tag_template.namespace',
-      'tag_template.slug',
-      'tag_template.metadata',
-    ])
-    .where('profile_tag.tag_profile_id', '=', tagProfileId2)
-    .where('tag_template.namespace', '=', 'skill')
-    .where('tag_template.deprecated_at', 'is not', null)
+  tagProfileId: string,
+  types: OpportunityType[],
+  limit: number,
+): Promise<OpportunityResponse[]> => {
+  const opportunities = await db
+    .selectFrom('raw_score')
+    .innerJoin('tag_profile', 'raw_score.item_tag_profile_id', 'tag_profile.id')
+    .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+    .selectAll('opportunity')
+    .where('user_tag_profile_id', '=', tagProfileId)
+    .$if(types.length > 0, qb =>
+      qb.where(eb => eb.or(types.map(t => eb('opportunity.type', '=', t)))),
+    )
+    .orderBy('score', 'desc')
+    .limit(limit)
     .execute()
 
-  return skillCollectionDistance(
-    tags1.map(t => ({
-      id: t.id,
-      slug: t.slug,
-      name: t.name,
-      namespace: 'skill',
-      category: (t.metadata as SkillTagMetadata).category,
-      sub_category: (t.metadata as SkillTagMetadata).sub_category,
-      external_id: (t.metadata as SkillTagMetadata).external_id,
-      embedding: t.embedding,
-    })),
-    tags2.map(t => ({
-      id: t.id,
-      slug: t.slug,
-      name: t.name,
-      namespace: 'skill',
-      category: (t.metadata as SkillTagMetadata).category,
-      sub_category: (t.metadata as SkillTagMetadata).sub_category,
-      external_id: (t.metadata as SkillTagMetadata).external_id,
-      embedding: t.embedding,
-    })),
-  )
+  const opportunitiesByType = new Map<
+    OpportunityType,
+    { id: string; index: number }[]
+  >()
+  for (let i = 0; i < opportunities.length; i++) {
+    const opportunity = opportunities[i]
+    if (!opportunitiesByType.has(opportunity.type)) {
+      opportunitiesByType.set(opportunity.type, [])
+    }
+
+    opportunitiesByType.set(opportunity.type, [
+      ...opportunitiesByType.get(opportunity.type)!,
+      { id: opportunity.id, index: i },
+    ])
+  }
+
+  return await getOpportunities(db, opportunitiesByType)
+}
+
+const getSimilarityRecommendationByUser = async (
+  db: Kysely<GlobalDatabase>,
+  userId: string,
+  types: OpportunityType[],
+  limit: number,
+): Promise<OpportunityResponse[]> => {
+  const opportunities = await db
+    .selectFrom('modified_score')
+    .innerJoin('user', 'modified_score.user_id', 'user.id')
+    .innerJoin('opportunity', 'opportunity.id', 'modified_score.opportunity_id')
+    .selectAll('opportunity')
+    .where('user.id', '=', userId)
+    .$if(types.length > 0, qb =>
+      qb.where(eb => eb.or(types.map(t => eb('opportunity.type', '=', t)))),
+    )
+    .orderBy('score', 'desc')
+    .limit(limit)
+    .execute()
+
+  const opportunitiesByType = new Map<
+    OpportunityType,
+    { id: string; index: number }[]
+  >()
+  for (let i = 0; i < opportunities.length; i++) {
+    const opportunity = opportunities[i]
+    if (!opportunitiesByType.has(opportunity.type)) {
+      opportunitiesByType.set(opportunity.type, [])
+    }
+
+    opportunitiesByType.set(opportunity.type, [
+      ...opportunitiesByType.get(opportunity.type)!,
+      { id: opportunity.id, index: i },
+    ])
+  }
+
+  return await getOpportunities(db, opportunitiesByType)
 }
 
 // TODO: We might want to add a priority queue registering requested recommendation pairs.
-// TODO: Make decay strategy configurable.
 export const getRecommendationByTags = async (
   db: Kysely<GlobalDatabase>,
+  tenantId: string,
   tags: string[],
   types: OpportunityType[],
   limit: number,
-) => {
+): Promise<{
+  opportunities: OpportunityResponse[]
+  sources: RecommendationSources
+}> => {
   const hash = await createUUIDSetHash(tags)
-  const tagProfile = await db
+  let tagProfile = await db
     .selectFrom('tag_profile')
     .selectAll()
     .where('hash', '=', hash)
     .executeTakeFirst()
-  let tagProfileId = tagProfile?.id
   if (!tagProfile) {
     const { id } = await db
       .insertInto('tag_profile')
@@ -165,10 +197,116 @@ export const getRecommendationByTags = async (
         })),
       )
       .execute()
-    tagProfileId = id
+
+    return {
+      opportunities: await getLatestRecommendation(db, types, limit),
+      sources: { latest: 100 },
+    }
   }
 
-  return []
+  if (!tagProfile.computed_at) {
+    return {
+      opportunities: await getLatestRecommendation(db, types, limit),
+      sources: { latest: 100 },
+    }
+  }
+
+  const latest = await db
+    .selectFrom('tag_profile')
+    .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+    .selectAll('tag_profile')
+    .where('created_at', '>', tagProfile.computed_at)
+    .orderBy('created_at', 'desc')
+    .limit(1)
+    .execute()
+
+  // If there's new item tag profiles created AFTER the latest compute time of the target tag profile, we apply decay algorithm.
+  if (latest.length > 0) {
+    const tenant = await db
+      .selectFrom('tenant')
+      .selectAll()
+      .where('id', '=', tenantId)
+      .executeTakeFirstOrThrow()
+    const days = differenceInDays(latest[0].created_at, tagProfile.computed_at)
+    if (
+      tenant.configuration.tag_profile_score_validity_decay_start ===
+        undefined ||
+      tenant.configuration.tag_profile_score_validity_decay_end === undefined
+    ) {
+      return {
+        opportunities: await getSimilarityRecommendationByTags(
+          db,
+          tagProfile.id,
+          types,
+          limit,
+        ),
+        sources: { raw_similarity: 100 },
+      }
+    }
+
+    // Example: if decay_start == 3 and decay_end == 5, when days == 2, strategy is similarity 100%, when days == 3, strategy is similarity 67% + latest 33%
+    // Calculation: latest <- max(0, min(1, (days - decay_start + 1) / (decay_end - decay_start + 1)))
+    const latestRatio = Math.max(
+      Math.min(
+        (days -
+          tenant.configuration.tag_profile_score_validity_decay_start +
+          1) /
+          (tenant.configuration.tag_profile_score_validity_decay_end -
+            tenant.configuration.tag_profile_score_validity_decay_start +
+            1),
+        1,
+      ),
+      0,
+    )
+
+    if (latestRatio === 0) {
+      return {
+        opportunities: await getSimilarityRecommendationByTags(
+          db,
+          tagProfile.id,
+          types,
+          limit,
+        ),
+        sources: { raw_similarity: 100 },
+      }
+    }
+
+    if (latestRatio === 1) {
+      return {
+        opportunities: await getLatestRecommendation(db, types, limit),
+        sources: { latest: 100 },
+      }
+    }
+
+    const latestLimit = Math.round(latestRatio * limit)
+    const latestPercentage = Math.round(latestRatio * 100)
+
+    return {
+      opportunities: [
+        ...(await getSimilarityRecommendationByTags(
+          db,
+          tagProfile.id,
+          types,
+          limit - latestLimit,
+        )),
+        ...(await getLatestRecommendation(db, types, latestLimit)),
+      ],
+      sources: {
+        raw_similarity: 100 - latestPercentage,
+        latest: latestPercentage,
+      },
+    }
+  }
+
+  return {
+    opportunities: await getSimilarityRecommendationByTags(
+      db,
+      tagProfile.id,
+      types,
+      limit,
+    ),
+    sources: { raw_similarity: 100 },
+  }
 }
 
 export const getRecommendationByUser = async (
@@ -177,6 +315,415 @@ export const getRecommendationByUser = async (
   userId: string,
   types: OpportunityType[],
   limit: number,
-) => {
-  return []
+): Promise<{
+  opportunities: OpportunityResponse[]
+  sources: RecommendationSources
+} | null> => {
+  const user = await db
+    .selectFrom('user')
+    .selectAll()
+    .where('tenant_id', '=', tenantId)
+    .where('id', '=', userId)
+    .executeTakeFirst()
+  if (!user) {
+    return null
+  }
+
+  // Three layers: if the modified scores are up to date, recommend by them, if not, fallback to raw scores, use latest if both are not up to date.
+  if (!user.computed_at) {
+    if (!user.tag_profile_id) {
+      return {
+        opportunities: await getLatestRecommendation(db, types, limit),
+        sources: { latest: 100 },
+      }
+    }
+
+    const tagProfile = await db
+      .selectFrom('tag_profile')
+      .selectAll()
+      .where('id', '=', user.tag_profile_id)
+      .executeTakeFirstOrThrow()
+
+    if (!tagProfile.computed_at) {
+      return {
+        opportunities: await getLatestRecommendation(db, types, limit),
+        sources: { latest: 100 },
+      }
+    }
+
+    const latest = await db
+      .selectFrom('tag_profile')
+      .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+      .selectAll('tag_profile')
+      .where('created_at', '>', tagProfile.computed_at)
+      .orderBy('created_at', 'desc')
+      .limit(1)
+      .execute()
+
+    if (latest.length > 0) {
+      const tenant = await db
+        .selectFrom('tenant')
+        .selectAll()
+        .where('id', '=', tenantId)
+        .executeTakeFirstOrThrow()
+      const days = differenceInDays(
+        latest[0].created_at,
+        tagProfile.computed_at,
+      )
+      if (
+        tenant.configuration.tag_profile_score_validity_decay_start ===
+          undefined ||
+        tenant.configuration.tag_profile_score_validity_decay_end === undefined
+      ) {
+        return {
+          opportunities: await getSimilarityRecommendationByTags(
+            db,
+            tagProfile.id,
+            types,
+            limit,
+          ),
+          sources: { raw_similarity: 100 },
+        }
+      }
+
+      const latestRatio = Math.max(
+        Math.min(
+          (days -
+            tenant.configuration.tag_profile_score_validity_decay_start +
+            1) /
+            (tenant.configuration.tag_profile_score_validity_decay_end -
+              tenant.configuration.tag_profile_score_validity_decay_start +
+              1),
+          1,
+        ),
+        0,
+      )
+
+      if (latestRatio === 0) {
+        return {
+          opportunities: await getSimilarityRecommendationByTags(
+            db,
+            tagProfile.id,
+            types,
+            limit,
+          ),
+          sources: { raw_similarity: 100 },
+        }
+      }
+
+      if (latestRatio === 1) {
+        return {
+          opportunities: await getLatestRecommendation(db, types, limit),
+          sources: { latest: 100 },
+        }
+      }
+
+      const latestLimit = Math.round(latestRatio * limit)
+      const latestPercentage = Math.round(latestRatio * 100)
+
+      return {
+        opportunities: [
+          ...(await getSimilarityRecommendationByTags(
+            db,
+            tagProfile.id,
+            types,
+            limit - latestLimit,
+          )),
+          ...(await getLatestRecommendation(db, types, latestLimit)),
+        ],
+        sources: {
+          raw_similarity: 100 - latestPercentage,
+          latest: latestPercentage,
+        },
+      }
+    }
+
+    return {
+      opportunities: await getSimilarityRecommendationByTags(
+        db,
+        tagProfile.id,
+        types,
+        limit,
+      ),
+      sources: { raw_similarity: 100 },
+    }
+  }
+
+  const latestByUser = await db
+    .selectFrom('tag_profile')
+    .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+    .selectAll('tag_profile')
+    .where('created_at', '>', user.computed_at)
+    .orderBy('created_at', 'desc')
+    .limit(1)
+    .execute()
+
+  if (latestByUser.length > 0) {
+    const tenant = await db
+      .selectFrom('tenant')
+      .selectAll()
+      .where('id', '=', tenantId)
+      .executeTakeFirstOrThrow()
+    const days = differenceInDays(latestByUser[0].created_at, user.computed_at)
+    if (
+      tenant.configuration.user_score_validity_decay_start === undefined ||
+      tenant.configuration.user_score_validity_decay_end === undefined
+    ) {
+      return {
+        opportunities: await getSimilarityRecommendationByUser(
+          db,
+          userId,
+          types,
+          limit,
+        ),
+        sources: { label_similarity: 100 },
+      }
+    }
+
+    const rawOrLatestRatio = Math.max(
+      Math.min(
+        (days - tenant.configuration.user_score_validity_decay_start + 1) /
+          (tenant.configuration.user_score_validity_decay_end -
+            tenant.configuration.user_score_validity_decay_start +
+            1),
+        1,
+      ),
+      0,
+    )
+    if (rawOrLatestRatio === 0) {
+      return {
+        opportunities: await getSimilarityRecommendationByUser(
+          db,
+          userId,
+          types,
+          limit,
+        ),
+        sources: { label_similarity: 100 },
+      }
+    }
+
+    const rawOrLatestLimit = Math.round(rawOrLatestRatio * limit)
+    const rawOrLatestPercentage = Math.round(rawOrLatestRatio * 100)
+
+    if (
+      tenant.configuration.tag_profile_score_validity_decay_start ===
+        undefined ||
+      tenant.configuration.tag_profile_score_validity_decay_end === undefined ||
+      !user.tag_profile_id
+    ) {
+      if (rawOrLatestRatio === 1) {
+        return {
+          opportunities: await getLatestRecommendation(db, types, limit),
+          sources: { latest: 100 },
+        }
+      }
+
+      return {
+        opportunities: [
+          ...(await getSimilarityRecommendationByUser(
+            db,
+            userId,
+            types,
+            limit - rawOrLatestLimit,
+          )),
+          ...(await getLatestRecommendation(db, types, rawOrLatestLimit)),
+        ],
+        sources: {
+          label_similarity: 100 - rawOrLatestPercentage,
+          latest: rawOrLatestPercentage,
+        },
+      }
+    }
+
+    const tagProfile = await db
+      .selectFrom('tag_profile')
+      .selectAll()
+      .where('id', '=', user.tag_profile_id)
+      .executeTakeFirstOrThrow()
+
+    if (!tagProfile.computed_at) {
+      if (rawOrLatestRatio === 1) {
+        return {
+          opportunities: await getLatestRecommendation(db, types, limit),
+          sources: { latest: 100 },
+        }
+      }
+
+      return {
+        opportunities: [
+          ...(await getSimilarityRecommendationByUser(
+            db,
+            userId,
+            types,
+            limit - rawOrLatestLimit,
+          )),
+          ...(await getLatestRecommendation(db, types, rawOrLatestLimit)),
+        ],
+        sources: {
+          label_similarity: 100 - rawOrLatestPercentage,
+          latest: rawOrLatestPercentage,
+        },
+      }
+    }
+
+    const latestByTagProfile = await db
+      .selectFrom('tag_profile')
+      .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+      .selectAll('tag_profile')
+      .where('created_at', '>', tagProfile.computed_at)
+      .orderBy('created_at', 'desc')
+      .limit(1)
+      .execute()
+
+    if (latestByTagProfile.length > 0) {
+      const days = differenceInDays(
+        latestByTagProfile[0].created_at,
+        tagProfile.computed_at,
+      )
+
+      const latestRatio = Math.max(
+        Math.min(
+          (days -
+            tenant.configuration.tag_profile_score_validity_decay_start +
+            1) /
+            (tenant.configuration.tag_profile_score_validity_decay_end -
+              tenant.configuration.tag_profile_score_validity_decay_start +
+              1),
+          1,
+        ),
+        0,
+      )
+
+      if (latestRatio === 0) {
+        if (rawOrLatestRatio === 1) {
+          return {
+            opportunities: await getSimilarityRecommendationByTags(
+              db,
+              tagProfile.id,
+              types,
+              rawOrLatestLimit,
+            ),
+            sources: {
+              raw_similarity: 100,
+            },
+          }
+        }
+
+        return {
+          opportunities: [
+            ...(await getSimilarityRecommendationByUser(
+              db,
+              userId,
+              types,
+              limit - rawOrLatestLimit,
+            )),
+            ...(await getSimilarityRecommendationByTags(
+              db,
+              tagProfile.id,
+              types,
+              rawOrLatestLimit,
+            )),
+          ],
+          sources: {
+            label_similarity: 100 - rawOrLatestPercentage,
+            raw_similarity: rawOrLatestPercentage,
+          },
+        }
+      }
+
+      if (latestRatio === 1) {
+        if (rawOrLatestRatio === 1) {
+          return {
+            opportunities: await getLatestRecommendation(db, types, limit),
+            sources: { latest: 100 },
+          }
+        }
+
+        return {
+          opportunities: [
+            ...(await getSimilarityRecommendationByUser(
+              db,
+              userId,
+              types,
+              limit - rawOrLatestLimit,
+            )),
+            ...(await getLatestRecommendation(db, types, rawOrLatestLimit)),
+          ],
+          sources: {
+            label_similarity: 100 - rawOrLatestPercentage,
+            latest: rawOrLatestPercentage,
+          },
+        }
+      }
+
+      const latestLimit = Math.round(latestRatio * rawOrLatestRatio * limit)
+      const latestPercentage = Math.round(latestRatio * rawOrLatestRatio * 100)
+
+      return {
+        opportunities: [
+          ...(await getSimilarityRecommendationByUser(
+            db,
+            userId,
+            types,
+            limit - rawOrLatestLimit,
+          )),
+          ...(await getSimilarityRecommendationByTags(
+            db,
+            tagProfile.id,
+            types,
+            rawOrLatestLimit - latestLimit,
+          )),
+          ...(await getLatestRecommendation(db, types, latestLimit)),
+        ],
+        sources: {
+          label_similarity: 100 - rawOrLatestPercentage,
+          raw_similarity: rawOrLatestPercentage - latestPercentage,
+          latest: latestPercentage,
+        },
+      }
+    }
+
+    if (rawOrLatestRatio === 1) {
+      return {
+        opportunities: await getSimilarityRecommendationByTags(
+          db,
+          tagProfile.id,
+          types,
+          limit,
+        ),
+        sources: { raw_similarity: 100 },
+      }
+    }
+
+    return {
+      opportunities: [
+        ...(await getSimilarityRecommendationByUser(
+          db,
+          userId,
+          types,
+          limit - rawOrLatestLimit,
+        )),
+        ...(await getSimilarityRecommendationByTags(
+          db,
+          tagProfile.id,
+          types,
+          rawOrLatestLimit,
+        )),
+      ],
+      sources: {
+        label_similarity: 100 - rawOrLatestPercentage,
+        raw_similarity: rawOrLatestPercentage,
+      },
+    }
+  }
+
+  return {
+    opportunities: await getSimilarityRecommendationByUser(
+      db,
+      userId,
+      types,
+      limit,
+    ),
+    sources: { label_similarity: 100 },
+  }
 }

@@ -2,6 +2,7 @@ import { stringSchema, uuidSchema } from '@resettle/schema'
 import {
   opportunityResponseSchema,
   opportunityTypeSchema,
+  recommendationSourcesSchema,
 } from '@resettle/schema/global'
 import z from 'zod'
 
@@ -16,7 +17,10 @@ export const recommendByUser = defineAPISchema({
     user_id: uuidSchema,
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
-  responseData: z.array(opportunityResponseSchema),
+  responseData: z.object({
+    opportunities: z.array(opportunityResponseSchema),
+    sources: recommendationSourcesSchema,
+  }),
 })
 
 export const recommendByTags = defineAPISchema({
@@ -27,5 +31,8 @@ export const recommendByTags = defineAPISchema({
     tags: z.array(stringSchema).min(1).max(20),
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
-  responseData: z.array(opportunityResponseSchema),
+  responseData: z.object({
+    opportunities: z.array(opportunityResponseSchema),
+    sources: recommendationSourcesSchema,
+  }),
 })
