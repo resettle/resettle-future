@@ -30,7 +30,6 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createView('place_name_or_alias')
     .materialized()
-    .orReplace()
     .as(
       db
         .with('expanded', db =>
@@ -76,6 +75,11 @@ export async function up(db: Kysely<any>): Promise<void> {
 export async function down(db: Kysely<any>): Promise<void> {
   await db.schema
     .dropIndex('place_name_or_alias_name_skey')
+    .ifExists()
+    .execute()
+  await db.schema
+    .dropView('place_name_or_alias')
+    .materialized()
     .ifExists()
     .execute()
   await db.schema.dropTable('place').ifExists().execute()
