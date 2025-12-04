@@ -282,81 +282,9 @@ If you have questions, please contact us by emailing our engineering team at [cu
 </div>
 
 
-<div data-tab="Tagging Changes (73)">
+<div data-tab="Tagging Changes (1)">
 
 * Altered tagging criteria for \`"AI Agent Monitoring" (LCSV63BJYU9JR83GHQIG)\`
-* Altered tagging criteria for \`"AI Agent Observability" (LCSPI0QTQRPRG8NQ6F1U)\`
-* Altered tagging criteria for \`"API System Integration" (LCS8HHB6J0GZCBBF54Y1)\`
-* Altered tagging criteria for \`"Agent Orchestration Frameworks" (LCS213MG05MZ3QX08576)\`
-* Altered tagging criteria for \`"Amazon Relational Database Services" (KS120FP5XWVKP9LR719W)\`
-* Altered tagging criteria for \`"Amazon Simple Notification Service (SNS)" (KS440PM60PZ55Z1ZZW6P)\`
-* Altered tagging criteria for \`"Analytical Techniques" (KS120GT79SSWNBB5T99H)\`
-* Altered tagging criteria for \`"Applied Machine Learning" (LCSIT66E9WHFHQD0Q89Q)\`
-* Altered tagging criteria for \`"Architecturally Significant Requirements" (LCSWO8810AZI2K7ZSP4S)\`
-* Altered tagging criteria for \`"Architecture Decision Records" (LCS2XVSD96KERTQAZCTB)\`
-* Altered tagging criteria for \`"Artificial Cardiac Pacemakers" (KS121DC71689NJZ1D92J)\`
-* Altered tagging criteria for \`"Artificial Intelligence Infrastructure" (LCS5M3TLF4NBDKYLP8FP)\`
-* Altered tagging criteria for \`"Artificial Intelligence Product Management" (LCSWIFRT7K95AVGV46MM)\`
-* Altered tagging criteria for \`"Artificial Intelligence Project Estimation" (LCSNNE5QGR85IO33NNTV)\`
-* Altered tagging criteria for \`"Artificial Intelligence Project Scoping" (LCS23GAOQ4ZO4OBHTDEE)\`
-* Altered tagging criteria for \`"Artificial Intelligence Strategy" (LCS1Q7AKZFJAQ1CHRFV0)\`
-* Altered tagging criteria for \`"Artificial Intelligence Use Case Design" (LCS0IGXPFVXE4QS4RROL)\`
-* Altered tagging criteria for \`"Autodesk" (ES65C3A1A13527AD7580)\`
-* Altered tagging criteria for \`"Blockchain" (KS2DSDNSP4UY5VRHV2CM)\`
-* Altered tagging criteria for \`"Boiler Operator License" (ES4BE672262A11922089)\`
-* Altered tagging criteria for \`"Bootstrap Aggregating (Bagging)" (ES8B5ECCFED2DE03685F)\`
-* Altered tagging criteria for \`"Business Intelligence" (KS120ZX7019J4V8DHBTM)\`
-* Altered tagging criteria for \`"Cascading Style Sheets (CSS)" (KS121F45VPV8C9W3QFYH)\`
-* Altered tagging criteria for \`"Cereal Processing" (ESFC0232CD8199B4896F)\`
-* Altered tagging criteria for \`"Certified Accounting Technician" (KS1204465VX49HF182BQ)\`
-* Altered tagging criteria for \`"Certified Leasing Agent" (KS7G2FZ5YT6TVLL7ZNB0)\`
-* Altered tagging criteria for \`"Certified Radiology Administrator" (KS685XF6R8F387NPRHJV)\`
-* Altered tagging criteria for \`"Clinical Documentation Integrity (CDI)" (ES4B69E6D82BD35C3AB8)\`
-* Altered tagging criteria for \`"Coding Standards and Governance" (LCS3V7Z2WVE4VHQ93E49)\`
-* Altered tagging criteria for \`"Compliance Auditing" (BGSB77E6D707DDDC94B2)\`
-* Altered tagging criteria for \`"Container Workflow Automation" (LCSN2R6PAURBBW09CBQK)\`
-* Altered tagging criteria for \`"Content Management" (KS122BM7899YNC6504SP)\`
-* Altered tagging criteria for \`"Correction of Error (COE) Analysis and Correction" (LCSLK10KB6I55N7KP581)\`
-* Altered tagging criteria for \`"Correction of Error (COE) Review, Validation, and Ownership" (LCSXDHRTKIRWEX09UPQR)\`
-* Altered tagging criteria for \`"Dagster" (LCSXVLL06RBJBKLALQGH)\`
-* Altered tagging criteria for \`"Defect Management" (LCSENPI130DLIIYU7AGB)\`
-* Altered tagging criteria for \`"Defibrillation" (KS121DB6X0V47PT1WG5P)\`
-* Altered tagging criteria for \`"Design of Experiments (DOE)" (KS122VN73RX0QR6GMDHV)\`
-* Altered tagging criteria for \`"Domain-Specific Execution Planning" (LCS86MPBDLM1ZRO4DHRU)\`
-* Altered tagging criteria for \`"Forward propagation" (LCS9DHUR3GO5UDNWP1LJ)\`
-* Altered tagging criteria for \`"Hearing Instrument Specialist" (KS124N671F465DYN6CGH)\`
-* Altered tagging criteria for \`"Image Modeling" (LCSMPOMLF3IEBMH9PT7T)\`
-* Altered tagging criteria for \`"Java Code Coverage Tools" (KS1222070RZ28DZ5RB4Q)\`
-* Altered tagging criteria for \`"Large Language Model Evaluation" (LCSJ2ECLASDTRTYVH7H3)\`
-* Altered tagging criteria for \`"Large Language Model Fine-Tuning" (LCS1PKIOJ29AF6NZAXS9)\`
-* Altered tagging criteria for \`"Linux/GNU Certified Administrator" (KS7G6ST73GQRCPDGQB1X)\`
-* Altered tagging criteria for \`"Machine Learning API Contracts" (LCS7DCVVCIMWC9C2BIUN)\`
-* Altered tagging criteria for \`"Machine Learning Domain Model Selection" (LCSKWENFQTG40Z6WU5SE)\`
-* Altered tagging criteria for \`"Machine Learning Feature Store Engineering" (LCSE22IU8IFKWQ0KRP0G)\`
-* Altered tagging criteria for \`"Machine Learning Frameworks" (LCSIEA89OEUGZME2NV9N)\`
-* Altered tagging criteria for \`"Machine Learning Infrastructure" (LCSW7JOP9MMD44GD186E)\`
-* Altered tagging criteria for \`"Machine Learning Lifecycle Management" (LCSMO4THUNRPKKB7O8UF)\`
-* Altered tagging criteria for \`"Machine Learning Model Consumption" (LCSN4DZLFAVE8T9QPU7Z)\`
-* Altered tagging criteria for \`"Machine Learning Model Integration" (LCST14QEXY17I7CRQNND)\`
-* Altered tagging criteria for \`"Machine Learning Product Management" (LCSFAW4HEPZ8CU8MRJM4)\`
-* Altered tagging criteria for \`"Machine Learning Project Estimation" (LCST5TPFY9C84MSJHT1A)\`
-* Altered tagging criteria for \`"Machine Learning Project Scoping" (LCSDKZ4XCS553GP1GI67)\`
-* Altered tagging criteria for \`"Machine Learning Strategy" (LCSCUTE00IEV15AGVJMW)\`
-* Altered tagging criteria for \`"Model Architecture" (LCSAF0V83CR9HWKPTUID)\`
-* Altered tagging criteria for \`"Oracle Certified Master (OCM)" (KS440B8766BBFP2V6GLM)\`
-* Altered tagging criteria for \`"Platform Mindset" (LCSZEFBLXLRPIN8U8H68)\`
-* Altered tagging criteria for \`"Plumbing" (KS1258D71GC65F25H9TH)\`
-* Altered tagging criteria for \`"Release of Information (ROI)" (ES84A49CDFA592CFF71E)\`
-* Altered tagging criteria for \`"Resilience" (ESC5567F7A6FA12D0DCD)\`
-* Altered tagging criteria for \`"Scalable Machine Learning Infrastructure" (LCSJYR5RNBZUE27VROEE)\`
-* Altered tagging criteria for \`"Service-Oriented Architecture" (KS440H873RW906B7R308)\`
-* Altered tagging criteria for \`"Standardization and Reusability Advocacy" (LCSX0EP60YNR10TIXXEA)\`
-* Altered tagging criteria for \`"Streaming Machine Learning" (LCS3HRBTDT48K2EMUW53)\`
-* Altered tagging criteria for \`"System Integration Leadership" (LCSIOSLEK0FW6L87H8IB)\`
-* Altered tagging criteria for \`"System-Level Execution" (LCSJHMBBHTJVW4RPF7OA)\`
-* Altered tagging criteria for \`"Target Audience" (KS441726FF2HBJTL448F)\`
-* Altered tagging criteria for \`"Vector Search Systems" (LCS3PI55ET7J6WEM5KFN)\`
-* Altered tagging criteria for \`"Visionary" (KS441VC75P5WHX8QL5SN)\`
 
 </div>
 

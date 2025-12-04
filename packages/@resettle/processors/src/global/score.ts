@@ -1,29 +1,8 @@
 import type { GlobalDatabase } from '@resettle/database/global'
 import type { SkillTag, SkillTagMetadata } from '@resettle/schema/global'
+import { cosineSimilarity } from '@resettle/utils'
 import { isAfter } from 'date-fns'
 import { type Kysely } from 'kysely'
-
-const cosineSimilarity = (a: number[], b: number[]) => {
-  if (a.length !== b.length) {
-    throw new Error('Vectors must be of same length')
-  }
-
-  let dot = 0
-  let normA = 0
-  let normB = 0
-
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i]
-    normA += a[i] * a[i]
-    normB += b[i] * b[i]
-  }
-
-  if (normA === 0 || normB === 0) {
-    return 0
-  }
-
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB))
-}
 
 // TODO: Differentiate by data.
 // The range is [0, 3]
@@ -35,7 +14,11 @@ const skillDistance = (a: SkillTag, b: SkillTag) => {
   return 2 + cosineDistance
 }
 
-const skillCollectionDistance = (a: SkillTag[], b: SkillTag[]) => {
+export const skillCollectionDistance = (a: SkillTag[], b: SkillTag[]) => {
+  if (a.length === 0 || b.length === 0) {
+    throw new Error('Both arrays must have at least one element')
+  }
+
   const largerLength = Math.max(a.length, b.length)
   let small = a
   let large = b
@@ -189,7 +172,7 @@ export const calculateRawScores = async (db: Kysely<GlobalDatabase>) => {
 }
 
 export const calculateModifiedScores = async (db: Kysely<GlobalDatabase>) => {
-  // Before execute this, we assume all raw scores are calculated.
+  // Before executing this, we assume all raw scores are calculated.
   const tenantLabelRules = await db
     .selectFrom('tenant')
     .innerJoin('tenant_label_rule', 'tenant.id', 'tenant_label_rule.tenant_id')
