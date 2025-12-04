@@ -4,6 +4,7 @@ import { describe, it } from 'node:test'
 import {
   createObjectHash,
   createPasswordHash,
+  createUUIDSetHash,
   verifyPasswordHash,
 } from './hash'
 
@@ -58,6 +59,29 @@ describe('hash', () => {
       const hashB = await createObjectHash(b)
 
       assert.notStrictEqual(hashA, hashB)
+    })
+  })
+
+  describe('createUUIDSetHash', () => {
+    it('should sort UUIDs', async () => {
+      const uuid0 = '00000000-0000-0000-0000-000000000000'
+      const uuid1 = '00000000-0000-0000-0000-000000000001'
+      const hash01 = await createUUIDSetHash([uuid0, uuid1])
+      const hash10 = await createUUIDSetHash([uuid1, uuid0])
+
+      assert.strictEqual(hash01, hash10)
+    })
+
+    it('should throw with invalid length', () => {
+      assert.rejects(async () => await createUUIDSetHash([]), {
+        message: 'Invalid UUID',
+      })
+    })
+
+    it('should throw with invalid format', () => {
+      assert.rejects(async () => await createUUIDSetHash(['abc']), {
+        message: 'Invalid UUID',
+      })
     })
   })
 })

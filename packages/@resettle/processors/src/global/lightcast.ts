@@ -16,7 +16,7 @@ import {
   type RefDir,
 } from '../utils'
 
-type Skills = {
+export type LightcastSkills = {
   name: 'Categories'
   children: {
     name: string
@@ -102,10 +102,12 @@ export const processSkillsIncrementally = async (
   const realFullRef = refDirToRef(ref, `lightcast/${fullFilename}`)
   const fullContent = await loadFile(ctx, realFullRef, { stream: false })
   if (!fullContent.success) {
-    throw new Error('Skills were never processed before')
+    throw new Error('Skills were never downloaded before')
   }
 
-  const oldParsed = JSON.parse(fullContent.data.toString('utf-8')) as Skills
+  const oldParsed = JSON.parse(
+    fullContent.data.toString('utf-8'),
+  ) as LightcastSkills
   if (!oldParsed.embedded) {
     throw new Error('Skills were never processed before')
   }
@@ -135,7 +137,7 @@ export const processSkillsIncrementally = async (
 
   let updated = false
   const resp = await fetch('https://lightcast.io/api/skills/skill-categories')
-  const newParsed = (await resp.json()) as Skills
+  const newParsed = (await resp.json()) as LightcastSkills
 
   const newSkills: {
     category: string
@@ -155,14 +157,24 @@ export const processSkillsIncrementally = async (
           name: item.name,
           id: item.id,
         })
-        const foundOldSkill = oldSkills.find(s => s.name === item.name)
+        const foundOldSkill = oldSkills.find(s => s.id === item.id)
         if (!foundOldSkill) {
           updated = true
         } else {
           newSkills[newSkills.length - 1].embedding = foundOldSkill.embedding
+          item.embedding = foundOldSkill.embedding
         }
       }
     }
+  }
+
+  // We also need to check if there's removed old skills
+  if (
+    !oldSkills
+      .map(os => os.id)
+      .every(osId => newSkills.find(ns => ns.id === osId))
+  ) {
+    updated = true
   }
 
   // NOTE: It's still possible that the remote source provides inconsistent delta or update multiple times in one month, current logic won't apply correctly if they happen.
@@ -238,13 +250,7 @@ export const processSkillsIncrementally = async (
           .where('id', '=', oldTag.id)
           .execute()
         await tx
-          .updateTable('user_tag')
-          .set('tag_template_id', newTag.id)
-          .where('tag_template_id', '=', oldTag.id)
-          .execute()
-        // TODO: More opportunity types
-        await tx
-          .updateTable('job_tag')
+          .updateTable('profile_tag')
           .set('tag_template_id', newTag.id)
           .where('tag_template_id', '=', oldTag.id)
           .execute()
@@ -315,7 +321,7 @@ export const processSkillsIncrementally = async (
       embedding?: number[]
     }[] = []
     for (const add of addActions) {
-      const found = newSkills.find(s => s.id === add.id && s.name === add.id)
+      const found = newSkills.find(s => s.id === add.id && s.name === add.name)
       if (found) {
         addNames.push({
           category: found.category,
@@ -371,6 +377,8 @@ export const processSkillsIncrementally = async (
     await saveFile(ctx, realFullRef, JSON.stringify(newParsed), {})
     console.log(`All embeddings processed successfully.`)
   }
+
+  return updated
 }
 
 export const processSkillsCompletely = async (
@@ -386,7 +394,7 @@ export const processSkillsCompletely = async (
       'https://lightcast.io/api/skills/skill-categories',
     )
   ).toString('utf-8')
-  const parsed = JSON.parse(content) as Skills
+  const parsed = JSON.parse(content) as LightcastSkills
   const skills: {
     category: string
     sub_category: string

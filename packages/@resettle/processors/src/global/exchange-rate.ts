@@ -12,12 +12,12 @@ import {
   type RefDir,
 } from '../utils'
 
-type Content = {
+export type ExchangeRates = {
   success: boolean
   timestamp: number
   base: CurrencyCode
   date: string
-  rates: Record<CurrencyCode, number>
+  rates: Partial<Record<CurrencyCode, number>>
 }
 
 /**
@@ -37,7 +37,7 @@ const download = async (apiKey: string) => {
 
   const content = await response.json()
 
-  return content as Content
+  return content as ExchangeRates
 }
 
 /**
@@ -60,7 +60,7 @@ export const processExchangeRates = async (
   const files = await listFiles(ctx, ref, { prefix: `exchange-rate/` })
   const computedRef = refDirToRef(ref, file)
 
-  let content: Content
+  let content: ExchangeRates
 
   if (!files.includes(file)) {
     content = await download(apiKey)

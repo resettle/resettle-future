@@ -9,7 +9,7 @@
     }
   },
   "scripts": {
-    "test": "tsx --test src/*.spec.ts"
+    "test": "tsx --test src/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

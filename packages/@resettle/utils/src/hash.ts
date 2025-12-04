@@ -138,6 +138,7 @@ export const createUUIDSetHash = async (
   uuidSet: string[],
   algorithm: 'SHA-256' | 'SHA-512' = 'SHA-256',
 ) => {
+  if (uuidSet.length === 0) throw new Error('Invalid UUID')
   const uuidBuffers = uuidSet.map(u => {
     const hex = u.replace(/-/g, '')
     if (hex.length !== 32) throw new Error('Invalid UUID')

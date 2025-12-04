@@ -490,15 +490,24 @@ importers:
       '@types/node':
         specifier: 24.10.1
         version: 24.10.1
+      '@types/pg':
+        specifier: 8.15.6
+        version: 8.15.6
       '@types/slug':
         specifier: 5.0.9
         version: 5.0.9
       '@types/unzipper':
         specifier: 0.10.11
         version: 0.10.11
+      pg:
+        specifier: 8.16.3
+        version: 8.16.3
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      undici:
+        specifier: 7.16.0
+        version: 7.16.0
       unzipper:
         specifier: 0.12.3
         version: 0.12.3
