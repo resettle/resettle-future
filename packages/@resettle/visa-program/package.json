@@ -1,0 +1,22 @@
+{
+  "name": "@resettle/visa-program",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "tsx --test src/**/*.spec.ts"
+  },
+  "dependencies": {
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
+  }
+}

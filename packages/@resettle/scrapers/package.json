@@ -1,0 +1,29 @@
+{
+  "name": "@resettle/scrapers",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "tsc"
+  },
+  "dependencies": {
+    "@resettle/database": "workspace:^",
+    "@resettle/schema": "workspace:^",
+    "@resettle/utils": "workspace:^",
+    "cheerio": "1.1.2",
+    "date-fns": "4.1.0",
+    "header-generator": "2.1.78",
+    "kysely": "0.28.8",
+    "slug": "11.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/slug": "5.0.9",
+    "typescript": "5.9.3"
+  }
+}

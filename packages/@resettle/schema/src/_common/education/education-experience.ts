@@ -4,6 +4,7 @@ import { countryAlpha2CodeOptionalSchema } from '../iso'
 import {
   booleanOptionalSchema,
   dateNullishSchema,
+  numberOptionalSchema,
   stringOptionalSchema,
   uuidSchema,
 } from '../utils'
@@ -11,11 +12,12 @@ import { educationLevelOptionalSchema } from './education-level'
 
 export const educationExperienceSchema = z.object({
   id: uuidSchema,
+  institution_id: stringOptionalSchema,
   institution_name: stringOptionalSchema,
   institution_country: countryAlpha2CodeOptionalSchema,
   level: educationLevelOptionalSchema,
   field_of_study: stringOptionalSchema,
-  grade: stringOptionalSchema,
+  grade: numberOptionalSchema,
   is_remote: booleanOptionalSchema,
   is_stem: booleanOptionalSchema,
   start_date: dateNullishSchema,

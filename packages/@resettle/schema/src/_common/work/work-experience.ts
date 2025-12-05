@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { countryAlpha2CodeOptionalSchema } from '../iso'
+import { monetaryOptionalSchema } from '../monetary'
 import {
   booleanOptionalSchema,
   dateNullishSchema,
@@ -8,6 +9,7 @@ import {
   uuidSchema,
 } from '../utils'
 import { employmentTypeOptionalSchema } from './employment-type'
+import { occupationCodesOptionalSchema } from './occupation-codes'
 
 export const workExperienceSchema = z.object({
   id: uuidSchema,
@@ -18,6 +20,9 @@ export const workExperienceSchema = z.object({
   job_description: stringOptionalSchema,
   is_remote: booleanOptionalSchema,
   is_stem: booleanOptionalSchema,
+  occupation_codes: occupationCodesOptionalSchema,
+  fixed_annual_salary: monetaryOptionalSchema,
+  fixed_monthly_salary: monetaryOptionalSchema,
   start_date: dateNullishSchema,
   end_date: dateNullishSchema,
 })
