@@ -2,7 +2,7 @@ import type {
   OccupationClassification,
   OccupationCodes,
 } from '@resettle/schema'
-import type { OccupationCodeCrosswalk } from '@resettle/schema/global'
+import type { OccupationCodeCrosswalk } from '@resettle/schema/intelligence'
 
 type RequiredOccupationCode = {
   level: 'category' | 'major' | 'sub_major' | 'minor' | 'broad' | 'unit'

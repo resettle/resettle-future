@@ -1,4 +1,0 @@
-export const GLOBAL_API_ERROR_CODES = {
-  PLACE_NOT_FOUND: 1000,
-  OCCUPATION_NOT_FOUND: 1001,
-} as const

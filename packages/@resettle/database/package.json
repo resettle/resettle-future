@@ -11,9 +11,9 @@
       "import": "./src/app/index.ts",
       "require": "./src/app/index.ts"
     },
-    "./global": {
-      "import": "./src/global/index.ts",
-      "require": "./src/global/index.ts"
+    "./intelligence": {
+      "import": "./src/intelligence/index.ts",
+      "require": "./src/intelligence/index.ts"
     }
   },
   "scripts": {
@@ -23,9 +23,9 @@
     "db:app": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e app' --",
     "db:app:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e app' --",
     "db:app:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e app' --",
-    "db:global": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e global' --",
-    "db:global:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e global' --",
-    "db:global:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e global' --",
+    "db:intelligence": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
+    "db:intelligence:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
+    "db:intelligence:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
     "db:test": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e test' --"
   },
   "dependencies": {

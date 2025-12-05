@@ -19,8 +19,9 @@ services:
       PID=$$!;
       until pg_isready -U resettler; do sleep 1; done;
       psql -U resettler -d postgres -c 'CREATE DATABASE resettle;';
-      psql -U resettler -d postgres -c 'CREATE DATABASE resettle_global';
+      psql -U resettler -d postgres -c 'CREATE DATABASE resettle_intelligence';
       psql -U resettler -d postgres -c 'CREATE DATABASE resettle_directus';
+      psql -U resettler -d postgres -c 'CREATE DATABASE resettle_test';
       wait $$PID
       "
     volumes:

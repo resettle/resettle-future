@@ -17,7 +17,7 @@ const mocked = mock.module('./currency', {
   },
 })
 
-import type { ExchangeRateData } from '@resettle/schema/global'
+import type { ExchangeRateData } from '@resettle/schema/intelligence'
 import { convertCurrency } from './currency'
 
 describe('getBooleanSimilarity', () => {

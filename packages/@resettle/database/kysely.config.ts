@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 const configSchema = z.object({
   POSTGRES_CONNECTION_STRING_APP: z.url(),
-  POSTGRES_CONNECTION_STRING_GLOBAL: z.url(),
+  POSTGRES_CONNECTION_STRING_INTELLIGENCE: z.url(),
   POSTGRES_CONNECTION_STRING_TEST: z.url(),
 })
 
@@ -28,18 +28,18 @@ export default defineConfig({
         getSeedPrefix: getKnexTimestampPrefix,
       },
     },
-    global: {
+    intelligence: {
       dialect: new PostgresDialect({
         pool: new Pool({
-          connectionString: config.POSTGRES_CONNECTION_STRING_GLOBAL,
+          connectionString: config.POSTGRES_CONNECTION_STRING_INTELLIGENCE,
         }),
       }),
       migrations: {
-        migrationFolder: './src/global/migrations',
+        migrationFolder: './src/intelligence/migrations',
         getMigrationPrefix: getKnexTimestampPrefix,
       },
       seeds: {
-        seedFolder: './src/global/seeds',
+        seedFolder: './src/intelligence/seeds',
         getSeedPrefix: getKnexTimestampPrefix,
       },
     },
@@ -50,11 +50,11 @@ export default defineConfig({
         }),
       }),
       migrations: {
-        migrationFolder: './src/global/migrations',
+        migrationFolder: './src/intelligence/migrations',
         getMigrationPrefix: getKnexTimestampPrefix,
       },
       seeds: {
-        seedFolder: './src/global/seeds',
+        seedFolder: './src/intelligence/seeds',
         getSeedPrefix: getKnexTimestampPrefix,
       },
     },

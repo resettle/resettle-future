@@ -2,14 +2,14 @@
 
 import { Command } from 'commander'
 
-import { globalCommand } from './global'
+import { intelligenceCommand } from './intelligence'
 
 try {
   await new Command()
     .name('rsx')
     .description(`Resettle CLI [${process.env.ENV}]`)
     .version('1.0.0')
-    .addCommand(globalCommand)
+    .addCommand(intelligenceCommand)
     .parseAsync(process.argv)
 } catch (error) {
   console.error(error)

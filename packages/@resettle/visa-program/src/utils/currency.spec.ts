@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@resettle/schema'
-import type { ExchangeRateData } from '@resettle/schema/global'
+import type { ExchangeRateData } from '@resettle/schema/intelligence'
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
 

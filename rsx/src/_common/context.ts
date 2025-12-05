@@ -1,28 +1,28 @@
 import { S3Client } from '@3rd-party-clients/s3'
-import type { GlobalDatabase } from '@resettle/database/global'
+import type { IntelligenceDatabase } from '@resettle/database/intelligence'
 import { Kysely, PostgresDialect } from 'kysely'
 import pg from 'pg'
 
 export const BATCH_SIZE = 500
 
 /**
- * Get global database and connection pool
+ * Get intelligence database and connection pool
  * @param env - The environment
- * @param env.POSTGRES_CONNECTION_STRING_GLOBAL - The Postgres connection string
- * @returns The global database and pool
+ * @param env.POSTGRES_CONNECTION_STRING_INTELLIGENCE - The Postgres connection string
+ * @returns The intelligence database and pool
  */
-export const getGlobalDB = (env: {
-  POSTGRES_CONNECTION_STRING_GLOBAL: string
+export const getIntelligenceDB = (env: {
+  POSTGRES_CONNECTION_STRING_INTELLIGENCE: string
 }) => {
-  if (!env.POSTGRES_CONNECTION_STRING_GLOBAL) {
-    throw new Error('POSTGRES_CONNECTION_STRING_GLOBAL is not set')
+  if (!env.POSTGRES_CONNECTION_STRING_INTELLIGENCE) {
+    throw new Error('POSTGRES_CONNECTION_STRING_INTELLIGENCE is not set')
   }
 
   const pool = new pg.Pool({
-    connectionString: env.POSTGRES_CONNECTION_STRING_GLOBAL,
+    connectionString: env.POSTGRES_CONNECTION_STRING_INTELLIGENCE,
   })
 
-  const db = new Kysely<GlobalDatabase>({
+  const db = new Kysely<IntelligenceDatabase>({
     dialect: new PostgresDialect({ pool }),
   })
 

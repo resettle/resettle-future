@@ -11,9 +11,9 @@
       "import": "./src/app/index.ts",
       "require": "./src/app/index.ts"
     },
-    "./global": {
-      "import": "./src/global/index.ts",
-      "require": "./src/global/index.ts"
+    "./intelligence": {
+      "import": "./src/intelligence/index.ts",
+      "require": "./src/intelligence/index.ts"
     }
   },
   "scripts": {},

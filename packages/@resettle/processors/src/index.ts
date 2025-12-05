@@ -1,2 +1,2 @@
-export * from './global'
+export * from './intelligence'
 export * from './utils'

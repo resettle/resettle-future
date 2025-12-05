@@ -3,7 +3,7 @@ import type {
   ExchangeRateData,
   OccupationCode,
   OccupationCodeCrosswalk,
-} from '@resettle/schema/global'
+} from '@resettle/schema/intelligence'
 
 import type { Ref, RefInput } from './refs'
 
