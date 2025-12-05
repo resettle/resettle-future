@@ -15,19 +15,22 @@
   },
   "dependencies": {
     "@3rd-party-clients/s3": "workspace:^",
+    "@hono/standard-validator": "0.2.0",
     "@resettle/api": "workspace:^",
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@types/jsonwebtoken": "9.0.10",
-    "hono": "4.10.6",
-    "jsonwebtoken": "9.0.2",
-    "openai": "6.9.1",
+    "hono": "4.10.7",
+    "hono-openapi": "1.1.1",
+    "jsonwebtoken": "9.0.3",
+    "openai": "6.10.0",
     "stripe": "20.0.0",
     "zeptomail": "7.0.0",
-    "zod": "4.1.12"
+    "zod": "4.1.13"
   },
   "peerDependencies": {
     "hono": ">=4.8.0",
+    "hono-openapi": ">=1.1.1",
     "zod": ">=4.0.0"
   },
   "devDependencies": {

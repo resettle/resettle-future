@@ -1,31 +1,5 @@
-import { API_ERROR_CODES, APIError } from '@resettle/api'
-import { validator } from 'hono/validator'
+import { validator } from 'hono-openapi'
 import type { z } from 'zod'
-
-/**
- * Get a validate function
- * @param schema - The schema
- * @returns The validate function
- */
-const getValidateFn =
-  <T extends z.ZodType>(schema: T) =>
-  (value: unknown) => {
-    const parsed = schema.safeParse(value)
-
-    if (!parsed.success) {
-      throw new APIError({
-        statusCode: 400,
-        code: API_ERROR_CODES.VALIDATION_ERROR,
-        message: parsed.error.message,
-        data: {
-          type: parsed.error.type,
-          issues: parsed.error.issues,
-        },
-      })
-    }
-
-    return parsed.data
-  }
 
 /**
  * Param validator
@@ -42,7 +16,7 @@ export const paramValidator = <
   _requiredParams: readonly Params[],
   schema: T,
 ) => {
-  return validator('param', getValidateFn(schema))
+  return validator('param', schema)
 }
 
 /**
@@ -55,7 +29,7 @@ export const queryValidator = <
 >(
   schema: T,
 ) => {
-  return validator('query', getValidateFn(schema))
+  return validator('query', schema)
 }
 
 /**
@@ -64,5 +38,5 @@ export const queryValidator = <
  * @returns The validator
  */
 export const jsonValidator = <T extends z.ZodType>(schema: T) => {
-  return validator('json', getValidateFn(schema))
+  return validator('json', schema)
 }

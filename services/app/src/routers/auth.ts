@@ -2,6 +2,7 @@ import { apiSuccessResponse } from '@resettle/api'
 import { APP_API_SCHEMAS } from '@resettle/api/app'
 import { jsonValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 import { env } from 'hono/adapter'
 
 import { signInWithEmail } from '../handlers/auth'
@@ -11,6 +12,19 @@ export const authRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 authRouter.post(
   APP_API_SCHEMAS.auth.signInWithEmail.route.path,
+  describeRoute({
+    description: 'Sign in with email',
+    responses: {
+      200: {
+        description: 'Sign in with email successful',
+        content: {
+          'text/plain': {
+            schema: resolver(APP_API_SCHEMAS.auth.signInWithEmail.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(APP_API_SCHEMAS.auth.signInWithEmail.body),
   async ctx => {
     const db = ctx.get('db')

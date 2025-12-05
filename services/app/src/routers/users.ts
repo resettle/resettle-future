@@ -10,6 +10,7 @@ import {
 } from '@resettle/database/app'
 import type { User, UserResponse } from '@resettle/schema/app'
 import {
+  auth,
   jsonValidator,
   paramValidator,
   queryValidator,
@@ -36,6 +37,9 @@ export const usersRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 usersRouter.get(
   APP_API_SCHEMAS.user.getUsers.route.path,
   queryValidator(APP_API_SCHEMAS.user.getUsers.query),
+  auth({
+    roles: ['admin', 'mod'],
+  }),
   async ctx => {
     const db = ctx.get('db')
     const {
@@ -67,11 +71,29 @@ usersRouter.get(
 
 usersRouter.get(
   APP_API_SCHEMAS.user.getUserById.route.path,
-  paramValidator(['userId'] as const, APP_API_SCHEMAS.user.getUserById.params!),
+  paramValidator(
+    APP_API_SCHEMAS.user.getUserById.route.params,
+    APP_API_SCHEMAS.user.getUserById.params,
+  ),
   queryValidator(APP_API_SCHEMAS.user.getUserById.query),
+  auth(),
   async ctx => {
+    const currentUser = ctx.get('user')
     const db = ctx.get('db')
+
     const { userId } = ctx.req.valid('param')
+
+    if (
+      currentUser.role !== 'admin' &&
+      currentUser.role !== 'mod' &&
+      currentUser.id !== userId
+    ) {
+      throw new APIError({
+        statusCode: 403,
+        code: API_ERROR_CODES.FORBIDDEN,
+        message: 'Forbidden: You are not allowed to access this user',
+      })
+    }
 
     const user = await getUserById(db, userId)
 
@@ -94,14 +116,29 @@ usersRouter.get(
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserById.route.path,
   paramValidator(
-    ['userId'] as const,
-    APP_API_SCHEMAS.user.updateUserById.params!,
+    APP_API_SCHEMAS.user.updateUserById.route.params,
+    APP_API_SCHEMAS.user.updateUserById.params,
   ),
   jsonValidator(APP_API_SCHEMAS.user.updateUserById.body),
+  auth(),
   async ctx => {
+    const currentUser = ctx.get('user')
     const db = ctx.get('db')
+
     const { userId } = ctx.req.valid('param')
     const updates = ctx.req.valid('json')
+
+    if (
+      currentUser.role !== 'admin' &&
+      currentUser.role !== 'mod' &&
+      currentUser.id !== userId
+    ) {
+      throw new APIError({
+        statusCode: 403,
+        code: API_ERROR_CODES.FORBIDDEN,
+        message: 'Forbidden: You are not allowed to update this user',
+      })
+    }
 
     const user = await updateUserById(db, userId, updates)
 
@@ -124,14 +161,29 @@ usersRouter.patch(
 usersRouter.put(
   APP_API_SCHEMAS.user.updateUserUsernameById.route.path,
   paramValidator(
-    ['userId'] as const,
-    APP_API_SCHEMAS.user.updateUserUsernameById.params!,
+    APP_API_SCHEMAS.user.updateUserUsernameById.route.params,
+    APP_API_SCHEMAS.user.updateUserUsernameById.params,
   ),
   jsonValidator(APP_API_SCHEMAS.user.updateUserUsernameById.body),
+  auth(),
   async ctx => {
+    const currentUser = ctx.get('user')
     const db = ctx.get('db')
+
     const { userId } = ctx.req.valid('param')
     const { username } = ctx.req.valid('json')
+
+    if (
+      currentUser.role !== 'admin' &&
+      currentUser.role !== 'mod' &&
+      currentUser.id !== userId
+    ) {
+      throw new APIError({
+        statusCode: 403,
+        code: API_ERROR_CODES.FORBIDDEN,
+        message: 'Forbidden: You are not allowed to update this user',
+      })
+    }
 
     const existingUser = await getUserBy(db, { username })
 
@@ -164,14 +216,29 @@ usersRouter.put(
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserProfileById.route.path,
   paramValidator(
-    ['userId'] as const,
-    APP_API_SCHEMAS.user.updateUserProfileById.params!,
+    APP_API_SCHEMAS.user.updateUserProfileById.route.params,
+    APP_API_SCHEMAS.user.updateUserProfileById.params,
   ),
   jsonValidator(APP_API_SCHEMAS.user.updateUserProfileById.body),
+  auth(),
   async ctx => {
+    const currentUser = ctx.get('user')
     const db = ctx.get('db')
+
     const { userId } = ctx.req.valid('param')
     const { profile } = ctx.req.valid('json')
+
+    if (
+      currentUser.role !== 'admin' &&
+      currentUser.role !== 'mod' &&
+      currentUser.id !== userId
+    ) {
+      throw new APIError({
+        statusCode: 403,
+        code: API_ERROR_CODES.FORBIDDEN,
+        message: 'Forbidden: You are not allowed to update this user',
+      })
+    }
 
     const user = await updateUserProfileById(db, userId, profile)
 
@@ -194,14 +261,29 @@ usersRouter.patch(
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserMetadataById.route.path,
   paramValidator(
-    ['userId'] as const,
-    APP_API_SCHEMAS.user.updateUserMetadataById.params!,
+    APP_API_SCHEMAS.user.updateUserMetadataById.route.params,
+    APP_API_SCHEMAS.user.updateUserMetadataById.params,
   ),
   jsonValidator(APP_API_SCHEMAS.user.updateUserMetadataById.body),
+  auth(),
   async ctx => {
+    const currentUser = ctx.get('user')
     const db = ctx.get('db')
+
     const { userId } = ctx.req.valid('param')
     const { metadata } = ctx.req.valid('json')
+
+    if (
+      currentUser.role !== 'admin' &&
+      currentUser.role !== 'mod' &&
+      currentUser.id !== userId
+    ) {
+      throw new APIError({
+        statusCode: 403,
+        code: API_ERROR_CODES.FORBIDDEN,
+        message: 'Forbidden: You are not allowed to update this user',
+      })
+    }
 
     const user = await updateUserMetadataById(db, userId, metadata)
 

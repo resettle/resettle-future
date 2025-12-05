@@ -21,7 +21,7 @@
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "ky": "1.14.0",
-    "zod": "4.1.12"
+    "zod": "4.1.13"
   },
   "peerDependencies": {
     "ky": ">=1.12.0",

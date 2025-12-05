@@ -20,14 +20,14 @@
     "cheerio": "1.1.2",
     "csv-parse": "6.1.0",
     "date-fns": "4.1.0",
-    "header-generator": "2.1.77",
+    "header-generator": "2.1.78",
     "kysely": "0.28.8",
     "markdown-it": "14.1.0",
-    "openai": "6.9.1",
+    "openai": "6.10.0",
     "pgvector": "0.2.1",
     "slug": "11.0.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-    "zod": "4.1.12"
+    "zod": "4.1.13"
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",

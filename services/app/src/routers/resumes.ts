@@ -5,7 +5,6 @@ import {
   getResumeById,
   getResumesWithOffsetPagination,
 } from '@resettle/database/app'
-import type { Resume } from '@resettle/schema/app'
 import {
   auth,
   jsonValidator,
@@ -13,24 +12,6 @@ import {
   queryValidator,
 } from '@services/_common'
 import { Hono } from 'hono'
-
-/**
- * Converts a resume to a resume response
- * @param resume - The resume to convert
- * @returns The resume response
- */
-const toResumeResponse = (resume: Resume): Resume => {
-  return {
-    id: resume.id,
-    user_id: resume.user_id,
-    file_type: resume.file_type,
-    file_url: resume.file_url,
-    parsed_result: resume.parsed_result,
-    created_at: resume.created_at,
-    updated_at: resume.updated_at,
-    deleted_at: resume.deleted_at,
-  }
-}
 
 export const resumesRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
@@ -51,7 +32,7 @@ resumesRouter.post(
 
     return apiSuccessResponse(
       APP_API_SCHEMAS.resume.createResume.responseData,
-      toResumeResponse(resume),
+      resume,
       201,
     )
   },
@@ -81,10 +62,7 @@ resumesRouter.get(
 
     return apiSuccessResponse(
       APP_API_SCHEMAS.resume.getResumes.responseData,
-      {
-        ...resumes,
-        data: resumes.data.map(toResumeResponse),
-      },
+      resumes,
       200,
     )
   },
@@ -93,7 +71,10 @@ resumesRouter.get(
 resumesRouter.get(
   APP_API_SCHEMAS.resume.getResumeById.route.path,
   auth(),
-  paramValidator(['resumeId'] as const, APP_API_SCHEMAS.resume.getResumeById.params!),
+  paramValidator(
+    APP_API_SCHEMAS.resume.getResumeById.route.params,
+    APP_API_SCHEMAS.resume.getResumeById.params,
+  ),
   queryValidator(APP_API_SCHEMAS.resume.getResumeById.query),
   async ctx => {
     const db = ctx.get('db')
@@ -111,9 +92,8 @@ resumesRouter.get(
 
     return apiSuccessResponse(
       APP_API_SCHEMAS.resume.getResumeById.responseData,
-      toResumeResponse(resume),
+      resume,
       200,
     )
   },
 )
-
