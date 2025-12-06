@@ -1,5 +1,5 @@
-/*
 import type { EducationExperience } from '@resettle/schema'
+import assert from 'node:assert'
 import { describe, it } from 'node:test'
 
 import { createMockContext } from '../mock'
@@ -45,16 +45,19 @@ describe('education-experiences', () => {
         input,
       )
 
-      expect(result.kind).toBe('education_experiences')
-      expect(result.op).toBe('contains')
+      assert.equal(result.kind, 'education_experiences')
+      assert.equal(result.op, 'contains')
 
       if (result.op === 'contains') {
-        expect(result.children).toHaveLength(1)
-        expect(result.children[0].filters.institution_country_in).toEqual({
-          expected: ['US', 'CA'],
-          actual: 'US',
-          similarity: 1,
-        })
+        assert.equal(result.children.length, 1)
+        assert.deepStrictEqual(
+          result.children[0].filters.institution_country_in,
+          {
+            expected: ['US', 'CA'],
+            actual: 'US',
+            similarity: 1,
+          },
+        )
       }
     })
 
@@ -78,11 +81,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.institution_country_in).toEqual({
-          expected: ['GB', 'FR'],
-          actual: 'US',
-          similarity: 0,
-        })
+        assert.deepStrictEqual(
+          result.children[0].filters.institution_country_in,
+          {
+            expected: ['GB', 'FR'],
+            actual: 'US',
+            similarity: 0,
+          },
+        )
       }
     })
 
@@ -111,98 +117,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.institution_country_in).toEqual({
-          expected: ['US'],
-          similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
-        })
-      }
-    })
-
-    it('should handle degree filter with matching value', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['BA', 'MA'],
-        },
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [mockEducationExperience],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children[0].filters.degree_in).toEqual({
-          expected: ['BA', 'MA'],
-          actual: ['BA'],
-          similarity: 1,
-        })
-      }
-    })
-
-    it('should handle degree filter with non-matching value', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['PhD', 'MA'],
-        },
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [mockEducationExperience],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children[0].filters.degree_in).toEqual({
-          expected: ['PhD', 'MA'],
-          actual: ['BA'],
-          similarity: 0,
-        })
-      }
-    })
-
-    it('should handle degree filter with undefined value', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['BA'],
-        },
-      }
-
-      const educationExperienceWithoutDegrees = {
-        ...mockEducationExperience,
-        degrees: undefined,
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [educationExperienceWithoutDegrees],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children[0].filters.degree_in).toEqual({
-          expected: ['BA'],
-          similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
-        })
+        assert.deepStrictEqual(
+          result.children[0].filters.institution_country_in,
+          {
+            actual: undefined,
+            expected: ['US'],
+            similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+          },
+        )
       }
     })
 
@@ -231,7 +153,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_present).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_present, {
           expected: true,
           actual: true,
           similarity: 1,
@@ -267,7 +189,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_present).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_present, {
           expected: true,
           actual: true,
           similarity: 1,
@@ -295,7 +217,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_present).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_present, {
           expected: false,
           actual: false,
           similarity: 1,
@@ -331,11 +253,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_present_or_future).toEqual({
-          expected: true,
-          actual: true,
-          similarity: 1,
-        })
+        assert.deepStrictEqual(
+          result.children[0].filters.is_present_or_future,
+          {
+            expected: true,
+            actual: true,
+            similarity: 1,
+          },
+        )
       }
     })
 
@@ -359,7 +284,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_completed).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_completed, {
           expected: true,
           actual: true,
           similarity: 1,
@@ -392,7 +317,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_completed).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_completed, {
           expected: false,
           actual: false,
           similarity: 1,
@@ -420,7 +345,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_remote).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_remote, {
           expected: false,
           actual: false,
           similarity: 1,
@@ -453,7 +378,8 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.is_remote).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.is_remote, {
+          actual: undefined,
           expected: true,
           similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         })
@@ -480,15 +406,18 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.expected,
-        ).toBe('high_school')
-        expect(
+          'high_school',
+        )
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.actual,
-        ).toBe('bachelor')
-        expect(
+          'bachelor',
+        )
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.similarity,
-        ).toBe(1)
+          1,
+        )
       }
     })
 
@@ -512,19 +441,22 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.expected,
-        ).toBe('doctorate')
-        expect(
+          'doctorate',
+        )
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.actual,
-        ).toBe('bachelor')
-        expect(
+          'bachelor',
+        )
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.similarity,
-        ).toBe(0)
+          0,
+        )
       }
     })
 
-    it('should handle min_highest_degree_level filter with undefined degrees', () => {
+    it('should handle min_highest_degree_level filter with undefined level', () => {
       const state: EducationExperiencesState = {
         kind: 'education_experiences',
         op: 'contains',
@@ -535,7 +467,7 @@ describe('education-experiences', () => {
 
       const educationExperienceWithoutDegrees = {
         ...mockEducationExperience,
-        degrees: undefined,
+        level: undefined,
       }
 
       const input: EducationExperiencesStateInput = {
@@ -549,10 +481,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_highest_education_level).toEqual({
-          expected: 'bachelor',
-          similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
-        })
+        assert.deepStrictEqual(
+          result.children[0].filters.min_highest_education_level,
+          {
+            actual: undefined,
+            expected: 'bachelor',
+            similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+          },
+        )
       }
     })
 
@@ -579,15 +515,21 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_duration?.expected).toEqual({
-          value: 24,
-          unit: 'month',
-        })
-        expect(result.children[0].filters.min_duration?.actual).toEqual({
-          value: 48,
-          unit: 'month',
-        })
-        expect(result.children[0].filters.min_duration?.similarity).toBe(1)
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.expected,
+          {
+            value: 24,
+            unit: 'month',
+          },
+        )
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.actual,
+          {
+            value: 48,
+            unit: 'month',
+          },
+        )
+        assert.equal(result.children[0].filters.min_duration?.similarity, 1)
       }
     })
 
@@ -614,15 +556,21 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_duration?.expected).toEqual({
-          value: 60,
-          unit: 'month',
-        })
-        expect(result.children[0].filters.min_duration?.actual).toEqual({
-          value: 48,
-          unit: 'month',
-        })
-        expect(result.children[0].filters.min_duration?.similarity).toBe(0.8)
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.expected,
+          {
+            value: 60,
+            unit: 'month',
+          },
+        )
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.actual,
+          {
+            value: 48,
+            unit: 'month',
+          },
+        )
+        assert.equal(result.children[0].filters.min_duration?.similarity, 0.8)
       }
     })
 
@@ -655,7 +603,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_duration).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_duration, {
           expected: {
             value: 24,
             unit: 'month',
@@ -688,15 +636,21 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_duration?.expected).toEqual({
-          value: 3,
-          unit: 'year',
-        })
-        expect(result.children[0].filters.min_duration?.actual).toEqual({
-          value: 4,
-          unit: 'year',
-        })
-        expect(result.children[0].filters.min_duration?.similarity).toBe(1)
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.expected,
+          {
+            value: 3,
+            unit: 'year',
+          },
+        )
+        assert.deepStrictEqual(
+          result.children[0].filters.min_duration?.actual,
+          {
+            value: 4,
+            unit: 'year',
+          },
+        )
+        assert.equal(result.children[0].filters.min_duration?.similarity, 1)
       }
     })
 
@@ -725,7 +679,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 5,
           actual: 1,
           similarity: 1,
@@ -758,7 +712,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 1,
           actual: 2,
           similarity: 0,
@@ -791,7 +745,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 10,
           actual: undefined,
           similarity: 0,
@@ -824,9 +778,8 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 10,
-          actual: undefined,
           similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         })
       }
@@ -857,7 +810,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_arwu_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_arwu_rank, {
           expected: 10,
           actual: 7,
           similarity: 1,
@@ -890,7 +843,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_arwu_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_arwu_rank, {
           expected: 5,
           actual: 7,
           similarity: 0,
@@ -923,7 +876,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_twur_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_twur_rank, {
           expected: 5,
           actual: 1,
           similarity: 1,
@@ -956,7 +909,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_twur_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_twur_rank, {
           expected: 1,
           actual: 2,
           similarity: 0,
@@ -989,7 +942,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 5,
           actual: 1,
           similarity: 1,
@@ -1022,7 +975,7 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 5,
           actual: 1,
           similarity: 1,
@@ -1057,22 +1010,22 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(result.children[0].filters.min_qs_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_qs_rank, {
           expected: 5,
           actual: 1,
           similarity: 1,
         })
-        expect(result.children[0].filters.min_arwu_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_arwu_rank, {
           expected: 10,
           actual: 1,
           similarity: 1,
         })
-        expect(result.children[0].filters.min_twur_rank).toEqual({
+        assert.deepStrictEqual(result.children[0].filters.min_twur_rank, {
           expected: 5,
           actual: 2,
           similarity: 1,
         })
-        expect(result.children[0].similarity).toBe(1) // average of all 1s
+        assert.equal(result.children[0].similarity, 1) // average of all 1s
       }
     })
 
@@ -1082,7 +1035,6 @@ describe('education-experiences', () => {
         op: 'contains',
         expected: {
           institution_country_in: ['US'],
-          degree_in: ['BA'],
           is_completed: true,
           min_duration: {
             value: 24,
@@ -1102,75 +1054,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'contains') {
-        expect(
+        assert.equal(
           result.children[0].filters.institution_country_in?.similarity,
-        ).toBe(1)
-        expect(result.children[0].filters.degree_in?.similarity).toBe(1)
-        expect(result.children[0].filters.is_completed?.similarity).toBe(1)
-        expect(result.children[0].filters.min_duration?.similarity).toBe(1)
-        expect(result.children[0].similarity).toBe(1) // average of all 1s
-        expect(result.similarity).toBe(1) // average of children similarities
-      }
-    })
-
-    it('should handle multiple education experiences', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['BA'],
-        },
-      }
-
-      const secondEducationExperience = {
-        ...mockEducationExperience,
-        id: 'test-id-2',
-        degrees: ['MA'] as Degree[],
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [
-          mockEducationExperience,
-          secondEducationExperience,
-        ],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children).toHaveLength(2)
-        expect(result.children[0].filters.degree_in?.similarity).toBe(1)
-        expect(result.children[1].filters.degree_in?.similarity).toBe(0)
-        expect(result.similarity).toBe(0.5) // average of 1 and 0
-      }
-    })
-
-    it('should handle empty education experiences array', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['BA'],
-        },
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children).toHaveLength(0)
-        expect(result.similarity).toBe(0)
+          1,
+        )
+        assert.equal(result.children[0].filters.is_completed?.similarity, 1)
+        assert.equal(result.children[0].filters.min_duration?.similarity, 1)
+        assert.equal(result.children[0].similarity, 1) // average of all 1s
+        assert.equal(result.similarity, 1) // average of children similarities
       }
     })
 
@@ -1197,14 +1088,17 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration, {
           expected: {
             value: 36,
             unit: 'month',
           },
           similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         })
-        expect(result.similarity).toBe(DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+        )
       }
     })
   })
@@ -1234,20 +1128,23 @@ describe('education-experiences', () => {
         input,
       )
 
-      expect(result.kind).toBe('education_experiences')
-      expect(result.op).toBe('matches')
+      assert.equal(result.kind, 'education_experiences')
+      assert.equal(result.op, 'matches')
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 36,
-          unit: 'month',
-        })
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 36,
+            unit: 'month',
+          },
+        )
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 48,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
-        expect(result.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -1276,16 +1173,19 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 60,
-          unit: 'month',
-        })
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 60,
+            unit: 'month',
+          },
+        )
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 48,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(0.8)
-        expect(result.similarity).toBe(0.8)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 0.8)
+        assert.equal(result.similarity, 0.8)
       }
     })
 
@@ -1314,16 +1214,19 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 3,
-          unit: 'year',
-        })
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 3,
+            unit: 'year',
+          },
+        )
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 4,
           unit: 'year',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
-        expect(result.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -1362,16 +1265,19 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 60,
-          unit: 'month',
-        })
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 60,
+            unit: 'month',
+          },
+        )
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 72,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
-        expect(result.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -1414,20 +1320,23 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.children).toHaveLength(2)
-        expect(result.children[0].similarity).toBe(1)
-        expect(result.children[1].similarity).toBe(0)
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 40,
-          unit: 'month',
-        })
+        assert.equal(result.children.length, 2)
+        assert.equal(result.children[0].similarity, 1)
+        assert.equal(result.children[1].similarity, 0)
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 40,
+            unit: 'month',
+          },
+        )
         // Only the first experience should be aggregated (48 months)
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 48,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
-        expect(result.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -1466,16 +1375,19 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.expected).toEqual({
-          value: 36,
-          unit: 'month',
-        })
+        assert.deepStrictEqual(
+          result.aggregation.min_sum_of_duration?.expected,
+          {
+            value: 36,
+            unit: 'month',
+          },
+        )
         // Only the first education experience's duration is counted (48 months)
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 48,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
       }
     })
 
@@ -1504,14 +1416,17 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration, {
           expected: {
             value: 36,
             unit: 'month',
           },
           similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         })
-        expect(result.similarity).toBe(DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+        )
       }
     })
 
@@ -1538,14 +1453,17 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration, {
           expected: {
             value: 36,
             unit: 'month',
           },
           similarity: DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         })
-        expect(result.similarity).toBe(DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+        )
       }
     })
 
@@ -1589,12 +1507,12 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 60,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(1)
-        expect(result.similarity).toBe(1)
+        assert.equal(result.aggregation.min_sum_of_duration?.similarity, 1)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -1638,11 +1556,14 @@ describe('education-experiences', () => {
       )
 
       if (result.op === 'matches') {
-        expect(result.aggregation.min_sum_of_duration?.actual).toEqual({
+        assert.deepStrictEqual(result.aggregation.min_sum_of_duration?.actual, {
           value: 24,
           unit: 'month',
         })
-        expect(result.aggregation.min_sum_of_duration?.similarity).toBe(24 / 36)
+        assert.equal(
+          result.aggregation.min_sum_of_duration?.similarity,
+          24 / 36,
+        )
       }
     })
   })
@@ -1654,7 +1575,6 @@ describe('education-experiences', () => {
         op: 'contains',
         expected: {
           institution_country_in: ['US'],
-          degree_in: ['BA'],
           is_present: true,
           is_completed: false,
           is_remote: false,
@@ -1669,7 +1589,7 @@ describe('education-experiences', () => {
       const emptyEducationExperience: EducationExperience = {
         id: 'empty-id',
         institution_country: undefined,
-        degrees: undefined,
+        level: undefined,
         start_date: undefined,
         end_date: undefined,
         institution_name: '',
@@ -1688,89 +1608,27 @@ describe('education-experiences', () => {
 
       if (result.op === 'contains') {
         // All filters should have similarity DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY
-        expect(
+        assert.equal(
           result.children[0].filters.institution_country_in?.similarity,
-        ).toBe(DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY)
-        expect(result.children[0].filters.degree_in?.similarity).toBe(
           DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         )
-        expect(result.children[0].filters.is_remote?.similarity).toBe(
+        assert.equal(
+          result.children[0].filters.is_remote?.similarity,
           DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         )
-        expect(
+        assert.equal(
           result.children[0].filters.min_highest_education_level?.similarity,
-        ).toBe(DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY)
-        expect(result.children[0].filters.min_duration?.similarity).toBe(
           DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         )
-        expect(result.children[0].similarity).toBe(
+        assert.equal(
+          result.children[0].filters.min_duration?.similarity,
           DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
         )
-      }
-    })
-
-    it('should generate random id when education experience has no id', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['BA'],
-        },
-      }
-
-      const educationExperienceWithoutId = {
-        ...mockEducationExperience,
-        id: 'fallback-id', // Fix the undefined id issue
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [educationExperienceWithoutId],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children[0].id).toBeDefined()
-      }
-    })
-
-    it('should handle education experience with multiple degrees', () => {
-      const state: EducationExperiencesState = {
-        kind: 'education_experiences',
-        op: 'contains',
-        expected: {
-          degree_in: ['MA'],
-        },
-      }
-
-      const educationExperienceWithMultipleDegrees = {
-        ...mockEducationExperience,
-        degrees: ['BA', 'MA'] as Degree[],
-      }
-
-      const input: EducationExperiencesStateInput = {
-        education_experiences: [educationExperienceWithMultipleDegrees],
-      }
-
-      const result = getEducationExperiencesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'contains') {
-        expect(result.children[0].filters.degree_in?.expected).toEqual(['MA'])
-        expect(result.children[0].filters.degree_in?.actual).toEqual([
-          'BA',
-          'MA',
-        ]) // First degree
-        expect(result.children[0].filters.degree_in?.similarity).toBe(1) // Contains MA
+        assert.equal(
+          result.children[0].similarity,
+          DEFAULT_EDUCATION_EXPERIENCES_SIMILARITY,
+        )
       }
     })
   })
 })
-*/

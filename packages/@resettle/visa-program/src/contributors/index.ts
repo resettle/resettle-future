@@ -1,11 +1,6 @@
-import {
-  getStateOutput,
-  type State,
-  type StateInput,
-  type StateOutput,
-} from '../states'
+import { type State, type StateInput, type StateOutput } from '../states'
 import type { Context } from '../types'
-import { applyPointsContributor, type PointsContributor } from './points'
+import { type PointsContributor } from './points'
 
 type ContributorUnion = PointsContributor
 
@@ -40,10 +35,13 @@ export type ContributorOutput =
 const applyContributorByKind = (
   context: Context,
   contributor: ContributorChildUnion,
+  contributorAppliers: {
+    points: (context: Context, contributor: PointsContributor) => void
+  },
 ): void => {
   switch (contributor.kind) {
     case 'points':
-      applyPointsContributor(context, contributor)
+      contributorAppliers.points(context, contributor)
       break
   }
 }
@@ -52,6 +50,14 @@ export const applyContributor = (
   context: Context,
   contributor: Contributor,
   stateInput: StateInput,
+  getStateOutput: (
+    context: Context,
+    state: State,
+    stateInput: StateInput,
+  ) => StateOutput,
+  contributorAppliers: {
+    points: (context: Context, contributor: PointsContributor) => void
+  },
 ): ContributorOutput => {
   if (contributor.kind === 'or') {
     const childrenOutput: ContributorChildOutputUnion[] = []
@@ -73,7 +79,7 @@ export const applyContributor = (
         appliedChildIndex === undefined
       ) {
         // Apply the first matching child
-        applyContributorByKind(context, child)
+        applyContributorByKind(context, child, contributorAppliers)
 
         childrenOutput.push({
           kind: child.kind,
@@ -123,7 +129,7 @@ export const applyContributor = (
     }
   }
 
-  applyContributorByKind(context, contributor)
+  applyContributorByKind(context, contributor, contributorAppliers)
 
   return {
     kind: contributor.kind,

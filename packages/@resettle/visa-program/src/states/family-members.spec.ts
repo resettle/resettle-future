@@ -92,6 +92,7 @@ describe('family members state', () => {
         assert.deepStrictEqual(result, {
           kind: 'family_members',
           op: 'exists',
+          actual: undefined,
           expected: true,
           similarity: 0,
         })
@@ -133,6 +134,7 @@ describe('family members state', () => {
         assert.deepStrictEqual(result, {
           kind: 'family_members',
           op: 'exists',
+          actual: undefined,
           expected: false,
           similarity: 1,
         })
@@ -283,6 +285,7 @@ describe('family members state', () => {
         assert.deepStrictEqual(result, {
           kind: 'family_members',
           op: 'exists',
+          actual: undefined,
           expected: true,
           similarity: 0,
         })

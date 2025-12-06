@@ -9,7 +9,7 @@
     }
   },
   "scripts": {
-    "test": "tsx --test src/**/*.spec.ts"
+    "test": "tsx --test --experimental-test-module-mocks src/**/*.spec.ts"
   },
   "dependencies": {
     "@resettle/schema": "workspace:^",

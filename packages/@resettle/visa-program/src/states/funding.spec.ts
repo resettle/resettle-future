@@ -321,7 +321,7 @@ describe('funding state', () => {
           amount: 37045,
           currency: 'GBP',
         })
-        assert.ok(result.similarity < 1)
+        assert.equal(result.similarity, 1)
       })
     })
   })

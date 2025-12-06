@@ -98,7 +98,7 @@ describe('getDurationInYears', () => {
   it('should handle month boundaries with day adjustments', () => {
     const start = new Date('2020-01-31')
     const end = new Date('2021-01-30') // 11 months + 30 days (but day is less)
-    assert.ok(getDurationInYears(start, end) > 1) // < 2 months remaining, round down
+    assert.ok(getDurationInYears(start, end) < 1) // < 2 months remaining, round down
   })
 
   it('should handle exact 2-month boundary', () => {
@@ -139,6 +139,6 @@ describe('getDurationInYears', () => {
 
     const end2 = new Date('2021-03-01') // 1 year + exactly 2 months
     assert.ok(getDurationInYears(start, end2) > 1.1)
-    assert.ok(getDurationInYears(start, end2) > 1.2)
+    assert.ok(getDurationInYears(start, end2) < 1.2)
   })
 })

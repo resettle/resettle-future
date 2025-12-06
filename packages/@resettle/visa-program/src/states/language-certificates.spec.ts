@@ -1,11 +1,9 @@
-/*
 import type {
-  IELTSAcademicScore,
-  IELTSGeneralScore,
-  JLPTLevel,
-  LanguageCertificate,
-} from '@resettle/common'
-import { describe, expect, it } from 'vitest'
+  IeltsScore,
+  LanguageCertificateInput,
+} from '@resettle/schema/intelligence'
+import assert from 'node:assert'
+import { describe, it } from 'node:test'
 
 import { createMockContext } from '../mock'
 import type {
@@ -20,96 +18,82 @@ import {
 const mockContext = createMockContext()
 
 // Mock language certificates for testing
-const mockIELTSAcademicCertificate: LanguageCertificate = {
-  type: 'IELTS_ACADEMIC',
+const mockIELTSAcademicCertificate: LanguageCertificateInput = {
+  type: 'ielts-academic',
   listening: '7.5',
   reading: '8',
   writing: '7.5',
   speaking: '7',
 }
 
-const mockIELTSGeneralCertificate: LanguageCertificate = {
-  type: 'IELTS_GENERAL',
+const mockIELTSGeneralCertificate: LanguageCertificateInput = {
+  type: 'ielts-general',
   listening: '7',
   reading: '7.5',
   writing: '6.5',
   speaking: '7',
 }
 
-const mockCELPIPCertificate: LanguageCertificate = {
-  type: 'CELPIP_GENERAL',
-  listening: 9,
-  reading: 8,
-  writing: 7,
-  speaking: 8,
+const mockCELPIPCertificate: LanguageCertificateInput = {
+  type: 'celpip-general',
+  listening: '9',
+  reading: '8',
+  writing: '7',
+  speaking: '8',
 }
 
-const mockCAECertificate: LanguageCertificate = {
-  type: 'CAE',
+/*
+const mockCAECertificate: LanguageCertificateInput = {
+  type: 'cae',
   listening: 185,
   reading: 190,
   writing: 180,
   speaking: 185,
-  use_of_english: 185,
 }
+*/
 
-const mockCPECertificate: LanguageCertificate = {
-  type: 'CPE',
-  listening: 195,
-  reading: 200,
-  writing: 190,
-  speaking: 195,
-  use_of_english: 185,
-}
-
-const mockFCECertificate: LanguageCertificate = {
-  type: 'FCE',
+const mockFCECertificate: LanguageCertificateInput = {
+  type: 'fce',
   listening: 165,
   reading: 170,
   writing: 160,
   speaking: 165,
-  use_of_english: 160,
 }
 
-const mockTOEFLCertificate: LanguageCertificate = {
-  type: 'TOEFL',
+const mockTOEFLCertificate: LanguageCertificateInput = {
+  type: 'toefl',
   listening: 25,
   reading: 28,
   writing: 24,
   speaking: 26,
 }
 
-const mockOETCertificate: LanguageCertificate = {
-  type: 'OET',
+const mockOETCertificate: LanguageCertificateInput = {
+  type: 'oet',
   listening: 380,
   reading: 400,
   writing: 350,
   speaking: 370,
 }
 
-const mockTCFCertificate: LanguageCertificate = {
-  type: 'TCF_CANADA',
+const mockTCFCertificate: LanguageCertificateInput = {
+  type: 'tcf-canada',
   listening: 520,
   reading: 515,
   writing: 12,
   speaking: 14,
 }
 
-const mockTEFCertificate: LanguageCertificate = {
-  type: 'TEF_CANADA',
+const mockTEFCertificate: LanguageCertificateInput = {
+  type: 'tef-canada',
   listening: 580,
   reading: 560,
   writing: 550,
   speaking: 540,
 }
 
-const mockJLPTCertificate: LanguageCertificate = {
-  type: 'JLPT',
-  level: 'N2',
-}
-
-const mockGESECertificate: LanguageCertificate = {
-  type: 'GESE',
+const mockGESECertificate: LanguageCertificateInput = {
+  type: 'gese',
   grade: 8,
 }
 
@@ -119,7 +103,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'auen-min',
-        expected: ['Proficient'],
+        expected: ['proficient'],
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -132,13 +116,13 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('auen-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'auen-min')
 
       if (result.op === 'auen-min') {
-        expect(result.expected).toEqual(['Proficient'])
-        expect(result.actual).toBeDefined()
-        expect(result.similarity).toBe(1)
+        assert.deepStrictEqual(result.expected, ['proficient'])
+        assert.ok(result.actual)
+        assert.equal(result.similarity, 1)
       }
     })
 
@@ -146,11 +130,11 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'auen-min',
-        expected: ['Superior'],
+        expected: ['superior'],
       }
 
-      const lowScoreIELTS: LanguageCertificate = {
-        type: 'IELTS_ACADEMIC',
+      const lowScoreIELTS: LanguageCertificateInput = {
+        type: 'ielts-academic',
         listening: '6',
         reading: '6.5',
         writing: '6',
@@ -168,8 +152,8 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'auen-min') {
-        expect(result.expected).toEqual(['Superior'])
-        expect(result.similarity).toBeLessThan(1)
+        assert.deepStrictEqual(result.expected, ['superior'])
+        assert.ok(result.similarity < 1)
       }
     })
 
@@ -177,7 +161,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'auen-min',
-        expected: ['Competent'],
+        expected: ['competent'],
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -191,19 +175,23 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'auen-min') {
-        expect(result.expected).toEqual(['Competent'])
-        expect(result.actual).toBeUndefined()
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.deepStrictEqual(result.expected, ['competent'])
+        assert.ok(!result.actual)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
   })
 
   describe('getLanguageCertificatesStateOutput - cefr-min operation', () => {
+    /*
     it('should handle CAE certificate meeting CEFR requirements', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'cefr-min',
-        expected: { level: ['C1'] },
+        expected: { level: ['c1'] },
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -216,21 +204,22 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('cefr-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'cefr-min')
 
       if (result.op === 'cefr-min') {
-        expect(result.expected).toEqual({ level: ['C1'] })
-        expect(result.actual).toBeDefined()
-        expect(result.similarity).toBe(1)
+        assert.deepStrictEqual(result.expected, { level: ['c1'] })
+        assert.ok(result.actual)
+        assert.equal(result.similarity, 1)
       }
     })
+    */
 
     it('should handle multiple expected CEFR levels', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'cefr-min',
-        expected: { level: ['B2', 'C1', 'C2'] },
+        expected: { level: ['b2', 'c1', 'c2'] },
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -244,8 +233,8 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'cefr-min') {
-        expect(result.expected).toEqual({ level: ['B2', 'C1', 'C2'] })
-        expect(result.similarity).toBeGreaterThan(0)
+        assert.deepStrictEqual(result.expected, { level: ['b2', 'c1', 'c2'] })
+        assert.ok(result.similarity > 0)
       }
     })
 
@@ -253,7 +242,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'cefr-min',
-        expected: { level: ['B2'] },
+        expected: { level: ['b2'] },
       }
 
       const input: LanguageCertificatesStateInput = {}
@@ -265,7 +254,10 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'cefr-min') {
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
   })
@@ -288,15 +280,13 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('clb-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'clb-min')
 
       if (result.op === 'clb-min') {
-        expect(result.expected).toEqual(['7'])
-        expect(result.actual).toBeDefined()
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+        assert.deepStrictEqual(result.expected, ['7'])
+        assert.ok(result.actual)
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
 
@@ -307,12 +297,12 @@ describe('language-certificates', () => {
         expected: ['10'],
       }
 
-      const lowCELPIP: LanguageCertificate = {
-        type: 'CELPIP_GENERAL',
-        listening: 5,
-        reading: 4,
-        writing: 4,
-        speaking: 5,
+      const lowCELPIP: LanguageCertificateInput = {
+        type: 'celpip-general',
+        listening: '5',
+        reading: '4',
+        writing: '4',
+        speaking: '5',
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -326,7 +316,7 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'clb-min') {
-        expect(result.similarity).toBeLessThan(1)
+        assert.ok(result.similarity < 1)
       }
     })
   })
@@ -354,15 +344,15 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('clb-sections-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'clb-sections-min')
 
       if (result.op === 'clb-sections-min') {
-        expect(result.filters.listening?.expected).toBe('8')
-        expect(result.filters.reading?.expected).toBe('7')
-        expect(result.filters.writing?.expected).toBe('6')
-        expect(result.filters.speaking?.expected).toBe('7')
-        expect(result.similarity).toBeGreaterThan(0)
+        assert.equal(result.filters.listening?.expected, '8')
+        assert.equal(result.filters.reading?.expected, '7')
+        assert.equal(result.filters.writing?.expected, '6')
+        assert.equal(result.filters.speaking?.expected, '7')
+        assert.ok(result.similarity > 0)
       }
     })
 
@@ -387,10 +377,10 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'clb-sections-min') {
-        expect(result.filters.listening).toBeDefined()
-        expect(result.filters.speaking).toBeDefined()
-        expect(result.filters.reading).toBeUndefined()
-        expect(result.filters.writing).toBeUndefined()
+        assert.ok(result.filters.listening)
+        assert.ok(result.filters.speaking)
+        assert.ok(!result.filters.reading)
+        assert.ok(!result.filters.writing)
       }
     })
 
@@ -415,13 +405,18 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'clb-sections-min') {
-        expect(result.filters.listening?.similarity).toBe(
+        assert.equal(
+          result.filters.listening?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-        expect(result.filters.reading?.similarity).toBe(
+        assert.equal(
+          result.filters.reading?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
   })
@@ -431,7 +426,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'four-sections-certificate-min',
-        type: 'TOEFL',
+        type: 'toefl',
         expected: {
           listening: 22,
           reading: 24,
@@ -450,18 +445,16 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('four-sections-certificate-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'four-sections-certificate-min')
 
       if (result.op === 'four-sections-certificate-min') {
-        expect(result.type).toBe('TOEFL')
-        expect(result.filters.listening?.expected).toBe(22)
-        expect(result.filters.reading?.expected).toBe(24)
-        expect(result.filters.writing?.expected).toBe(20)
-        expect(result.filters.speaking?.expected).toBe(23)
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+        assert.equal(result.type, 'toefl')
+        assert.equal(result.filters.listening?.expected, 22)
+        assert.equal(result.filters.reading?.expected, 24)
+        assert.equal(result.filters.writing?.expected, 20)
+        assert.equal(result.filters.speaking?.expected, 23)
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
 
@@ -469,7 +462,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'four-sections-certificate-min',
-        type: 'OET',
+        type: 'oet',
         expected: {
           listening: 350,
           reading: 350,
@@ -489,8 +482,8 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'four-sections-certificate-min') {
-        expect(result.type).toBe('OET')
-        expect(result.similarity).toBe(1) // All sections meet or exceed requirements
+        assert.equal(result.type, 'oet')
+        assert.equal(result.similarity, 1) // All sections meet or exceed requirements
       }
     })
 
@@ -498,7 +491,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'four-sections-certificate-min',
-        type: 'TOEFL',
+        type: 'toefl',
         expected: {
           listening: 20,
           reading: 20,
@@ -516,10 +509,12 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'four-sections-certificate-min') {
-        expect(result.filters.listening?.similarity).toBe(
+        assert.equal(
+          result.filters.listening?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-        expect(result.filters.reading?.similarity).toBe(
+        assert.equal(
+          result.filters.reading?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
       }
@@ -529,7 +524,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'four-sections-certificate-min',
-        type: 'TCF_CANADA',
+        type: 'tcf-canada',
         expected: {
           listening: 500,
           reading: 500,
@@ -549,10 +544,8 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'four-sections-certificate-min') {
-        expect(result.type).toBe('TCF_CANADA')
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+        assert.equal(result.type, 'tcf-canada')
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
 
@@ -560,7 +553,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'four-sections-certificate-min',
-        type: 'TEF_CANADA',
+        type: 'tef-canada',
         expected: {
           listening: 500,
           reading: 500,
@@ -580,155 +573,23 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'four-sections-certificate-min') {
-        expect(result.type).toBe('TEF_CANADA')
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+        assert.equal(result.type, 'tef-canada')
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
   })
 
-  describe('getLanguageCertificatesStateOutput - five-sections-certificate-min operation', () => {
-    it('should handle CAE certificate with five-section requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'five-sections-certificate-min',
-        type: 'CAE',
-        expected: {
-          listening: 180,
-          reading: 180,
-          writing: 180,
-          speaking: 180,
-          use_of_english: 180,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockCAECertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('five-sections-certificate-min')
-
-      if (result.op === 'five-sections-certificate-min') {
-        expect(result.type).toBe('CAE')
-        expect(result.filters.listening?.expected).toBe(180)
-        expect(result.filters.use_of_english?.expected).toBe(180)
-        expect(result.similarity).toBe(1)
-      }
-    })
-
-    it('should handle CPE certificate requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'five-sections-certificate-min',
-        type: 'CPE',
-        expected: {
-          listening: 190,
-          reading: 190,
-          writing: 190,
-          speaking: 190,
-          use_of_english: 190,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockCPECertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'five-sections-certificate-min') {
-        expect(result.type).toBe('CPE')
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
-      }
-    })
-
-    it('should handle FCE certificate requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'five-sections-certificate-min',
-        type: 'FCE',
-        expected: {
-          listening: 160,
-          reading: 160,
-          writing: 160,
-          speaking: 160,
-          use_of_english: 160,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockFCECertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'five-sections-certificate-min') {
-        expect(result.type).toBe('FCE')
-        expect(result.similarity).toBe(1)
-      }
-    })
-
-    it('should handle missing five-section certificate', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'five-sections-certificate-min',
-        type: 'CAE',
-        expected: {
-          listening: 180,
-          reading: 180,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'five-sections-certificate-min') {
-        expect(result.filters.listening?.similarity).toBe(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
-        expect(result.filters.reading?.similarity).toBe(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
-      }
-    })
-  })
-
-  describe('getLanguageCertificatesStateOutput - ielts-academic-min operation', () => {
+  describe('getLanguageCertificatesStateOutput - ielts-min operation', () => {
     it('should handle IELTS Academic certificate meeting requirements', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
-        op: 'ielts-academic-min',
+        op: 'ielts-min',
+        type: 'ielts-academic',
         expected: {
-          listening: '7.0' as IELTSAcademicScore,
-          reading: '7.5' as IELTSAcademicScore,
-          writing: '6.0' as IELTSAcademicScore,
-          speaking: '6.5' as IELTSAcademicScore,
+          listening: '7.0' as IeltsScore,
+          reading: '7.5' as IeltsScore,
+          writing: '6.0' as IeltsScore,
+          speaking: '6.5' as IeltsScore,
         },
       }
 
@@ -742,27 +603,26 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('ielts-academic-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'ielts-min')
 
-      if (result.op === 'ielts-academic-min') {
-        expect(result.filters.listening?.expected).toBe('7.0')
-        expect(result.filters.reading?.expected).toBe('7.5')
-        expect(result.filters.writing?.expected).toBe('6.0')
-        expect(result.filters.speaking?.expected).toBe('6.5')
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+      if (result.op === 'ielts-min') {
+        assert.equal(result.filters.listening?.expected, '7.0')
+        assert.equal(result.filters.reading?.expected, '7.5')
+        assert.equal(result.filters.writing?.expected, '6.0')
+        assert.equal(result.filters.speaking?.expected, '6.5')
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
 
     it('should handle partial IELTS Academic requirements', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
-        op: 'ielts-academic-min',
+        op: 'ielts-min',
+        type: 'ielts-academic',
         expected: {
-          listening: '8.0' as IELTSAcademicScore,
-          writing: '7.0' as IELTSAcademicScore,
+          listening: '8.0' as IeltsScore,
+          writing: '7.0' as IeltsScore,
         },
       }
 
@@ -776,21 +636,22 @@ describe('language-certificates', () => {
         input,
       )
 
-      if (result.op === 'ielts-academic-min') {
-        expect(result.filters.listening).toBeDefined()
-        expect(result.filters.writing).toBeDefined()
-        expect(result.filters.reading).toBeUndefined()
-        expect(result.filters.speaking).toBeUndefined()
+      if (result.op === 'ielts-min') {
+        assert.ok(result.filters.listening)
+        assert.ok(result.filters.writing)
+        assert.ok(!result.filters.reading)
+        assert.ok(!result.filters.speaking)
       }
     })
 
     it('should handle missing IELTS Academic certificate', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
-        op: 'ielts-academic-min',
+        op: 'ielts-min',
+        type: 'ielts-academic',
         expected: {
-          listening: '7.0' as IELTSAcademicScore,
-          reading: '7.0' as IELTSAcademicScore,
+          listening: '7.0' as IeltsScore,
+          reading: '7.0' as IeltsScore,
         },
       }
 
@@ -804,106 +665,19 @@ describe('language-certificates', () => {
         input,
       )
 
-      if (result.op === 'ielts-academic-min') {
-        expect(result.filters.listening?.similarity).toBe(
+      if (result.op === 'ielts-min') {
+        assert.equal(
+          result.filters.listening?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-        expect(result.filters.reading?.similarity).toBe(
+        assert.equal(
+          result.filters.reading?.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
-      }
-    })
-  })
-
-  describe('getLanguageCertificatesStateOutput - ielts-general-min operation', () => {
-    it('should handle IELTS General certificate meeting requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'ielts-general-min',
-        expected: {
-          listening: '6.5' as IELTSGeneralScore,
-          reading: '7.0' as IELTSGeneralScore,
-          writing: '6.0' as IELTSGeneralScore,
-          speaking: '6.5' as IELTSGeneralScore,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockIELTSGeneralCertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('ielts-general-min')
-
-      if (result.op === 'ielts-general-min') {
-        expect(result.filters.listening?.expected).toBe('6.5')
-        expect(result.filters.reading?.expected).toBe('7.0')
-        expect(result.filters.writing?.expected).toBe('6.0')
-        expect(result.filters.speaking?.expected).toBe('6.5')
-        expect(result.similarity).toBeGreaterThan(
+        assert.equal(
+          result.similarity,
           DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
         )
-      }
-    })
-
-    it('should handle high IELTS General requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'ielts-general-min',
-        expected: {
-          listening: '8.0' as IELTSGeneralScore,
-          reading: '8.5' as IELTSGeneralScore,
-          writing: '8.0' as IELTSGeneralScore,
-          speaking: '8.0' as IELTSGeneralScore,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockIELTSGeneralCertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'ielts-general-min') {
-        expect(result.similarity).toBeLessThan(1) // Scores don't meet high requirements
-      }
-    })
-
-    it('should handle missing IELTS General certificate', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'ielts-general-min',
-        expected: {
-          listening: '7.0' as IELTSGeneralScore,
-        },
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'ielts-general-min') {
-        expect(result.filters.listening?.similarity).toBe(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
   })
@@ -926,13 +700,13 @@ describe('language-certificates', () => {
         input,
       )
 
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('gese-min')
+      assert.equal(result.kind, 'language_certificates')
+      assert.equal(result.op, 'gese-min')
 
       if (result.op === 'gese-min') {
-        expect(result.expected).toBe(7)
-        expect(result.actual).toBe(8)
-        expect(result.similarity).toBe(1) // Exceeds requirement
+        assert.equal(result.expected, 7)
+        assert.equal(result.actual, 8)
+        assert.equal(result.similarity, 1) // Exceeds requirement
       }
     })
 
@@ -954,9 +728,9 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'gese-min') {
-        expect(result.expected).toBe(10)
-        expect(result.actual).toBe(8)
-        expect(result.similarity).toBe(0.8) // 8/10 = 0.8
+        assert.equal(result.expected, 10)
+        assert.equal(result.actual, 8)
+        assert.equal(result.similarity, 0.8) // 8/10 = 0.8
       }
     })
 
@@ -978,86 +752,12 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'gese-min') {
-        expect(result.expected).toBe(8)
-        expect(result.actual).toBeUndefined()
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
-      }
-    })
-  })
-
-  describe('getLanguageCertificatesStateOutput - jlpt-min operation', () => {
-    it('should handle JLPT certificate meeting requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'jlpt-min',
-        expected: 'N3' as JLPTLevel,
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockJLPTCertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      expect(result.kind).toBe('language_certificates')
-      expect(result.op).toBe('jlpt-min')
-
-      if (result.op === 'jlpt-min') {
-        expect(result.expected).toBe('N3')
-        expect(result.actual).toBe('N2')
-        expect(result.similarity).toBe(1) // N2 is a higher level than N3
-      }
-    })
-
-    it('should handle JLPT certificate not meeting requirements', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'jlpt-min',
-        expected: 'N1' as JLPTLevel,
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockJLPTCertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'jlpt-min') {
-        expect(result.expected).toBe('N1')
-        expect(result.actual).toBe('N2')
-        expect(result.similarity).toBe(0.75) // N2 is lower than N1
-      }
-    })
-
-    it('should handle missing JLPT certificate', () => {
-      const state: LanguageCertificatesState = {
-        kind: 'language_certificates',
-        op: 'jlpt-min',
-        expected: 'N4' as JLPTLevel,
-      }
-
-      const input: LanguageCertificatesStateInput = {
-        language_certificates: [mockTOEFLCertificate],
-      }
-
-      const result = getLanguageCertificatesStateOutput(
-        mockContext,
-        state,
-        input,
-      )
-
-      if (result.op === 'jlpt-min') {
-        expect(result.expected).toBe('N4')
-        expect(result.actual).toBeUndefined()
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.equal(result.expected, 8)
+        assert.ok(!result.actual)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
   })
@@ -1067,7 +767,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'auen-min',
-        expected: ['Competent'],
+        expected: ['competent'],
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -1081,7 +781,10 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'auen-min') {
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
 
@@ -1101,22 +804,26 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'clb-min') {
-        expect(result.similarity).toBe(DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
+        assert.equal(
+          result.similarity,
+          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
+        )
       }
     })
 
     it('should handle multiple certificates of same type', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
-        op: 'ielts-academic-min',
+        op: 'ielts-min',
+        type: 'ielts-academic',
         expected: {
-          listening: '7.0' as IELTSAcademicScore,
-          reading: '7.0' as IELTSAcademicScore,
+          listening: '7.0' as IeltsScore,
+          reading: '7.0' as IeltsScore,
         },
       }
 
-      const secondIELTS: LanguageCertificate = {
-        type: 'IELTS_ACADEMIC',
+      const secondIELTS: LanguageCertificateInput = {
+        type: 'ielts-academic',
         listening: '8',
         reading: '8.5',
         writing: '7.5',
@@ -1133,10 +840,8 @@ describe('language-certificates', () => {
         input,
       )
 
-      if (result.op === 'ielts-academic-min') {
-        expect(result.similarity).toBeGreaterThan(
-          DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY,
-        )
+      if (result.op === 'ielts-min') {
+        assert.ok(result.similarity > DEFAULT_LANGUAGE_CERTIFICATES_SIMILARITY)
       }
     })
 
@@ -1144,7 +849,7 @@ describe('language-certificates', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
         op: 'auen-min',
-        expected: ['Proficient'],
+        expected: ['proficient'],
       }
 
       const input: LanguageCertificatesStateInput = {
@@ -1152,7 +857,6 @@ describe('language-certificates', () => {
           mockIELTSAcademicCertificate,
           mockIELTSGeneralCertificate,
           mockCELPIPCertificate,
-          mockJLPTCertificate,
         ],
       }
 
@@ -1163,10 +867,9 @@ describe('language-certificates', () => {
       )
 
       if (result.op === 'auen-min') {
-        expect(result.actual).toBeDefined()
-        expect(result.similarity).toBeGreaterThan(0)
+        assert.ok(result.actual)
+        assert.ok(result.similarity > 0)
       }
     })
   })
 })
-*/

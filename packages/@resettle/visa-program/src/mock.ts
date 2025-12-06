@@ -3,10 +3,6 @@ import type { OccupationClassification } from '@resettle/schema'
 import { getRefValue } from './refs'
 import type { Context } from './types'
 
-/**
- * Create a mock context
- * @returns The mock context
- */
 export const createMockContext = (): Context => {
   const date = new Date('2024-07-25')
   return {

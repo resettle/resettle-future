@@ -41,14 +41,12 @@ import {
   type FundingStateInput,
   type FundingStateOutput,
 } from './funding'
-/*
 import {
   getLanguageCertificatesStateOutput,
   type LanguageCertificatesState,
   type LanguageCertificatesStateInput,
   type LanguageCertificatesStateOutput,
 } from './language-certificates'
-*/
 import {
   getPermanentResidencyStateOutput,
   type PermanentResidencyState,
@@ -75,7 +73,7 @@ export * from './country-of-birth'
 export * from './education-experiences'
 export * from './family-members'
 export * from './funding'
-// export * from './language-certificates'
+export * from './language-certificates'
 export * from './permanent-residency'
 export * from './points'
 export * from './work-experiences'
@@ -87,7 +85,7 @@ export type StateInput = AgeStateInput &
   EducationExperiencesStateInput &
   FamilyMembersStateInput &
   FundingStateInput &
-  // LanguageCertificatesStateInput &
+  LanguageCertificatesStateInput &
   PermanentResidencyStateInput &
   PointsStateInput &
   WorkExperiencesStateInput
@@ -104,7 +102,7 @@ export type State =
   | EducationExperiencesState
   | FamilyMembersState
   | FundingState
-  // | LanguageCertificatesState
+  | LanguageCertificatesState
   | PermanentResidencyState
   | PointsState
   | WorkExperiencesState
@@ -119,7 +117,7 @@ export type StateOutput =
   | EducationExperiencesStateOutput
   | FamilyMembersStateOutput
   | FundingStateOutput
-  // | LanguageCertificatesStateOutput
+  | LanguageCertificatesStateOutput
   | PermanentResidencyStateOutput
   | PointsStateOutput
   | WorkExperiencesStateOutput
@@ -208,10 +206,8 @@ export const getStateOutput = (
       return getFundingStateOutput(context, state, stateInput)
     case 'israel':
       return getIsraelStateOutput(state, stateInput)
-    /*
     case 'language_certificates':
       return getLanguageCertificatesStateOutput(context, state, stateInput)
-      */
     case 'permanent_residency':
       return getPermanentResidencyStateOutput(state, stateInput)
     case 'points':

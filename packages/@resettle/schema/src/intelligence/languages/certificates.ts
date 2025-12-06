@@ -1,48 +1,44 @@
 import { z } from 'zod'
 
-import { intSchema } from '../../_common'
+import { intOptionalSchema, intSchema } from '../../_common'
 import { validCefrLevelsSchema, validClbLevelsSchema } from './levels'
 
-const integerScoreSchema = intSchema
-
-const optionalIntegerScoreSchema = integerScoreSchema.optional()
-
-const cambridgeScoreSchema = integerScoreSchema.min(80).max(230)
+const cambridgeScoreSchema = intSchema.min(80).max(230)
 
 const optionalCambridgeScoreSchema = cambridgeScoreSchema.optional()
 
-const geseGradeSchema = integerScoreSchema.min(1).max(12)
+const geseGradeSchema = intSchema.min(1).max(12)
 
-const languageCertScoreSchema = integerScoreSchema.min(0).max(100)
+const languageCertScoreSchema = intSchema.min(0).max(100)
 
 const optionalLanguageCertScoreSchema = languageCertScoreSchema.optional()
 
-const metScoreSchema = integerScoreSchema.min(0).max(80)
+const metScoreSchema = intSchema.min(0).max(80)
 
 const optionalMetScoreSchema = metScoreSchema.optional()
 
-const oetScoreSchema = integerScoreSchema.min(0).max(500)
+const oetScoreSchema = intSchema.min(0).max(500)
 
 const optionalOetScoreSchema = oetScoreSchema.optional()
 
-const pteScoreSchema = integerScoreSchema.min(10).max(90)
+const pteScoreSchema = intSchema.min(10).max(90)
 
 const optionalPteScoreSchema = pteScoreSchema.optional()
 
-const tcfComprehensionScoreSchema = integerScoreSchema.min(0).max(699)
+const tcfComprehensionScoreSchema = intSchema.min(0).max(699)
 
 const optionalTcfComprehensionScoreSchema =
   tcfComprehensionScoreSchema.optional()
 
-const tcfSkillScoreSchema = integerScoreSchema.min(0).max(20)
+const tcfSkillScoreSchema = intSchema.min(0).max(20)
 
 const optionalTcfSkillScoreSchema = tcfSkillScoreSchema.optional()
 
-const tefScoreSchema = integerScoreSchema.min(0).max(699)
+const tefScoreSchema = intSchema.min(0).max(699)
 
 const optionalTefScoreSchema = tefScoreSchema.optional()
 
-const toeflScoreSchema = integerScoreSchema.min(0).max(30)
+const toeflScoreSchema = intSchema.min(0).max(30)
 
 const optionalToeflScoreSchema = toeflScoreSchema.optional()
 
@@ -275,7 +271,7 @@ export const oetCertificateInputSchema = z.object({
   reading: oetScoreSchema,
   speaking: oetScoreSchema,
   writing: oetScoreSchema,
-  total: optionalIntegerScoreSchema,
+  total: intOptionalSchema,
 })
 
 export type OetCertificateInput = z.infer<typeof oetCertificateInputSchema>
@@ -286,7 +282,7 @@ export const oetCertificateOutputSchema = z.object({
   reading: optionalOetScoreSchema,
   speaking: optionalOetScoreSchema,
   writing: optionalOetScoreSchema,
-  total: optionalIntegerScoreSchema,
+  total: intOptionalSchema,
 })
 
 export type OetCertificateOutput = z.infer<typeof oetCertificateOutputSchema>
@@ -387,7 +383,7 @@ export const toeflCertificateInputSchema = z.object({
   reading: toeflScoreSchema,
   speaking: toeflScoreSchema,
   writing: toeflScoreSchema,
-  total: optionalIntegerScoreSchema,
+  total: intOptionalSchema,
 })
 
 export type ToeflCertificateInput = z.infer<typeof toeflCertificateInputSchema>
@@ -398,7 +394,7 @@ export const toeflCertificateOutputSchema = z.object({
   reading: optionalToeflScoreSchema,
   speaking: optionalToeflScoreSchema,
   writing: optionalToeflScoreSchema,
-  total: optionalIntegerScoreSchema,
+  total: intOptionalSchema,
 })
 
 export type ToeflCertificateOutput = z.infer<

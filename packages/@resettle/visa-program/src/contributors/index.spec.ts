@@ -1,44 +1,21 @@
-/*
 import assert from 'node:assert'
-import { beforeEach, describe, it, mock } from 'node:test'
+import { describe, it, mock } from 'node:test'
 
-import { getStateOutput } from '../states'
+import type { StateOutput } from '../states'
 import type { Context, StateInputOverrides } from '../types'
 import type { Contributor, OrContributor } from './index'
 import { applyContributor } from './index'
-import { applyPointsContributor } from './points'
-
-// Mock the dependencies
-mock.module('../states', {
-  namedExports: {
-    getStateOutput: mock.fn(),
-  },
-})
-
-mock.module('./points', {
-  namedExports: {
-    applyPointsContributor: mock.fn(),
-  },
-})
-
-const mockGetStateOutput = vi.mocked(getStateOutput)
-const mockApplyPointsContributor = vi.mocked(applyPointsContributor)
 
 describe('contributors', () => {
   const createMockContext = (
     overrides: Partial<StateInputOverrides> = {},
   ): Context => ({
-    exchangeRatesData: {
-      base: 'USD' as const,
-      date: new Date(),
-      rates: {},
-    },
+    exchangeRatesData: [],
     institutionRankingsData: [],
     fortuneGlobal500Data: [],
-    occupationClassificationCrosswalksData: {} as any,
-    occupationClassificationsData: {} as any,
-    noc2021Teer2025Data: [],
-    getRefValue: vi.fn(),
+    occupationClassificationCrosswalksData: [],
+    occupationClassificationsData: [],
+    getRefValue: mock.fn(),
     stateInputOverrides: {
       points: 0,
       ...overrides,
@@ -54,10 +31,6 @@ describe('contributors', () => {
     op: '>=' as const,
     expected: 60,
   }
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
 
   describe('applyContributor', () => {
     describe('with individual contributor', () => {
@@ -77,22 +50,29 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.9,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
-
-        expect(mockGetStateOutput).toHaveBeenCalledWith(
+        const result = applyContributor(
+          context,
+          contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
+        assert.deepStrictEqual(mockGetStateOutput.mock.calls[0].arguments, [
           context,
           mockPointsState,
           mockStateInput,
+        ])
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, contributor],
         )
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
-          context,
-          contributor,
-        )
-        expect(result).toEqual({
+        assert.deepStrictEqual(result, {
           kind: 'points',
           op: '+',
           value: 10,
@@ -118,19 +98,26 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.7,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
-
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
+        const result = applyContributor(
+          context,
+          contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
 
-        expect(mockGetStateOutput).toHaveBeenCalledWith(
+        assert.deepStrictEqual(mockGetStateOutput.mock.calls[0].arguments, [
           context,
           mockPointsState,
           mockStateInput,
-        )
-        expect(mockApplyPointsContributor).not.toHaveBeenCalled()
-        expect(result).toEqual({
+        ])
+        assert.equal(mockApplyPointsContributor.mock.callCount(), 0)
+        assert.deepStrictEqual(result, {
           kind: 'points',
           op: '+',
           value: 10,
@@ -155,16 +142,23 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.9,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
+        const result = applyContributor(
+          context,
+          contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
 
-        expect(mockApplyPointsContributor).not.toHaveBeenCalled()
-
-        assert(result.kind === 'points')
-        expect(result.is_applied).toBe(false)
+        assert.equal(mockApplyPointsContributor.mock.callCount(), 0)
+        assert.ok(result.kind === 'points')
+        assert.ok(!result.is_applied)
       })
 
       it('should apply when similarity equals threshold', () => {
@@ -183,19 +177,26 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.8,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
-
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
+        const result = applyContributor(
           context,
           contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, contributor],
         )
 
-        assert(result.kind === 'points')
-        expect(result.is_applied).toBe(true)
+        assert.ok(result.kind === 'points')
+        assert.ok(result.is_applied)
       })
     })
 
@@ -236,22 +237,33 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.8,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>(
+          () => mockStateOutput1,
+        )
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput
-          .mockReturnValueOnce(mockStateOutput1)
-          .mockReturnValueOnce(mockStateOutput2)
-
-        const context = createMockContext()
-        const result = applyContributor(context, orContributor, mockStateInput)
-
-        expect(mockGetStateOutput).toHaveBeenCalledTimes(2)
-        expect(mockApplyPointsContributor).toHaveBeenCalledTimes(1)
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
-          context,
-          orContributor.children[0],
+        mockGetStateOutput.mock.mockImplementationOnce(
+          () => mockStateOutput2,
+          1,
         )
 
-        expect(result).toEqual({
+        const context = createMockContext()
+        const result = applyContributor(
+          context,
+          orContributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
+
+        assert.equal(mockGetStateOutput.mock.callCount(), 2)
+        assert.equal(mockApplyPointsContributor.mock.callCount(), 1)
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, orContributor.children[0]],
+        )
+
+        assert.deepStrictEqual(result, {
           kind: 'or',
           children: [
             {
@@ -296,17 +308,25 @@ describe('contributors', () => {
           actual: 50,
           similarity: 0.6,
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, orContributor, mockStateInput)
+        const result = applyContributor(
+          context,
+          orContributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
 
-        expect(mockApplyPointsContributor).not.toHaveBeenCalled()
+        assert.equal(mockApplyPointsContributor.mock.callCount(), 0)
 
-        assert(result.kind === 'or')
-        expect(result.applied_child_index).toBeUndefined()
-        expect(result.children[0].is_applied).toBe(false)
+        assert.ok(result.kind === 'or')
+        assert.ok(!result.applied_child_index)
+        assert.ok(!result.children[0].is_applied)
       })
 
       it('should handle empty children array', () => {
@@ -314,14 +334,22 @@ describe('contributors', () => {
           kind: 'or',
           children: [],
         }
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
 
         const context = createMockContext()
-        const result = applyContributor(context, orContributor, mockStateInput)
+        const result = applyContributor(
+          context,
+          orContributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
+        )
 
-        expect(mockGetStateOutput).not.toHaveBeenCalled()
-        expect(mockApplyPointsContributor).not.toHaveBeenCalled()
+        assert.equal(mockGetStateOutput.mock.callCount(), 0)
+        assert.equal(mockApplyPointsContributor.mock.callCount(), 0)
 
-        expect(result).toEqual({
+        assert.deepStrictEqual(result, {
           kind: 'or',
           children: [],
           applied_child_index: undefined,
@@ -347,20 +375,29 @@ describe('contributors', () => {
           similarity: 0.9,
         }
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
+
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
-
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
+        const result = applyContributor(
           context,
           contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
         )
 
-        assert(result.kind === 'points')
-        expect(result.is_applied).toBe(true)
-        expect(result.op).toBe('-')
-        expect(result.value).toBe(15)
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, contributor],
+        )
+
+        assert.ok(result.kind === 'points')
+        assert.ok(result.is_applied)
+        assert.equal(result.op, '-')
+        assert.equal(result.value, 15)
       })
 
       it('should handle multiplication operation', () => {
@@ -380,20 +417,29 @@ describe('contributors', () => {
           similarity: 0.9,
         }
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
+
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
-
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
+        const result = applyContributor(
           context,
           contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
         )
 
-        assert(result.kind === 'points')
-        expect(result.is_applied).toBe(true)
-        expect(result.op).toBe('*')
-        expect(result.value).toBe(2)
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, contributor],
+        )
+
+        assert.ok(result.kind === 'points')
+        assert.ok(result.is_applied)
+        assert.equal(result.op, '*')
+        assert.equal(result.value, 2)
       })
 
       it('should handle division operation', () => {
@@ -413,17 +459,26 @@ describe('contributors', () => {
           similarity: 0.9,
         }
 
-        mockGetStateOutput.mockReturnValue(mockStateOutput)
+        const mockGetStateOutput = mock.fn<() => StateOutput>()
+        const mockApplyPointsContributor = mock.fn()
+
+        mockGetStateOutput.mock.mockImplementationOnce(() => mockStateOutput)
 
         const context = createMockContext()
-        const result = applyContributor(context, contributor, mockStateInput)
-
-        expect(mockApplyPointsContributor).toHaveBeenCalledWith(
+        const result = applyContributor(
           context,
           contributor,
+          mockStateInput,
+          mockGetStateOutput,
+          { points: mockApplyPointsContributor },
         )
 
-        assert(result.kind === 'points')
+        assert.deepStrictEqual(
+          mockApplyPointsContributor.mock.calls[0].arguments,
+          [context, contributor],
+        )
+
+        assert.ok(result.kind === 'points')
         assert.ok(result.is_applied)
         assert.equal(result.op, '/')
         assert.equal(result.value, 3)
@@ -431,4 +486,3 @@ describe('contributors', () => {
     })
   })
 })
-*/

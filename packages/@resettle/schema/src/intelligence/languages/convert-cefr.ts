@@ -4,7 +4,7 @@ import type {
 } from './certificates'
 import type { CefrLevel, ValidCefrLevel } from './levels'
 
-export const convertCefrToCertificate = (
+export const convertCefrLevelToCertificate = (
   level: ValidCefrLevel,
   type:
     | 'cae'
@@ -280,7 +280,8 @@ export const convertCefrToCertificate = (
   }
 }
 
-export const convertCertificateToCefr = (
+// TODO
+export const convertCertificateToCefrLevel = (
   certificate: LanguageCertificateInput,
 ): CefrLevel => {
   switch (certificate.type) {

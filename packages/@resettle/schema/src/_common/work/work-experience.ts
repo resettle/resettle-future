@@ -19,7 +19,6 @@ export const workExperienceSchema = z.object({
   job_title: stringOptionalSchema,
   job_description: stringOptionalSchema,
   is_remote: booleanOptionalSchema,
-  is_stem: booleanOptionalSchema,
   occupation_codes: occupationCodesOptionalSchema,
   fixed_annual_salary: monetaryOptionalSchema,
   fixed_monthly_salary: monetaryOptionalSchema,

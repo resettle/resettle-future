@@ -1,4 +1,3 @@
-/*
 import type { EducationExperience } from '@resettle/schema'
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
@@ -112,7 +111,7 @@ describe('graduation-date', () => {
           'graduation_date.doctorate',
           mockInput,
         )
-        assert.ok(result === null).toBeNull()
+        assert.ok(result === null)
       })
     })
 
@@ -123,7 +122,7 @@ describe('graduation-date', () => {
           mockInput,
         )
         // Should return the highest and most recent degree (master's)
-        expect(result).toEqual(new Date('2026-05-30'))
+        assert.deepStrictEqual(result, new Date('2026-05-30'))
       })
 
       it('should return most recent graduation date for bachelor_or_higher', () => {
@@ -132,7 +131,7 @@ describe('graduation-date', () => {
           mockInput,
         )
         // Should return the most recent graduation from bachelor or higher (master's)
-        expect(result).toEqual(new Date('2026-05-30'))
+        assert.deepStrictEqual(result, new Date('2026-05-30'))
       })
 
       it('should return master graduation date for master_or_higher', () => {
@@ -140,7 +139,7 @@ describe('graduation-date', () => {
           'graduation_date.master_or_higher',
           mockInput,
         )
-        expect(result).toEqual(new Date('2026-05-30'))
+        assert.deepStrictEqual(result, new Date('2026-05-30'))
       })
 
       it('should return null for doctorate_or_higher when no doctorate exists', () => {
@@ -148,7 +147,7 @@ describe('graduation-date', () => {
           'graduation_date.doctorate_or_higher',
           mockInput,
         )
-        expect(result).toBeNull()
+        assert.ok(result === null)
       })
     })
 
@@ -158,7 +157,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.add_years:2',
           mockInput,
         )
-        expect(result).toEqual(new Date('2026-05-15'))
+        assert.deepStrictEqual(result, new Date('2026-05-15'))
       })
 
       it('should add months to graduation date', () => {
@@ -166,7 +165,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.add_months:6',
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-11-15'))
+        assert.deepStrictEqual(result, new Date('2024-11-15'))
       })
 
       it('should add days to graduation date', () => {
@@ -174,7 +173,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.add_days:30',
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-06-14'))
+        assert.deepStrictEqual(result, new Date('2024-06-14'))
       })
 
       it('should subtract years from graduation date', () => {
@@ -182,7 +181,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.subtract_years:1',
           mockInput,
         )
-        expect(result).toEqual(new Date('2023-05-15'))
+        assert.deepStrictEqual(result, new Date('2023-05-15'))
       })
 
       it('should subtract months from graduation date', () => {
@@ -190,7 +189,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.subtract_months:3',
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-02-15'))
+        assert.deepStrictEqual(result, new Date('2024-02-15'))
       })
 
       it('should subtract days from graduation date', () => {
@@ -198,7 +197,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.subtract_days:15',
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-04-30'))
+        assert.deepStrictEqual(result, new Date('2024-04-30'))
       })
 
       it('should return original date for invalid calculation', () => {
@@ -206,7 +205,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.invalid_operation:5' as GraduationDateRef,
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-05-15'))
+        assert.deepStrictEqual(result, new Date('2024-05-15'))
       })
 
       it('should return original date for invalid number', () => {
@@ -214,7 +213,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor.add_years:invalid' as GraduationDateRef,
           mockInput,
         )
-        expect(result).toEqual(new Date('2024-05-15'))
+        assert.deepStrictEqual(result, new Date('2024-05-15'))
       })
     })
 
@@ -225,7 +224,7 @@ describe('graduation-date', () => {
             {
               id: 'no-degree',
               institution_name: 'School',
-              degrees: undefined,
+              level: undefined,
               start_date: new Date('2020-01-01'),
               end_date: new Date('2024-01-01'),
             },
@@ -235,26 +234,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor',
           inputWithoutDegrees,
         )
-        expect(result).toBeNull()
-      })
-
-      it('should handle education experience with empty degrees array', () => {
-        const inputWithEmptyDegrees: GraduationDateRefInput = {
-          education_experiences: [
-            {
-              id: 'empty-degrees',
-              institution_name: 'School',
-              degrees: [],
-              start_date: new Date('2020-01-01'),
-              end_date: new Date('2024-01-01'),
-            },
-          ],
-        }
-        const result = getGraduationDateRefValue(
-          'graduation_date.bachelor',
-          inputWithEmptyDegrees,
-        )
-        expect(result).toBeNull()
+        assert.ok(result === null)
       })
 
       it('should handle education experience without end_date', () => {
@@ -273,7 +253,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor',
           inputWithoutEndDate,
         )
-        expect(result).toBeNull()
+        assert.ok(result === null)
       })
 
       it('should handle multiple education experiences with same degree level', () => {
@@ -299,7 +279,7 @@ describe('graduation-date', () => {
           'graduation_date.bachelor',
           inputWithMultipleBachelors,
         )
-        expect(result).toEqual(new Date('2024-05-20'))
+        assert.deepStrictEqual(result, new Date('2024-05-20'))
       })
     })
 
@@ -322,15 +302,14 @@ describe('graduation-date', () => {
           'graduation_date.doctorate',
           inputWithDoctorate,
         )
-        expect(result).toEqual(new Date('2030-05-15'))
+        assert.deepStrictEqual(result, new Date('2030-05-15'))
 
         const resultOrHigher = getGraduationDateRefValue(
           'graduation_date.master_or_higher',
           inputWithDoctorate,
         )
-        expect(resultOrHigher).toEqual(new Date('2030-05-15'))
+        assert.deepStrictEqual(resultOrHigher, new Date('2030-05-15'))
       })
     })
   })
 })
-*/
