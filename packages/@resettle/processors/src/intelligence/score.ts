@@ -3,6 +3,7 @@ import type { SkillTag, SkillTagMetadata } from '@resettle/schema/intelligence'
 import { cosineSimilarity } from '@resettle/utils'
 import { isAfter } from 'date-fns'
 import { type Kysely } from 'kysely'
+import { fromSql } from 'pgvector/kysely'
 
 // TODO: Differentiate by data.
 // The range is [0, 3]
@@ -53,22 +54,35 @@ export const skillCollectionDistance = (a: SkillTag[], b: SkillTag[]) => {
 
 const distanceToScore = (distance: number) => (3 - distance) / 3
 
+// TODO: Considering distance is commutative, sorting profile id will make storage size 1/2, also can omit the diagonal.
 export const calculateRawScores = async (db: Kysely<IntelligenceDatabase>) => {
-  const tagProfiles = await db
+  const itemTagProfiles = await db
     .selectFrom('tag_profile')
-    .leftJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
+    .innerJoin('opportunity', 'opportunity.tag_profile_id', 'tag_profile.id')
     .select([
       'tag_profile.computed_at',
       'tag_profile.created_at',
       'tag_profile.id',
       'opportunity.id as opportunity_id',
+      'opportunity.updated_at',
     ])
     .execute()
+  const itemTagProfileMap = new Map<string, Date>()
+  for (const itp of itemTagProfiles) {
+    const latestUpdatedAt = itemTagProfileMap.get(itp.id)
+    if (
+      !latestUpdatedAt ||
+      latestUpdatedAt.getTime() < itp.updated_at.getTime()
+    ) {
+      itemTagProfileMap.set(itp.id, itp.updated_at)
+    }
+  }
 
-  const itemTagProfiles = tagProfiles.filter(p => p.opportunity_id)
-  const pages = Math.ceil(itemTagProfiles.length / 1000)
-  const userTagProfiles = tagProfiles.filter(p => !p.opportunity_id)
-  for (const utp of userTagProfiles) {
+  const tagProfiles = await db.selectFrom('tag_profile').selectAll().execute()
+  const itemTagProfileByUpdated = [...itemTagProfileMap]
+
+  const pages = Math.ceil(itemTagProfileByUpdated.length / 1000)
+  for (const utp of tagProfiles) {
     const now = new Date()
     await db.transaction().execute(async tx => {
       const tags1 = await tx
@@ -89,15 +103,13 @@ export const calculateRawScores = async (db: Kysely<IntelligenceDatabase>) => {
         ])
         .where('profile_tag.tag_profile_id', '=', utp.id)
         .where('tag_template.namespace', '=', 'skill')
-        .where('tag_template.deprecated_at', 'is not', null)
+        .where('tag_template.deprecated_at', 'is', null)
         .execute()
 
       for (let i = 0; i < pages; i++) {
-        const page = itemTagProfiles.slice(i * 1000, (i + 1) * 1000)
+        const page = itemTagProfileByUpdated.slice(i * 1000, (i + 1) * 1000)
         const toCompute = page.filter(itp =>
-          utp.computed_at === null
-            ? true
-            : isAfter(itp.created_at, utp.computed_at),
+          utp.computed_at === null ? true : isAfter(itp[1]!, utp.computed_at),
         )
         if (toCompute.length > 0) {
           const tags2 = await tx
@@ -120,30 +132,34 @@ export const calculateRawScores = async (db: Kysely<IntelligenceDatabase>) => {
             .where(
               'profile_tag.tag_profile_id',
               'in',
-              toCompute.map(itp => itp.id),
+              toCompute.map(itp => itp[0]),
             )
             .where('tag_template.namespace', '=', 'skill')
-            .where('tag_template.deprecated_at', 'is not', null)
+            .where('tag_template.deprecated_at', 'is', null)
             .execute()
+          const skillTags1 = tags1.map(
+            t =>
+              ({
+                id: t.id,
+                slug: t.slug,
+                name: t.name,
+                namespace: 'skill',
+                category: (t.metadata as SkillTagMetadata).category,
+                sub_category: (t.metadata as SkillTagMetadata).sub_category,
+                external_id: (t.metadata as SkillTagMetadata).external_id,
+                embedding: fromSql(t.embedding),
+              }) satisfies SkillTag,
+          )
           const computed = toCompute.map(itp => ({
             user_tag_profile_id: utp.id,
-            item_tag_profile_id: itp.id,
+            item_tag_profile_id: itp[0],
             method: 'similarity',
             created_at: now,
             score: distanceToScore(
               skillCollectionDistance(
-                tags1.map(t => ({
-                  id: t.id,
-                  slug: t.slug,
-                  name: t.name,
-                  namespace: 'skill',
-                  category: (t.metadata as SkillTagMetadata).category,
-                  sub_category: (t.metadata as SkillTagMetadata).sub_category,
-                  external_id: (t.metadata as SkillTagMetadata).external_id,
-                  embedding: t.embedding,
-                })),
+                skillTags1,
                 tags2
-                  .filter(t => t.tag_profile_id === itp.id)
+                  .filter(t => t.tag_profile_id === itp[0])
                   .map(t => ({
                     id: t.id,
                     slug: t.slug,
@@ -152,13 +168,17 @@ export const calculateRawScores = async (db: Kysely<IntelligenceDatabase>) => {
                     category: (t.metadata as SkillTagMetadata).category,
                     sub_category: (t.metadata as SkillTagMetadata).sub_category,
                     external_id: (t.metadata as SkillTagMetadata).external_id,
-                    embedding: t.embedding,
+                    embedding: fromSql(t.embedding),
                   })),
               ),
             ),
           }))
 
-          await tx.insertInto('raw_score').values(computed).execute()
+          await tx
+            .insertInto('raw_score')
+            .values(computed)
+            .onConflict(oc => oc.doNothing())
+            .execute()
         }
       }
 
@@ -171,7 +191,9 @@ export const calculateRawScores = async (db: Kysely<IntelligenceDatabase>) => {
   }
 }
 
-export const calculateModifiedScores = async (db: Kysely<IntelligenceDatabase>) => {
+export const calculateModifiedScores = async (
+  db: Kysely<IntelligenceDatabase>,
+) => {
   // Before executing this, we assume all raw scores are calculated.
   const tenantLabelRules = await db
     .selectFrom('tenant')
@@ -191,17 +213,14 @@ export const calculateModifiedScores = async (db: Kysely<IntelligenceDatabase>) 
     tenantLabelRuleMap
       .get(rule.id)!
       .push(
-        new Function('rawScore', 'events', `return ${rule.rule}`) as (
+        new Function('score', 'events', `return ${rule.rule}`) as (
           rawScore: number,
           events: Record<string, number>,
         ) => number,
       )
   }
 
-  const opportunities = await db
-    .selectFrom('opportunity')
-    .select(['id', 'opportunity.tag_profile_id'])
-    .execute()
+  const opportunities = await db.selectFrom('opportunity').selectAll().execute()
 
   for (const [tenantId, rules] of tenantLabelRuleMap) {
     const users = await db
@@ -244,6 +263,47 @@ export const calculateModifiedScores = async (db: Kysely<IntelligenceDatabase>) 
             )
         }
 
+        const opportunitiesWithoutLabels = opportunities.filter(
+          o => !labelsByOpportunity.has(o.id),
+        )
+        if (opportunitiesWithoutLabels.length > 0) {
+          const pages = Math.ceil(opportunitiesWithoutLabels.length / 1000)
+          for (let i = 0; i < pages; i++) {
+            const page = opportunitiesWithoutLabels.slice(
+              i * 1000,
+              (i + 1) * 1000,
+            )
+            const scores = await tx
+              .selectFrom('raw_score')
+              .select(['score', 'item_tag_profile_id'])
+              .where('user_tag_profile_id', '=', user.tag_profile_id!)
+              .where('item_tag_profile_id', 'in', [
+                ...new Set(page.map(p => p.tag_profile_id)),
+              ])
+              .execute()
+            await tx
+              .insertInto('modified_score')
+              .values(
+                page.map(p => ({
+                  user_id: user.id,
+                  opportunity_id: p.id,
+                  score: scores.find(
+                    s => s.item_tag_profile_id === p.tag_profile_id,
+                  )!.score,
+                  created_at: now,
+                  updated_at: now,
+                })),
+              )
+              .onConflict(oc =>
+                oc.columns(['user_id', 'opportunity_id']).doUpdateSet(eb => ({
+                  score: eb.ref('excluded.score'),
+                  updated_at: now,
+                })),
+              )
+              .execute()
+          }
+        }
+
         for (const [opportunityId, labels] of labelsByOpportunity) {
           if (
             user.computed_at &&
@@ -279,6 +339,8 @@ export const calculateModifiedScores = async (db: Kysely<IntelligenceDatabase>) 
               user_id: user.id,
               opportunity_id: opportunityId,
               score: modifiedScore,
+              created_at: now,
+              updated_at: now,
             })
             .onConflict(oc =>
               oc.columns(['user_id', 'opportunity_id']).doUpdateSet(eb => ({

@@ -13,6 +13,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('updated_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`now()`),
     )
+    .addUniqueConstraint('modified_score_user_id_opportunity_id_ukey', [
+      'user_id',
+      'opportunity_id',
+    ])
     .ifNotExists()
     .execute()
 }

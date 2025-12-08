@@ -5,7 +5,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('label')
     .addColumn('user_id', 'uuid', col => col.notNull())
     .addColumn('opportunity_id', 'uuid', col => col.notNull())
-    .addColumn('tenant_label_id', 'uuid', col => col.notNull())
+    .addColumn('name', 'varchar', col => col.notNull())
     .addColumn('value', 'float8', col => col.notNull())
     .addColumn('created_at', 'timestamptz', col =>
       col.notNull().defaultTo(sql`now()`),
@@ -16,7 +16,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addPrimaryKeyConstraint('label_pkey', [
       'user_id',
       'opportunity_id',
-      'tenant_label_id',
+      'name',
     ])
     .ifNotExists()
     .execute()
