@@ -42,7 +42,6 @@ const mockCELPIPCertificate: LanguageCertificateInput = {
   speaking: '8',
 }
 
-/*
 const mockCAECertificate: LanguageCertificateInput = {
   type: 'cae',
   listening: 185,
@@ -50,7 +49,6 @@ const mockCAECertificate: LanguageCertificateInput = {
   writing: 180,
   speaking: 185,
 }
-*/
 
 const mockFCECertificate: LanguageCertificateInput = {
   type: 'fce',
@@ -186,7 +184,6 @@ describe('language-certificates', () => {
   })
 
   describe('getLanguageCertificatesStateOutput - cefr-min operation', () => {
-    /*
     it('should handle CAE certificate meeting CEFR requirements', () => {
       const state: LanguageCertificatesState = {
         kind: 'language_certificates',
@@ -213,7 +210,6 @@ describe('language-certificates', () => {
         assert.equal(result.similarity, 1)
       }
     })
-    */
 
     it('should handle multiple expected CEFR levels', () => {
       const state: LanguageCertificatesState = {
