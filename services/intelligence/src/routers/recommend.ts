@@ -2,6 +2,7 @@ import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
 import { INTELLIGENCE_API_SCHEMAS } from '@resettle/api/intelligence'
 import { jsonValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 import {
   getRecommendationByTags,
@@ -14,6 +15,19 @@ export const recommendRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 recommendRouter.post(
   INTELLIGENCE_API_SCHEMAS.recommend.recommendByUser.route.path,
+  describeRoute({
+    description: 'Get recommendations by user',
+    responses: {
+      200: {
+        description: 'Recommendations retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.recommend.recommendByUser.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.recommend.recommendByUser.body),
   async ctx => {
     const db = ctx.get('db')
@@ -47,6 +61,19 @@ recommendRouter.post(
 
 recommendRouter.post(
   INTELLIGENCE_API_SCHEMAS.recommend.recommendByTags.route.path,
+  describeRoute({
+    description: 'Get recommendations by tags',
+    responses: {
+      200: {
+        description: 'Recommendations retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.recommend.recommendByTags.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.recommend.recommendByTags.body),
   async ctx => {
     const db = ctx.get('db')

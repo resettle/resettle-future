@@ -21,7 +21,7 @@
     "@resettle/utils": "workspace:^",
     "@types/jsonwebtoken": "9.0.10",
     "hono": "4.10.7",
-    "hono-openapi": "1.1.1",
+    "hono-openapi": "1.1.2",
     "jsonwebtoken": "9.0.3",
     "openai": "6.10.0",
     "stripe": "20.0.0",
@@ -34,7 +34,7 @@
     "zod": ">=4.0.0"
   },
   "devDependencies": {
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.2",
     "@types/zeptomail": "workspace:^",
     "typescript": "5.9.3"
   }

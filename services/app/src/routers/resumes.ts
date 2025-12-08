@@ -12,11 +12,25 @@ import {
   queryValidator,
 } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 export const resumesRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 resumesRouter.post(
   APP_API_SCHEMAS.resume.createResume.route.path,
+  describeRoute({
+    description: 'Create a new resume',
+    responses: {
+      201: {
+        description: 'Resume created successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.resume.createResume.responseData),
+          },
+        },
+      },
+    },
+  }),
   auth(),
   jsonValidator(APP_API_SCHEMAS.resume.createResume.body),
   async ctx => {
@@ -40,6 +54,19 @@ resumesRouter.post(
 
 resumesRouter.get(
   APP_API_SCHEMAS.resume.getResumes.route.path,
+  describeRoute({
+    description: 'Get resumes with pagination',
+    responses: {
+      200: {
+        description: 'Resumes retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.resume.getResumes.responseData),
+          },
+        },
+      },
+    },
+  }),
   auth(),
   queryValidator(APP_API_SCHEMAS.resume.getResumes.query),
   async ctx => {
@@ -70,6 +97,19 @@ resumesRouter.get(
 
 resumesRouter.get(
   APP_API_SCHEMAS.resume.getResumeById.route.path,
+  describeRoute({
+    description: 'Get resume by ID',
+    responses: {
+      200: {
+        description: 'Resume retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.resume.getResumeById.responseData),
+          },
+        },
+      },
+    },
+  }),
   auth(),
   paramValidator(
     APP_API_SCHEMAS.resume.getResumeById.route.params,

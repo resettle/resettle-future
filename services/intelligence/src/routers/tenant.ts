@@ -7,6 +7,7 @@ import {
 } from '@resettle/database/intelligence'
 import { jsonValidator, paramValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 const DUMMY_TENANT_ID = '00000000-0000-0000-0000-000000000000'
 
@@ -14,6 +15,19 @@ export const tenantRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 tenantRouter.post(
   INTELLIGENCE_API_SCHEMAS.tenant.createTenantLabelRule.route.path,
+  describeRoute({
+    description: 'Create tenant label rule',
+    responses: {
+      200: {
+        description: 'Tenant label rule created successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tenant.createTenantLabelRule.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.tenant.createTenantLabelRule.body),
   async ctx => {
     const db = ctx.get('db')
@@ -36,6 +50,19 @@ tenantRouter.post(
 
 tenantRouter.patch(
   INTELLIGENCE_API_SCHEMAS.tenant.updateTenantLabelRule.route.path,
+  describeRoute({
+    description: 'Update tenant label rule',
+    responses: {
+      200: {
+        description: 'Tenant label rule updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tenant.updateTenantLabelRule.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     ['tenantLabelRuleId'] as const,
     INTELLIGENCE_API_SCHEMAS.tenant.updateTenantLabelRule.params,
@@ -76,6 +103,19 @@ tenantRouter.patch(
 
 tenantRouter.delete(
   INTELLIGENCE_API_SCHEMAS.tenant.deprecateTenantLabelRule.route.path,
+  describeRoute({
+    description: 'Deprecate tenant label rule',
+    responses: {
+      200: {
+        description: 'Tenant label rule deprecated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tenant.deprecateTenantLabelRule.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     ['tenantLabelRuleId'] as const,
     INTELLIGENCE_API_SCHEMAS.tenant.deprecateTenantLabelRule.params,

@@ -1,5 +1,8 @@
 import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
-import { INTELLIGENCE_API_SCHEMAS } from '@resettle/api/intelligence'
+import {
+  INTELLIGENCE_API_ROUTES,
+  INTELLIGENCE_API_SCHEMAS,
+} from '@resettle/api/intelligence'
 import { searchPlaces } from '@resettle/database/intelligence'
 import type {
   CostOfLivingDataResponse,
@@ -7,12 +10,31 @@ import type {
 } from '@resettle/schema/intelligence'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi'
+
+import { auth } from '../middlewares/auth'
 
 export const placeRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 placeRouter.get(
   INTELLIGENCE_API_SCHEMAS.place.search.route.path,
+  describeRoute({
+    description: 'Search places',
+    responses: {
+      200: {
+        description: 'Places found successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.place.search.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.place.search.query),
+  auth({ isPlaceAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const {
@@ -50,7 +72,23 @@ placeRouter.get(
 
 placeRouter.get(
   INTELLIGENCE_API_SCHEMAS.place.queryCostOfLiving.route.path,
+  describeRoute({
+    description: 'Query cost of living data for a place',
+    responses: {
+      200: {
+        description: 'Cost of living data retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.place.queryCostOfLiving.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.place.queryCostOfLiving.query),
+  auth({ isPlaceAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const { place_id, currency_code = 'USD' } = ctx.req.valid('query')
@@ -125,7 +163,23 @@ placeRouter.get(
 
 placeRouter.get(
   INTELLIGENCE_API_SCHEMAS.place.queryGeneralInfo.route.path,
+  describeRoute({
+    description: 'Query general information for a place',
+    responses: {
+      200: {
+        description: 'Place information retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.place.queryGeneralInfo.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.place.queryGeneralInfo.query),
+  auth({ isPlaceAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const { place_id } = ctx.req.valid('query')
@@ -158,4 +212,20 @@ placeRouter.get(
       200,
     )
   },
+)
+
+/**
+ * OpenAPI
+ */
+placeRouter.get(
+  INTELLIGENCE_API_ROUTES.place.openapi.path,
+  openAPIRouteHandler(placeRouter, {
+    documentation: {
+      info: {
+        title: 'Resettle Place API',
+        version: '1.0.0',
+        description: 'Resettle Place API',
+      },
+    },
+  }),
 )

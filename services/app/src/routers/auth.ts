@@ -18,7 +18,7 @@ authRouter.post(
       200: {
         description: 'Sign in with email successful',
         content: {
-          'text/plain': {
+          'application/json': {
             schema: resolver(APP_API_SCHEMAS.auth.signInWithEmail.responseData),
           },
         },
@@ -46,6 +46,19 @@ authRouter.post(
 
 authRouter.post(
   APP_API_SCHEMAS.auth.requestEmailOTP.route.path,
+  describeRoute({
+    description: 'Request email OTP',
+    responses: {
+      200: {
+        description: 'OTP sent successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.auth.requestEmailOTP.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(APP_API_SCHEMAS.auth.requestEmailOTP.body),
   async ctx => {
     const db = ctx.get('db')

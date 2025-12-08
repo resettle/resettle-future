@@ -8,6 +8,7 @@ import {
 } from '@resettle/database/intelligence'
 import { jsonValidator, queryValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 const DUMMY_TENANT_ID = '00000000-0000-0000-0000-000000000000'
 
@@ -16,6 +17,21 @@ export const userRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 userRouter.post(
   INTELLIGENCE_API_SCHEMAS.user.createUsers.route.path,
+  describeRoute({
+    description: 'Create users',
+    responses: {
+      200: {
+        description: 'Users created successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.user.createUsers.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.user.createUsers.body),
   async ctx => {
     const db = ctx.get('db')
@@ -41,6 +57,21 @@ userRouter.post(
 
 userRouter.patch(
   INTELLIGENCE_API_SCHEMAS.user.updateUsers.route.path,
+  describeRoute({
+    description: 'Update users',
+    responses: {
+      200: {
+        description: 'Users updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.user.updateUsers.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.user.updateUsers.body),
   async ctx => {
     const db = ctx.get('db')
@@ -64,6 +95,21 @@ userRouter.patch(
 
 userRouter.post(
   INTELLIGENCE_API_SCHEMAS.user.deleteUsers.route.path,
+  describeRoute({
+    description: 'Delete users',
+    responses: {
+      200: {
+        description: 'Users deleted successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.user.deleteUsers.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.user.deleteUsers.body),
   async ctx => {
     const db = ctx.get('db')
@@ -85,6 +131,21 @@ userRouter.post(
 
 userRouter.get(
   INTELLIGENCE_API_SCHEMAS.user.readUser.route.path,
+  describeRoute({
+    description: 'Read user',
+    responses: {
+      200: {
+        description: 'User retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.user.readUser.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.user.readUser.query),
   async ctx => {
     const db = ctx.get('db')

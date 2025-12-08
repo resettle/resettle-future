@@ -3,6 +3,7 @@ import { INTELLIGENCE_API_SCHEMAS } from '@resettle/api/intelligence'
 import { attachTags, detachTags, searchTags } from '@resettle/database/intelligence'
 import { jsonValidator, queryValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 const DUMMY_TENANT_ID = '00000000-0000-0000-0000-000000000000'
 
@@ -10,6 +11,19 @@ export const tagRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 tagRouter.get(
   INTELLIGENCE_API_SCHEMAS.tag.search.route.path,
+  describeRoute({
+    description: 'Search tags',
+    responses: {
+      200: {
+        description: 'Tags found successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tag.search.responseData),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.tag.search.query),
   async ctx => {
     const db = ctx.get('db')
@@ -37,6 +51,19 @@ tagRouter.get(
 
 tagRouter.post(
   INTELLIGENCE_API_SCHEMAS.tag.attach.route.path,
+  describeRoute({
+    description: 'Attach tags to opportunities',
+    responses: {
+      200: {
+        description: 'Tags attached successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tag.attach.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.tag.attach.body),
   async ctx => {
     const db = ctx.get('db')
@@ -56,6 +83,19 @@ tagRouter.post(
 
 tagRouter.post(
   INTELLIGENCE_API_SCHEMAS.tag.detach.route.path,
+  describeRoute({
+    description: 'Detach tags from opportunities',
+    responses: {
+      200: {
+        description: 'Tags detached successfully',
+        content: {
+          'application/json': {
+            schema: resolver(INTELLIGENCE_API_SCHEMAS.tag.detach.responseData),
+          },
+        },
+      },
+    },
+  }),
   jsonValidator(INTELLIGENCE_API_SCHEMAS.tag.detach.body),
   async ctx => {
     const db = ctx.get('db')

@@ -1,5 +1,8 @@
 import { API_ERROR_CODES, APIError, apiSuccessResponse } from '@resettle/api'
-import { INTELLIGENCE_API_SCHEMAS } from '@resettle/api/intelligence'
+import {
+  INTELLIGENCE_API_ROUTES,
+  INTELLIGENCE_API_SCHEMAS,
+} from '@resettle/api/intelligence'
 import {
   exactSearchOccupationCodes,
   fuzzySearchOccupationCodes,
@@ -11,14 +14,32 @@ import type {
 } from '@resettle/schema/intelligence'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi'
 
 import { getCrosswalkPairs } from '../libs/occupation'
+import { auth } from '../middlewares/auth'
 
 export const occupationRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 occupationRouter.get(
   INTELLIGENCE_API_SCHEMAS.occupation.crosswalk.route.path,
+  describeRoute({
+    description: 'Crosswalk occupation codes between classifications',
+    responses: {
+      200: {
+        description: 'Occupation codes crosswalked successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.occupation.crosswalk.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.occupation.crosswalk.query),
+  auth({ isOccupationAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const { from, to } = ctx.req.valid('query')
@@ -103,7 +124,23 @@ occupationRouter.get(
 
 occupationRouter.get(
   INTELLIGENCE_API_SCHEMAS.occupation.query.route.path,
+  describeRoute({
+    description: 'Query occupation codes',
+    responses: {
+      200: {
+        description: 'Occupation codes retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.occupation.query.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.occupation.query.query),
+  auth({ isOccupationAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const {
@@ -131,7 +168,23 @@ occupationRouter.get(
 
 occupationRouter.get(
   INTELLIGENCE_API_SCHEMAS.occupation.search.route.path,
+  describeRoute({
+    description: 'Search occupation codes',
+    responses: {
+      200: {
+        description: 'Occupation codes found successfully',
+        content: {
+          'application/json': {
+            schema: resolver(
+              INTELLIGENCE_API_SCHEMAS.occupation.search.responseData,
+            ),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(INTELLIGENCE_API_SCHEMAS.occupation.search.query),
+  auth({ isOccupationAPI: true }),
   async ctx => {
     const db = ctx.get('db')
     const { q, classification, fuzzy, limit = 100 } = ctx.req.valid('query')
@@ -159,4 +212,20 @@ occupationRouter.get(
       200,
     )
   },
+)
+
+/**
+ * OpenAPI
+ */
+occupationRouter.get(
+  INTELLIGENCE_API_ROUTES.occupation.openapi.path,
+  openAPIRouteHandler(occupationRouter, {
+    documentation: {
+      info: {
+        title: 'Resettle Occupation API',
+        version: '1.0.0',
+        description: 'Resettle Occupation API',
+      },
+    },
+  }),
 )

@@ -19,14 +19,14 @@
     "@resettle/utils": "workspace:^",
     "@services/_common": "workspace:^",
     "hono": "4.10.7",
-    "hono-openapi": "1.1.1",
+    "hono-openapi": "1.1.2",
     "kysely": "0.28.8",
     "openai": "6.10.0",
     "pg": "8.16.3",
     "zod": "4.1.13"
   },
   "devDependencies": {
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.2",
     "@types/pg": "8.15.6",
     "typescript": "5.9.3"
   }

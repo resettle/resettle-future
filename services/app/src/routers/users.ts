@@ -16,6 +16,7 @@ import {
   queryValidator,
 } from '@services/_common'
 import { Hono } from 'hono'
+import { describeRoute, resolver } from 'hono-openapi'
 
 /**
  * Converts a user to a user response
@@ -36,6 +37,19 @@ export const usersRouter = new Hono<{ Bindings: Cloudflare.Env }>()
 
 usersRouter.get(
   APP_API_SCHEMAS.user.getUsers.route.path,
+  describeRoute({
+    description: 'Get users with pagination (admin/mod only)',
+    responses: {
+      200: {
+        description: 'Users retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.getUsers.responseData),
+          },
+        },
+      },
+    },
+  }),
   queryValidator(APP_API_SCHEMAS.user.getUsers.query),
   auth({
     roles: ['admin', 'mod'],
@@ -71,6 +85,19 @@ usersRouter.get(
 
 usersRouter.get(
   APP_API_SCHEMAS.user.getUserById.route.path,
+  describeRoute({
+    description: 'Get user by ID',
+    responses: {
+      200: {
+        description: 'User retrieved successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.getUserById.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     APP_API_SCHEMAS.user.getUserById.route.params,
     APP_API_SCHEMAS.user.getUserById.params,
@@ -115,6 +142,19 @@ usersRouter.get(
 
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserById.route.path,
+  describeRoute({
+    description: 'Update user by ID',
+    responses: {
+      200: {
+        description: 'User updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.updateUserById.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     APP_API_SCHEMAS.user.updateUserById.route.params,
     APP_API_SCHEMAS.user.updateUserById.params,
@@ -160,6 +200,19 @@ usersRouter.patch(
 
 usersRouter.put(
   APP_API_SCHEMAS.user.updateUserUsernameById.route.path,
+  describeRoute({
+    description: 'Update user username by ID',
+    responses: {
+      200: {
+        description: 'Username updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.updateUserUsernameById.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     APP_API_SCHEMAS.user.updateUserUsernameById.route.params,
     APP_API_SCHEMAS.user.updateUserUsernameById.params,
@@ -215,6 +268,19 @@ usersRouter.put(
 
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserProfileById.route.path,
+  describeRoute({
+    description: 'Update user profile by ID',
+    responses: {
+      200: {
+        description: 'User profile updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.updateUserProfileById.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     APP_API_SCHEMAS.user.updateUserProfileById.route.params,
     APP_API_SCHEMAS.user.updateUserProfileById.params,
@@ -260,6 +326,19 @@ usersRouter.patch(
 
 usersRouter.patch(
   APP_API_SCHEMAS.user.updateUserMetadataById.route.path,
+  describeRoute({
+    description: 'Update user metadata by ID',
+    responses: {
+      200: {
+        description: 'User metadata updated successfully',
+        content: {
+          'application/json': {
+            schema: resolver(APP_API_SCHEMAS.user.updateUserMetadataById.responseData),
+          },
+        },
+      },
+    },
+  }),
   paramValidator(
     APP_API_SCHEMAS.user.updateUserMetadataById.route.params,
     APP_API_SCHEMAS.user.updateUserMetadataById.params,
