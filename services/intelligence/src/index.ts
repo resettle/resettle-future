@@ -1,4 +1,4 @@
-import { context as commonContext } from '@services/_common'
+import { apiErrorHandler, context as commonContext } from '@services/_common'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
@@ -12,6 +12,11 @@ import { tenantRouter } from './routers/tenant'
 import { userRouter } from './routers/user'
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>()
+
+  /**
+   * Error handler
+   */
+  .onError(apiErrorHandler)
 
   /**
    * Middlewares

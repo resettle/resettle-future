@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [[hyperdrive]]
 binding = "HYPERDRIVE"
-id = "8bf6b16566be4f9f88ffe551be3b2531"
+id = "9ca41dc5cd484a4cb4533ba62220136d"
 
 [placement]
 mode = "smart"
