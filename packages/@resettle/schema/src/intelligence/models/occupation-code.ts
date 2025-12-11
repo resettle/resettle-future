@@ -20,7 +20,9 @@ export const occupationCodeClassificationsSchema = z.enum(
 )
 
 export const occupationCodeSchema = z.object({
-  id: stringSchema,
+  id: stringSchema.describe(
+    'The id of the occupation code in format {classification}-{code}',
+  ),
   classification: occupationCodeClassificationsSchema.describe(
     'The occupation classification',
   ),
@@ -31,10 +33,16 @@ export const occupationCodeSchema = z.object({
 })
 
 export const occupationCodeRefSchema = z.union([
-  stringSchema,
+  stringSchema.describe(
+    'The id of the occupation code in format {classification}-{code}',
+  ),
   z.object({
-    classification: occupationCodeClassificationsSchema,
-    code: stringSchema,
+    classification: occupationCodeClassificationsSchema.describe(
+      'The occupation classification',
+    ),
+    code: stringSchema.describe(
+      'The code of the occupation under the classification',
+    ),
   }),
 ])
 

@@ -14,7 +14,9 @@ export const crosswalk = defineAPISchema({
   route: INTELLIGENCE_API_ROUTES.occupation.crosswalk,
   query: z.object({
     from: occupationCodeRefSchema,
-    to: occupationCodeClassificationsSchema,
+    to: occupationCodeClassificationsSchema.describe(
+      'The occupation classification',
+    ),
   }),
   responseData: z.array(occupationCodeSchema),
 })
@@ -23,8 +25,12 @@ export const query = defineAPISchema({
   method: 'GET',
   route: INTELLIGENCE_API_ROUTES.occupation.query,
   query: z.object({
-    classification: occupationCodeClassificationsSchema,
-    code: stringOptionalSchema,
+    classification: occupationCodeClassificationsSchema.describe(
+      'The occupation classification',
+    ),
+    code: stringOptionalSchema.describe(
+      'The code of the occupation under the classification',
+    ),
     cursor: stringOptionalSchema,
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
@@ -35,9 +41,14 @@ export const search = defineAPISchema({
   method: 'GET',
   route: INTELLIGENCE_API_ROUTES.occupation.search,
   query: z.object({
-    classification: occupationCodeClassificationsSchema.optional(),
-    q: z.string().min(1).max(100),
-    fuzzy: z.stringbool().optional(),
+    classification: occupationCodeClassificationsSchema
+      .optional()
+      .describe('The code of the occupation under the classification'),
+    q: z.string().min(1).max(100).describe('The searched text'),
+    fuzzy: z
+      .stringbool()
+      .optional()
+      .describe('Whether to perform a fuzzy match or exact text match'),
     limit: z.coerce.number().int().min(1).max(100).optional(),
   }),
   responseData: z.array(occupationCodeSchema),
