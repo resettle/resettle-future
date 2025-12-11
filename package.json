@@ -27,7 +27,7 @@
     "prettier-plugin-tailwindcss": "0.7.2",
     "rsx": "workspace:^",
     "tsx": "4.21.0",
-    "wrangler": "4.53.0"
+    "wrangler": "4.54.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
