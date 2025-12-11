@@ -1,5 +1,8 @@
 import { S3Client } from '@3rd-party-clients/s3'
+import type { IntelligenceDatabase } from '@resettle/database/intelligence'
+import { Kysely, PostgresDialect } from 'kysely'
 import { OpenAI } from 'openai'
+import pg from 'pg'
 import { Stripe } from 'stripe'
 import { SendMailClient } from 'zeptomail'
 
@@ -91,4 +94,31 @@ export const getZeptoMail = (env: { ZEPTOMAIL_API_TOKEN: string }) => {
   })
 
   return zeptoMail
+}
+
+export const getIntelligenceDB = (env: {
+  POSTGRES_CONNECTION_STRING_INTELLIGENCE: string
+  HYPERDRIVE?: {
+    connectionString: string
+  }
+}) => {
+  const connectionString = env.HYPERDRIVE
+    ? env.HYPERDRIVE.connectionString
+    : env.POSTGRES_CONNECTION_STRING_INTELLIGENCE
+
+  if (!connectionString) {
+    throw new Error(
+      'POSTGRES_CONNECTION_STRING_INTELLIGENCE or HYPERDRIVE.connectionString is not set',
+    )
+  }
+
+  const pool = new pg.Pool({
+    connectionString,
+  })
+
+  const db = new Kysely<IntelligenceDatabase>({
+    dialect: new PostgresDialect({ pool }),
+  })
+
+  return { db, pool }
 }

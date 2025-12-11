@@ -1,0 +1,22 @@
+name = "resettle-development-service-exchange-rates"
+main = "./src/index.ts"
+workers_dev = true
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = ""
+localConnectionString = "postgresql://resettler:password@localhost:5432/resettle_intelligence"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
+
+# Scheduled triggers for the data fetcher worker
+# "0 0 * * *" - Daily at midnight UTC
+# "0 0 * * 7" - Weekly on Sunday at midnight UTC
+[triggers]
+crons = ["0 0 * * *", "0 0 * * 7"]

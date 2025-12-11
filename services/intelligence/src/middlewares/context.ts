@@ -1,9 +1,8 @@
 import type { IntelligenceDatabase } from '@resettle/database/intelligence'
+import { getIntelligenceDB } from '@services/_common'
 import type { MiddlewareHandler } from 'hono'
 import { env } from 'hono/adapter'
 import type { Kysely } from 'kysely'
-
-import { getIntelligenceDB } from '../libs/context'
 
 declare module 'hono' {
   interface ContextVariableMap {

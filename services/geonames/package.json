@@ -1,0 +1,24 @@
+{
+  "name": "@services/geonames",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typegen": "dotenvx-cloudflare run -f ../../.env -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.toml",
+    "typegen:staging": "dotenvx-cloudflare run -f ../../.env.staging -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.staging.toml",
+    "typegen:production": "dotenvx-cloudflare run -f ../../.env.production -e 'DOTENV_|VITE_' -- wrangler types --config wrangler.production.toml",
+    "dev": "dotenvx-cloudflare run -f ../../.env -e 'DOTENV_|VITE_' -- wrangler dev --config wrangler.toml --port 4001 --inspector-port 10241",
+    "deploy:staging": "dotenvx run -f ../../.env.staging -- wrangler deploy --config wrangler.staging.toml",
+    "deploy:production": "dotenvx run -f ../../.env.production -- wrangler deploy --config wrangler.production.toml",
+    "secrets:staging": "dotenvx-cloudflare sync -f ../../.env.staging -e 'DOTENV_|VITE_' -n resettle-staging-service-geonames",
+    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'DOTENV_|VITE_' -n resettle-production-service-geonames"
+  },
+  "dependencies": {
+    "@resettle/processors": "workspace:^",
+    "@services/_common": "workspace:^",
+    "grammy": "1.38.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.2",
+    "typescript": "5.9.3"
+  }
+}

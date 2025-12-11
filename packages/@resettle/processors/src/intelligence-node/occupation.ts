@@ -8,7 +8,8 @@ import { parse } from 'csv-parse/sync'
 import type { Insertable, Kysely } from 'kysely'
 import { read, type WorkSheet } from 'xlsx'
 
-import { loadFile, refDirToRef, type RefDir } from '../utils'
+import { type RefDir } from '../_common'
+import { loadFile, refDirToRef } from '../node'
 
 type Anzsco2013InputDataRow = {
   Code: string
@@ -1943,13 +1944,6 @@ const parseUssoc2010Ussoc2018 = async (ctx: { s3: S3Client }, ref: RefDir) => {
   ] as Insertable<OccupationCodeCrosswalkTable>[]
 }
 
-/**
- * Process occupation
- * @param ctx - The context
- * @param ctx.s3 - The S3 client
- * @param ctx.db - The intelligence database
- * @param ref - The reference directory
- */
 export async function processOccupation(
   ctx: {
     s3: S3Client

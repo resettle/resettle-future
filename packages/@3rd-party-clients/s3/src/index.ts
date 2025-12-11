@@ -21,7 +21,12 @@ export type DeleteObjectCommandInput = { Bucket: string; Key: string }
 export type PutObjectCommandInput = {
   Bucket: string
   Key: string
-  Body: Blob | ArrayBuffer | Buffer<ArrayBufferLike> | string
+  Body:
+    | Blob
+    | ArrayBuffer
+    | Buffer<ArrayBufferLike>
+    | string
+    | ReadableStream<Uint8Array<ArrayBufferLike>>
   ContentType?: string
 }
 export type CopyObjectCommandInput = {

@@ -18,6 +18,7 @@ import type {
   RawJobTable,
   RawOrganizationTable,
   RawScoreTable,
+  ScrapeTaskTable,
   TagProfileTable,
   TagTemplateTable,
   TenantLabelRuleTable,
@@ -45,6 +46,7 @@ export interface IntelligenceDatabase {
   raw_job: RawJobTable
   raw_organization: RawOrganizationTable
   raw_score: RawScoreTable
+  scrape_task: ScrapeTaskTable
   tag_profile: TagProfileTable
   tag_template: TagTemplateTable
   tenant: TenantTable

@@ -1,4 +1,4 @@
-import { processNumbeo } from '@resettle/processors'
+import { processNumbeo } from '@resettle/processors/intelligence-node'
 import { Command } from 'commander'
 
 import { getIntelligenceDB, getR2 } from '../../../_common/context'

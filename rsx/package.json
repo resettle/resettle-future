@@ -15,17 +15,19 @@
   },
   "dependencies": {
     "@3rd-party-clients/s3": "workspace:^",
+    "@inquirer/prompts": "8.0.2",
     "@resettle/database": "workspace:^",
     "@resettle/processors": "workspace:^",
+    "@resettle/schema": "workspace:^",
+    "@resettle/scrapers": "workspace:^",
     "commander": "14.0.2",
     "kysely": "0.28.8",
     "pg": "8.16.3",
     "zod": "4.1.13"
   },
   "devDependencies": {
-    "@types/node": "24.10.2",
+    "@types/node": "24.10.1",
     "@types/pg": "8.15.6",
-    "tsx": "4.21.0",
     "typescript": "5.9.3"
   }
 }

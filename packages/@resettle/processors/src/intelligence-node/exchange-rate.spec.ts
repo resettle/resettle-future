@@ -15,7 +15,8 @@ import { after, afterEach, before, beforeEach, describe, it } from 'node:test'
 import { Pool } from 'pg'
 import { MockAgent, setGlobalDispatcher } from 'undici'
 
-import { processExchangeRates, type ExchangeRates } from './exchange-rate'
+import type { ExchangeRates } from '../_common'
+import { processExchangeRates } from './exchange-rate'
 
 const exchangeRates = {
   success: true,

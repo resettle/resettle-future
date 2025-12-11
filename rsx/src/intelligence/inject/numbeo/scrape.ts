@@ -2,7 +2,7 @@ import {
   downloadCitySlugs,
   downloadCountrySlugs,
   downloadData,
-} from '@resettle/processors'
+} from '@resettle/processors/intelligence-node'
 import { Command } from 'commander'
 import { z } from 'zod'
 

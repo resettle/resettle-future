@@ -7,14 +7,13 @@ import type OpenAI from 'openai'
 import { toSql } from 'pgvector/kysely'
 import slug from 'slug'
 
+import { getCurrentMonth, type RefDir } from '../_common'
 import {
   conditionalInMemoryDownload,
-  getCurrentMonth,
   loadFile,
   refDirToRef,
   saveFile,
-  type RefDir,
-} from '../utils'
+} from '../node'
 
 export type LightcastSkills = {
   name: 'Categories'

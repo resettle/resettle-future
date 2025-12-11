@@ -1,0 +1,24 @@
+name = "resettle-production-service-geonames"
+main = "./src/index.ts"
+minify = true
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "9ca41dc5cd484a4cb4533ba62220136d"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
+
+[limits]
+cpu_ms = 5000
+
+# Scheduled triggers for the data fetcher worker
+# "0 0 * * *" - Daily at midnight UTC
+# "0 0 * * 7" - Weekly on Sunday at midnight UTC
+[triggers]
+crons = ["0 0 * * *", "0 0 * * 7"]

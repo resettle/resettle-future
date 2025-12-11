@@ -1,4 +1,4 @@
-import { processExchangeRates } from '@resettle/processors'
+import { processExchangeRates } from '@resettle/processors/intelligence-node'
 import { Command } from 'commander'
 
 import { getIntelligenceDB, getR2 } from '../../_common/context'

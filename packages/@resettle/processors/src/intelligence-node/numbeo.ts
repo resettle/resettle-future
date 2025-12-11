@@ -10,15 +10,8 @@ import type { Expression, Kysely, SelectQueryBuilder, SqlBool } from 'kysely'
 import { join } from 'node:path'
 import { z } from 'zod'
 
-import {
-  getCurrentMonth,
-  getStartOfMonth,
-  listFiles,
-  loadFile,
-  refDirToRef,
-  saveFile,
-  type RefDir,
-} from '../utils'
+import { getCurrentMonth, getStartOfMonth, type RefDir } from '../_common'
+import { listFiles, loadFile, refDirToRef, saveFile } from '../node'
 
 const optionalNumber = z.number().optional()
 
@@ -997,13 +990,6 @@ const map = async (
   return entries
 }
 
-/**
- * Process numbeo
- * @param ctx - The context
- * @param ctx.s3 - The S3 client
- * @param ctx.db - The intelligence database
- * @param ref - The reference directory
- */
 export const processNumbeo = async (
   ctx: {
     s3: S3Client

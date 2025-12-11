@@ -7,7 +7,7 @@ import { occupationCommand } from './occupation'
 
 export const injectCommand = new Command()
   .name('inject')
-  .description('Data injection CLI tool')
+  .description('Data injection commands')
   .addCommand(exchangeRateCommand)
   .addCommand(geonamesCommand)
   .addCommand(numbeoCommand)

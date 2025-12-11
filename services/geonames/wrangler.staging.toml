@@ -1,0 +1,24 @@
+name = "resettle-staging-service-geonames"
+main = "./src/index.ts"
+minify = true
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "4deace14f00440c99e056a06cb456b8b"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
+
+[limits]
+cpu_ms = 5000
+
+# Scheduled triggers for the data fetcher worker
+# "0 0 * * *" - Daily at midnight UTC
+# "0 0 * * 7" - Weekly on Sunday at midnight UTC
+[triggers]
+crons = ["0 0 * * *", "0 0 * * 7"]

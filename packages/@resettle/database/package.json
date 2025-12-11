@@ -25,8 +25,7 @@
     "db:app:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e app' --",
     "db:intelligence": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
     "db:intelligence:staging": "dotenvx run -f ../../../.env.staging --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
-    "db:intelligence:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e intelligence' --",
-    "db:test": "dotenvx run -f ../../../.env --overload -- sh -c 'kysely \"$@\" -e test' --"
+    "db:intelligence:production": "dotenvx run -f ../../../.env.production --overload -- sh -c 'kysely \"$@\" -e intelligence' --"
   },
   "dependencies": {
     "@resettle/schema": "workspace:^",

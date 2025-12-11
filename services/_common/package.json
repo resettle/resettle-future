@@ -17,13 +17,16 @@
     "@3rd-party-clients/s3": "workspace:^",
     "@hono/standard-validator": "0.2.0",
     "@resettle/api": "workspace:^",
+    "@resettle/database": "workspace:^",
     "@resettle/schema": "workspace:^",
     "@resettle/utils": "workspace:^",
     "@types/jsonwebtoken": "9.0.10",
     "hono": "4.10.7",
     "hono-openapi": "1.1.2",
     "jsonwebtoken": "9.0.3",
+    "kysely": "0.28.8",
     "openai": "6.10.0",
+    "pg": "8.16.3",
     "stripe": "20.0.0",
     "zeptomail": "7.0.0",
     "zod": "4.1.13"
@@ -35,6 +38,7 @@
   },
   "devDependencies": {
     "@types/node": "24.10.2",
+    "@types/pg": "8.15.6",
     "@types/zeptomail": "workspace:^",
     "typescript": "5.9.3"
   }

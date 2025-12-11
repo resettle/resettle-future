@@ -1,4 +1,7 @@
-type Id = string | number
+import type { ScrapeSourceTrustworthiness } from '@resettle/schema'
+
+import assert from 'node:assert'
+import type { Id, Scraper } from './types'
 
 type SkillAbstract = {
   name: string
@@ -460,72 +463,89 @@ const HEADERS = {
   Accept: 'application/json',
 }
 
-// original, niche focusing
 export const japanDev = {
-  name: 'japan-dev.com',
+  name: 'japan-dev.com' as const,
+  trustworthiness: 'curated-niche' satisfies ScrapeSourceTrustworthiness,
   kind: 'explicit-company',
-  async countCompanies() {
-    const resp = await fetch(SEARCH_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(buildCompanyQueryPayload(0, 20)),
-    })
+  companyScraper: {
+    async count() {
+      const resp = await fetch(SEARCH_URL, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(buildCompanyQueryPayload(0, 20)),
+      })
 
-    const result = (await resp.json()) as CompanySearchResult
+      const result = (await resp.json()) as CompanySearchResult
 
-    return result.results[0].estimatedTotalHits
+      return result.results[0].estimatedTotalHits
+    },
+    async list(limit, offsetOrCursor = 0) {
+      assert(typeof offsetOrCursor === 'number')
+      const resp = await fetch(SEARCH_URL, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(buildCompanyQueryPayload(offsetOrCursor, limit)),
+      })
+
+      const firstResult = (await resp.json()) as CompanySearchResult
+
+      return firstResult.results[0].hits
+    },
+    async get(id) {
+      const resp = await fetch(buildCompanyUrl(id as string), {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      return (await resp.json()) as CompanyDetailed
+    },
   },
-  async listCompanies(offset: number, limit: number) {
-    const resp = await fetch(SEARCH_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(buildCompanyQueryPayload(offset, limit)),
-    })
+  jobScraper: {
+    async count() {
+      const resp = await fetch(SEARCH_URL, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(buildJobQueryPayload(0, 20)),
+      })
 
-    const firstResult = (await resp.json()) as CompanySearchResult
+      const result = (await resp.json()) as JobSearchResult
 
-    return firstResult.results[0].hits
+      return result.results[0].estimatedTotalHits
+    },
+    async list(limit, offsetOrCursor = 0) {
+      assert(typeof offsetOrCursor === 'number')
+      const resp = await fetch(SEARCH_URL, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(buildJobQueryPayload(offsetOrCursor, limit)),
+      })
+
+      const firstResult = (await resp.json()) as JobSearchResult
+
+      return firstResult.results[0].hits
+    },
+    async get(id) {
+      const resp = await fetch(buildJobUrl(id as string), {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      return (await resp.json()) as JobDetailed
+    },
+    getTime(job) {
+      return new Date(job.data.attributes.job_post_date)
+    },
+    getId(job) {
+      return job.id
+    },
   },
-  async getCompany(id: string) {
-    const resp = await fetch(buildCompanyUrl(id as string), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-
-    return (await resp.json()) as CompanyDetailed
-  },
-  async countJobs() {
-    const resp = await fetch(SEARCH_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(buildJobQueryPayload(0, 20)),
-    })
-
-    const result = (await resp.json()) as JobSearchResult
-
-    return result.results[0].estimatedTotalHits
-  },
-  async listJobs(offset: number, limit: number) {
-    const resp = await fetch(SEARCH_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(buildJobQueryPayload(offset, limit)),
-    })
-
-    const firstResult = (await resp.json()) as JobSearchResult
-
-    return firstResult.results[0].hits
-  },
-  async getJob(id: string) {
-    const resp = await fetch(buildJobUrl(id as string), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-
-    return (await resp.json()) as JobDetailed
-  },
-}
+} satisfies Scraper<
+  CompanySearchAbstract,
+  CompanyDetailed,
+  JobSearchAbstract,
+  JobDetailed
+>

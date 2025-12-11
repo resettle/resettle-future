@@ -1,4 +1,4 @@
-import { processGeonames } from '@resettle/processors'
+import { processGeonames } from '@resettle/processors/intelligence-node'
 import { Command } from 'commander'
 import { resolve } from 'node:path'
 import { cwd } from 'node:process'
