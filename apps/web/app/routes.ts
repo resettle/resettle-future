@@ -19,15 +19,8 @@ export default [
    */
   layout('common/components/NavigationLayout.tsx', [
     index('landing/routes/_index.tsx'),
+    route(PAGE_ROUTES.dev.path, 'landing/routes/dev.tsx'),
   ]),
-
-  /**
-   * Blog Routes
-   */
-  route(PAGE_ROUTES.blog.path, 'blog/routes/blog.tsx'),
-  route(PAGE_ROUTES.blog.id.path, 'blog/routes/blog.[blogId].tsx'),
-  route(PAGE_ROUTES.blog.page.page.path, 'blog/routes/blog.page.[page].tsx'),
-  route(PAGE_ROUTES.blog.tag.tag.path, 'blog/routes/blog.tag.[tag].tsx'),
 
   /**
    * Auth Routes

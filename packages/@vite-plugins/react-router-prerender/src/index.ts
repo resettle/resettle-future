@@ -42,7 +42,7 @@ export default function reactRouterPrerender(): Plugin {
     },
     closeBundle: async () => {
       if (config.command === 'build') {
-        // SEO: Removing trailing slashes from all files in build/client
+        // SEO: Removing trailing slashes from all files in build/client subdirectories
         try {
           const buildPath = path.join(config.root, 'build/client')
           const files = await fs.readdir(buildPath, {
@@ -51,7 +51,10 @@ export default function reactRouterPrerender(): Plugin {
           })
 
           const htmlFiles = files.filter(
-            file => file.isFile() && file.name.endsWith('.html'),
+            file =>
+              file.isFile() &&
+              file.name.endsWith('.html') &&
+              file.parentPath !== buildPath,
           )
 
           for (const file of htmlFiles) {
