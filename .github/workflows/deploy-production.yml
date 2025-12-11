@@ -1,0 +1,103 @@
+name: Deployment (Production)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - release
+    paths:
+      - .github/workflows/deploy-production.yml
+      - apps/**
+      - packages/**
+      - services/**
+      - .env.production
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate TypeScript typings
+        run: pnpm monorepo:typegen:production
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Build repo
+        run: pnpm build:production
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Sync Intelligence service secrets
+        run: pnpm secrets:production
+        working-directory: services/intelligence
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Sync Geonames service secrets
+        run: pnpm secrets:production
+        working-directory: services/geonames
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Sync Exchange Rates service secrets
+        run: pnpm secrets:production
+        working-directory: services/exchange-rates
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Migrate Intelligence database
+        run: pnpm db:intelligence:production migrate latest
+        working-directory: packages/@resettle/database
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Seed Intelligence database
+        run: pnpm db:intelligence:production seed run
+        working-directory: packages/@resettle/database
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Deploy Intelligence service
+        run: pnpm deploy:production
+        working-directory: services/intelligence
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Deploy Geonames service
+        run: pnpm deploy:production
+        working-directory: services/geonames
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Deploy Exchange Rates service
+        run: pnpm deploy:production
+        working-directory: services/exchange-rates
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+
+      - name: Deploy web application
+        run: pnpm deploy:production
+        working-directory: apps/web
+        env:
+          DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}

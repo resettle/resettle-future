@@ -1,0 +1,103 @@
+name: Deployment (Staging)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/deploy-staging.yml
+      - apps/**
+      - packages/**
+      - services/**
+      - .env.staging
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate TypeScript typings
+        run: pnpm monorepo:typegen:staging
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Build repo
+        run: pnpm build:staging
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Sync Intelligence service secrets
+        run: pnpm secrets:staging
+        working-directory: services/intelligence
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Sync Geonames service secrets
+        run: pnpm secrets:staging
+        working-directory: services/geonames
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Sync Exchange Rates service secrets
+        run: pnpm secrets:staging
+        working-directory: services/exchange-rates
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Migrate Intelligence database
+        run: pnpm db:intelligence:staging migrate latest
+        working-directory: packages/@resettle/database
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Seed Intelligence database
+        run: pnpm db:intelligence:staging seed run
+        working-directory: packages/@resettle/database
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Deploy Intelligence service
+        run: pnpm deploy:staging
+        working-directory: services/intelligence
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Deploy Geonames service
+        run: pnpm deploy:staging
+        working-directory: services/geonames
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Deploy Exchange Rates service
+        run: pnpm deploy:staging
+        working-directory: services/exchange-rates
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
+      - name: Deploy web application
+        run: pnpm deploy:staging
+        working-directory: apps/web
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
