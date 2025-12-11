@@ -21,9 +21,13 @@ export const occupationCodeClassificationsSchema = z.enum(
 
 export const occupationCodeSchema = z.object({
   id: stringSchema,
-  classification: occupationCodeClassificationsSchema,
-  code: stringSchema,
-  label: stringSchema,
+  classification: occupationCodeClassificationsSchema.describe(
+    'The occupation classification',
+  ),
+  code: stringSchema.describe(
+    'The code of the occupation under the classification',
+  ),
+  label: stringSchema.describe('The name of the occupation'),
 })
 
 export const occupationCodeRefSchema = z.union([

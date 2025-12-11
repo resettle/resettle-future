@@ -57,18 +57,22 @@ export const numbeoReferenceSchema = z.object({
 export const placeSchema = z.object({
   id: uuidSchema,
   external_id: intSchema,
-  name: stringSchema,
-  aliases: stringArraySchema,
-  latitude: numberSchema,
-  longitude: numberSchema,
+  name: stringSchema.describe('The name of the place'),
+  aliases: stringArraySchema.describe(
+    'The aliases of the place in different cultures and languages',
+  ),
+  latitude: numberSchema.describe('The latitude of the place'),
+  longitude: numberSchema.describe('The longitude of the place'),
   feature_code: placeFeatureCodesSchema,
-  country_code: countryAlpha2CodeSchema,
+  country_code: countryAlpha2CodeSchema.describe(
+    'The ISO 3166-1 alpha-2 country code of the place',
+  ),
   admin1_code: stringSchema,
   admin2_code: stringSchema,
   admin3_code: stringSchema,
   admin4_code: stringSchema,
-  population: stringSchema,
-  elevation: intSchema,
+  population: stringSchema.describe('The population of the place'),
+  elevation: intSchema.describe('The elevation of the place'),
   numbeo_reference: numbeoReferenceSchema.nullable(),
 })
 
@@ -88,7 +92,7 @@ export const placeSearchResponseSchema = placeSchema
   })
   .extend({
     place_id: uuidSchema,
-    scopes: z.array(placeScopesSchema),
+    scopes: z.array(placeScopesSchema).describe('Valid scopes of the place'),
   })
 
 export const placeGeneralInfoResponseSchema = placeSchema

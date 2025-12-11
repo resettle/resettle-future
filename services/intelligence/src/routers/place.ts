@@ -5,7 +5,7 @@ import {
 } from '@resettle/api/intelligence'
 import { searchPlaces } from '@resettle/database/intelligence'
 import type {
-  CostOfLivingDataResponse,
+  CostOfLivingDataDetailsOnly,
   PlaceScope,
 } from '@resettle/schema/intelligence'
 import { queryValidator } from '@services/_common'
@@ -141,21 +141,135 @@ placeRouter.get(
       rate = fromExchangeRate[0].rate_to_usd / toExchangeRate[0].rate_to_usd
     }
 
+    const applyRate = (
+      response: CostOfLivingDataDetailsOnly,
+      key: keyof CostOfLivingDataDetailsOnly,
+      rate: number,
+    ) => (response[key] === null ? null : response[key] * rate)
+
+    const { created_at, ...rest } = data[0]
+
     return apiSuccessResponse(
       INTELLIGENCE_API_SCHEMAS.place.queryCostOfLiving.responseData,
-      data.map(d => {
-        const { created_at, currency_code, place_id, ...rest } = d
-
-        return {
-          ...(Object.fromEntries(
-            Object.entries(rest).map(([key, value]) => [
-              key,
-              value === null ? null : value * rate,
-            ]),
-          ) as unknown as Omit<CostOfLivingDataResponse, 'currency_code'>),
-          currency_code,
-        }
-      })[0],
+      {
+        place_id,
+        currency_code,
+        dining: {
+          inexpensive: applyRate(rest, 'restaurants_meal_inexpensive', rate),
+          mid_tier: applyRate(rest, 'restaurants_meal_2_people', rate),
+          mcdonalds: applyRate(rest, 'restaurants_mc_meal', rate),
+          domestic_beer: applyRate(rest, 'restaurants_domestic_beer', rate),
+          imported_beer: applyRate(rest, 'restaurants_imported_beer', rate),
+          cappuccino: applyRate(rest, 'restaurants_cappuccino', rate),
+          soft_drink: applyRate(rest, 'restaurants_coke_pepsi', rate),
+          water: applyRate(rest, 'restaurants_water', rate),
+        },
+        grocery: {
+          milk: applyRate(rest, 'markets_milk', rate),
+          bread: applyRate(rest, 'markets_loaf_of_fresh_white_bread', rate),
+          rice: applyRate(rest, 'markets_rice', rate),
+          eggs: applyRate(rest, 'markets_eggs', rate),
+          cheese: applyRate(rest, 'markets_local_cheese', rate),
+          chicken_fillets: applyRate(rest, 'markets_chicken_fillets', rate),
+          beef_round: applyRate(rest, 'markets_beef_round', rate),
+          apples: applyRate(rest, 'markets_apples', rate),
+          bananas: applyRate(rest, 'markets_banana', rate),
+          oranges: applyRate(rest, 'markets_oranges', rate),
+          tomatoes: applyRate(rest, 'markets_tomato', rate),
+          potatoes: applyRate(rest, 'markets_potato', rate),
+          onions: applyRate(rest, 'markets_onion', rate),
+          lettuce: applyRate(rest, 'markets_lettuce', rate),
+          water: applyRate(rest, 'markets_water', rate),
+          wine: applyRate(rest, 'markets_bottle_of_wine', rate),
+          domestic_beer: applyRate(rest, 'markets_domestic_beer', rate),
+          imported_beer: applyRate(rest, 'markets_imported_beer', rate),
+          cigarettes: applyRate(rest, 'markets_cigarettes', rate),
+        },
+        transportation: {
+          one_way_ticket: applyRate(
+            rest,
+            'transportation_one_way_ticket',
+            rate,
+          ),
+          monthly_pass: applyRate(rest, 'transportation_monthly_pass', rate),
+          taxi_start: applyRate(rest, 'transportation_taxi_start', rate),
+          taxi_1_mile: applyRate(rest, 'transportation_taxi_1_km', rate),
+          taxi_1_hour_waiting: applyRate(
+            rest,
+            'transportation_taxi_1_hour_waiting',
+            rate,
+          ),
+          gasoline: applyRate(rest, 'transportation_gasoline', rate),
+          compact_car: applyRate(rest, 'transportation_volkswagen', rate),
+          mid_car: applyRate(rest, 'transportation_toyota', rate),
+        },
+        utilities: {
+          basic: applyRate(rest, 'utilities_basic', rate),
+          mobile: applyRate(rest, 'utilities_mobile', rate),
+          internet: applyRate(rest, 'utilities_internet', rate),
+        },
+        entertainment: {
+          fitness_club: applyRate(rest, 'sports_fitness_club', rate),
+          tennis_court: applyRate(rest, 'sports_tennis_court', rate),
+          cinema: applyRate(rest, 'sports_cinema', rate),
+        },
+        education: {
+          preschool: applyRate(rest, 'childcare_preschool', rate),
+          international_primary_school: applyRate(
+            rest,
+            'childcare_international_primary_school',
+            rate,
+          ),
+        },
+        clothing: {
+          jeans: applyRate(rest, 'clothing_jeans', rate),
+          summer_dress: applyRate(rest, 'clothing_summer_dress', rate),
+          running_shoes: applyRate(rest, 'clothing_running_shoes', rate),
+          business_shoes: applyRate(rest, 'clothing_business_shoes', rate),
+        },
+        housing: {
+          rent_city_center_1_bedroom: applyRate(
+            rest,
+            'rent_in_city_centre_1_bedroom',
+            rate,
+          ),
+          rent_city_center_3_bedrooms: applyRate(
+            rest,
+            'rent_in_city_centre_3_bedrooms',
+            rate,
+          ),
+          rent_outside_of_center_1_bedroom: applyRate(
+            rest,
+            'rent_outside_of_center_1_bedroom',
+            rate,
+          ),
+          rent_outside_of_center_3_bedrooms: applyRate(
+            rest,
+            'rent_outside_of_center_3_bedrooms',
+            rate,
+          ),
+          buy_city_center: applyRate(
+            rest,
+            'buy_apartment_in_city_centre',
+            rate,
+          ),
+          buy_outside_of_center: applyRate(
+            rest,
+            'buy_apartment_outside_of_centre',
+            rate,
+          ),
+        },
+        income: {
+          average_monthly_net_salary: applyRate(
+            rest,
+            'salary_average_monthly_net_salary',
+            rate,
+          ),
+        },
+        mortgage: {
+          interest_rate: applyRate(rest, 'salary_mortgage_interest_rate', rate),
+        },
+      },
       200,
     )
   },
