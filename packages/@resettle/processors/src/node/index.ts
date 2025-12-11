@@ -193,6 +193,9 @@ export const conditionalStreamDownload = async (
       )
     }
 
-    await saveFile({ s3 }, ref, resp.body, { contentType: 'application/zip' })
+    await saveFile({ s3 }, ref, resp.body, {
+      contentType: 'application/zip',
+      contentLength: Number(resp.headers.get('content-length') ?? '0'),
+    })
   }
 }

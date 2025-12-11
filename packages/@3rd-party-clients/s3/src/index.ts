@@ -28,6 +28,7 @@ export type PutObjectCommandInput = {
     | string
     | ReadableStream<Uint8Array<ArrayBufferLike>>
   ContentType?: string
+  ContentLength?: number
 }
 export type CopyObjectCommandInput = {
   Bucket: string
@@ -219,7 +220,8 @@ export class S3Client {
     }
 
     if (command instanceof PutObjectCommand) {
-      const { Bucket, Key, Body, ContentType } = command.input
+      const { Bucket, Key, Body, ContentType, ContentLength } = command.input
+
       const res = await this.client.fetch(
         `${this.options.endpoint}/${Bucket}/${Key}`,
         {
@@ -227,10 +229,16 @@ export class S3Client {
           body: Body as ArrayBuffer,
           headers: {
             ...(ContentType ? { 'Content-Type': ContentType } : {}),
+            ...(ContentLength
+              ? { 'Content-Length': String(ContentLength) }
+              : {}),
           },
         },
       )
-      if (!res.ok) throw new Error('Failed to put object')
+      if (!res.ok) {
+        console.error(await res.text())
+        throw new Error('Failed to put object')
+      }
       return {}
     }
 

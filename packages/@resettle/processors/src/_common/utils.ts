@@ -30,7 +30,10 @@ export type LoadOptions = { stream: boolean }
 export type LoadResult = Promise<
   { success: true; data: ReadableStream<string> | Buffer } | { success: false }
 >
-export type SaveOptions = { contentType?: string }
+export type SaveOptions = {
+  contentType?: string
+  contentLength?: number
+}
 export type ListOptions = { prefix: string }
 
 export const refDirToRefS3 = (ref: S3RefDir, filename: string): S3Ref => ({
@@ -121,6 +124,7 @@ export async function saveToS3(
       Key: ref.key,
       Body: content,
       ContentType: options.contentType,
+      ContentLength: options.contentLength,
     }),
   )
 }
