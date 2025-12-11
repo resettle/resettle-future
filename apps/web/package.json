@@ -10,6 +10,10 @@
     "build": "pnpm typecheck && dotenvx run -f ../../.env -- react-router build",
     "build:staging": "pnpm typecheck && dotenvx run -f ../../.env.staging -- react-router build",
     "build:production": "pnpm typecheck && dotenvx run -f ../../.env.production -- react-router build",
+    "deploy:staging": "dotenvx run -f ../../.env.staging -- wrangler deploy --config wrangler.staging.toml",
+    "deploy:production": "dotenvx run -f ../../.env.production -- wrangler deploy --config wrangler.production.toml",
+    "secrets:staging": "dotenvx-cloudflare sync -f ../../.env.staging -e 'VITE_' -n resettle-staging-app-web",
+    "secrets:production": "dotenvx-cloudflare sync -f ../../.env.production -e 'VITE_' -n resettle-production-app-web",
     "dev": "dotenvx run -f ../../.env -- react-router dev",
     "format": "prettier --write ."
   },
