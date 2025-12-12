@@ -6,7 +6,6 @@ import { z } from 'zod'
 const configSchema = z.object({
   POSTGRES_CONNECTION_STRING_APP: z.url(),
   POSTGRES_CONNECTION_STRING_INTELLIGENCE: z.url(),
-  POSTGRES_CONNECTION_STRING_TEST: z.url(),
 })
 
 const config = configSchema.parse(process.env)
@@ -32,21 +31,6 @@ export default defineConfig({
       dialect: new PostgresDialect({
         pool: new Pool({
           connectionString: config.POSTGRES_CONNECTION_STRING_INTELLIGENCE,
-        }),
-      }),
-      migrations: {
-        migrationFolder: './src/intelligence/migrations',
-        getMigrationPrefix: getKnexTimestampPrefix,
-      },
-      seeds: {
-        seedFolder: './src/intelligence/seeds',
-        getSeedPrefix: getKnexTimestampPrefix,
-      },
-    },
-    test: {
-      dialect: new PostgresDialect({
-        pool: new Pool({
-          connectionString: config.POSTGRES_CONNECTION_STRING_TEST,
         }),
       }),
       migrations: {
