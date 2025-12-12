@@ -104,7 +104,6 @@ export async function loadFromS3(
     }
   } catch (e: any) {
     if (e.name === 'NoSuchKey') {
-      console.log(e)
       return { success: false }
     }
 

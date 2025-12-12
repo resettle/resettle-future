@@ -634,6 +634,9 @@ importers:
       '@3rd-party-clients/s3':
         specifier: workspace:^
         version: link:../packages/@3rd-party-clients/s3
+      '@aws-sdk/client-s3':
+        specifier: 3.948.0
+        version: 3.948.0
       '@inquirer/prompts':
         specifier: 8.0.2
         version: 8.0.2(@types/node@25.0.0)

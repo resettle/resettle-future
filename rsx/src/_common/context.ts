@@ -1,4 +1,5 @@
 import { S3Client } from '@3rd-party-clients/s3'
+import { S3Client as AWSS3Client } from '@aws-sdk/client-s3'
 import type { IntelligenceDatabase } from '@resettle/database/intelligence'
 import { Kysely, PostgresDialect } from 'kysely'
 import pg from 'pg'
@@ -55,5 +56,32 @@ export const getR2 = (env: {
     endpoint: `https://${env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
     accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY_ID,
     secretAccessKey: env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+  })
+}
+
+export const getR2AWS = (env: {
+  CLOUDFLARE_ACCOUNT_ID: string
+  CLOUDFLARE_R2_ACCESS_KEY_ID: string
+  CLOUDFLARE_R2_SECRET_ACCESS_KEY: string
+}) => {
+  if (!env.CLOUDFLARE_ACCOUNT_ID) {
+    throw new Error('CLOUDFLARE_ACCOUNT_ID is not set')
+  }
+
+  if (!env.CLOUDFLARE_R2_ACCESS_KEY_ID) {
+    throw new Error('CLOUDFLARE_R2_ACCESS_KEY_ID is not set')
+  }
+
+  if (!env.CLOUDFLARE_R2_SECRET_ACCESS_KEY) {
+    throw new Error('CLOUDFLARE_R2_SECRET_ACCESS_KEY is not set')
+  }
+
+  return new AWSS3Client({
+    region: 'auto',
+    endpoint: `https://${env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY_ID,
+      secretAccessKey: env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+    },
   })
 }

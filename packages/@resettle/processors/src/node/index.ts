@@ -1,4 +1,10 @@
-import type { S3Client } from '@3rd-party-clients/s3'
+import {
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  type ListObjectsV2Output,
+  type S3Client,
+} from '@aws-sdk/client-s3'
 import { createReadStream, createWriteStream, existsSync } from 'node:fs'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -7,9 +13,6 @@ import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 
 import {
-  listFilesInS3,
-  loadFromS3,
-  saveToS3,
   type ByteStream,
   type FileSystemRef,
   type FileSystemRefDir,
@@ -18,6 +21,8 @@ import {
   type LoadResult,
   type Ref,
   type RefDir,
+  type S3Ref,
+  type S3RefDir,
   type SaveOptions,
 } from '../_common'
 
@@ -78,6 +83,79 @@ export async function loadFromFileSystem(
   }
 }
 
+const linesFromByteStream = (stream: ByteStream): ReadableStream<string> => {
+  const decoder = new TextDecoder()
+
+  let remaining = ''
+
+  return new ReadableStream<string>({
+    async start(controller) {
+      const reader = stream.getReader()
+
+      while (true) {
+        const { done, value } = await reader.read()
+
+        if (done) {
+          break
+        }
+
+        const text = decoder.decode(value, { stream: true })
+        remaining += text
+
+        const lines = remaining.split('\n')
+        remaining = lines.pop()!
+
+        for (const line of lines) {
+          controller.enqueue(line)
+        }
+      }
+
+      if (remaining) {
+        controller.enqueue(remaining)
+      }
+
+      controller.close()
+    },
+  })
+}
+
+async function loadFromS3(
+  s3: S3Client,
+  ref: S3Ref,
+  opts: LoadOptions,
+): LoadResult {
+  try {
+    const response = await s3.send(
+      new GetObjectCommand({
+        Bucket: ref.bucket,
+        Key: ref.key,
+      }),
+    )
+
+    if (!response.Body) {
+      throw new Error('Invalid body')
+    }
+
+    if (opts.stream) {
+      return {
+        success: true,
+        data: linesFromByteStream(response.Body.transformToWebStream()),
+      }
+    }
+
+    return {
+      success: true,
+      data: Buffer.from(await response.Body.transformToByteArray()),
+    }
+  } catch (e: any) {
+    if (e.name === 'NoSuchKey') {
+      return { success: false }
+    }
+
+    throw e
+  }
+}
+
 export function loadFile(
   ctx: { s3: S3Client },
   ref: Ref,
@@ -114,6 +192,23 @@ export async function saveToFileSystem(
   await pipeline(Readable.fromWeb(content as any), createWriteStream(ref.path))
 }
 
+async function saveToS3(
+  s3: S3Client,
+  ref: S3Ref,
+  content: ByteStream | string,
+  options: SaveOptions,
+) {
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: ref.bucket,
+      Key: ref.key,
+      Body: content,
+      ContentType: options.contentType,
+      ContentLength: options.contentLength,
+    }),
+  )
+}
+
 export async function saveFile(
   ctx: { s3: S3Client },
   ref: Ref,
@@ -136,6 +231,35 @@ export async function listFilesInFileSystem(
   return files
     .filter(f => f.isFile() && f.name.startsWith(options.prefix))
     .map(f => f.name)
+}
+
+async function listFilesInS3(
+  s3: S3Client,
+  ref: S3RefDir,
+  options: ListOptions,
+) {
+  const allKeys: string[] = []
+
+  let continuationToken: string | undefined = undefined
+
+  do {
+    const r: ListObjectsV2Output = await s3.send(
+      new ListObjectsV2Command({
+        Bucket: ref.bucket,
+        Prefix: options.prefix,
+        ContinuationToken: continuationToken,
+        MaxKeys: 1000,
+      }),
+    )
+
+    for (const obj of r.Contents ?? []) {
+      if (obj.Key) allKeys.push(obj.Key)
+    }
+
+    continuationToken = r.NextContinuationToken
+  } while (continuationToken)
+
+  return allKeys
 }
 
 export async function listFiles(
