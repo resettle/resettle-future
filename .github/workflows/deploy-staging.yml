@@ -43,6 +43,11 @@ jobs:
         env:
           DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
 
+      - name: Test
+        run: pnpm test
+        env:
+          DOTENV_PRIVATE_KEY_STAGING: ${{ secrets.DOTENV_PRIVATE_KEY_STAGING }}
+
       - name: Build repo
         run: pnpm build:staging
         env:

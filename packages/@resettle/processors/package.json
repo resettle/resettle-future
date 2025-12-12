@@ -21,10 +21,11 @@
     }
   },
   "scripts": {
-    "test": "dotenvx run -f ../../../.env --overload -- tsx --test --test-isolation='none' --experimental-test-module-mocks src/intelligence-node/**/*.spec.ts"
+    "test:integration": "dotenvx run -f ../../../.env --overload -- tsx --test --test-isolation='none' --experimental-test-module-mocks src/intelligence-node/**/*.spec.ts"
   },
   "dependencies": {
     "@3rd-party-clients/s3": "workspace:^",
+    "@aws-sdk/client-s3": "3.948.0",
     "@resettle/country-region": "workspace:^",
     "@resettle/database": "workspace:^",
     "@resettle/schema": "workspace:^",

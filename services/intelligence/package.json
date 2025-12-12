@@ -14,7 +14,7 @@
     "kysely": "dotenvx run -f ../../.env --overload -- kysely",
     "kysely:staging": "dotenvx run -f ../../.env.staging --overload -- kysely",
     "kysely:production": "dotenvx run -f ../../.env.production --overload -- kysely",
-    "test": "dotenvx run -f ../../.env --overload -- tsx --test --test-isolation='none' --experimental-test-module-mocks src/**/*.spec.ts"
+    "test:integration": "dotenvx run -f ../../.env --overload -- tsx --test --test-isolation='none' --experimental-test-module-mocks src/**/*.spec.ts"
   },
   "dependencies": {
     "@resettle/api": "workspace:^",

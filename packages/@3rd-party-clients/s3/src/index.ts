@@ -15,7 +15,11 @@ export class NoSuchKey extends Error {
   }
 }
 
-export type GetObjectCommandInput = { Bucket: string; Key: string }
+export type GetObjectCommandInput = {
+  Bucket: string
+  Key: string
+  Range?: string
+}
 export type HeadObjectCommandInput = { Bucket: string; Key: string }
 export type DeleteObjectCommandInput = { Bucket: string; Key: string }
 export type PutObjectCommandInput = {
