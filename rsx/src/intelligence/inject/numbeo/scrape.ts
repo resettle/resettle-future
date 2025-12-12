@@ -6,7 +6,7 @@ import {
 import { Command } from 'commander'
 import { z } from 'zod'
 
-import { getR2 } from '../../../_common/context'
+import { getR2AWS } from '../../../_common/context'
 
 const PAGE_SIZE = 100
 
@@ -27,7 +27,7 @@ export const scrapeCommand = new Command()
       endPage?: string
       directory?: string
     }) => {
-      const r2 = getR2(process.env)
+      const r2 = getR2AWS(process.env)
       const countries = await downloadCountrySlugs(
         { s3: r2 },
         options.directory

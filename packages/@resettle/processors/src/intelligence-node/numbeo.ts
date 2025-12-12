@@ -1,4 +1,4 @@
-import type { S3Client } from '@3rd-party-clients/s3'
+import type { S3Client } from '@aws-sdk/client-s3'
 import { convertCountryNameToAlpha2 } from '@resettle/country-region'
 import type { IntelligenceDatabase } from '@resettle/database/intelligence'
 import type { CountryAlpha2Code, CurrencyCode } from '@resettle/schema'
@@ -996,9 +996,12 @@ export const processNumbeo = async (
     db: Kysely<IntelligenceDatabase>
   },
   ref: RefDir,
+  month?: string,
 ) => {
-  const month = getCurrentMonth()
-  const startOfMonth = getStartOfMonth()
+  if (!month) {
+    month = getCurrentMonth()
+  }
+  const startOfMonth = getStartOfMonth(new Date(month))
   const files = await listFiles(
     ctx,
     ref.type === 'fs'

@@ -125,7 +125,7 @@ const processModifications = async (
             admin4_code: eb.ref('excluded.admin4_code'),
             population: eb.ref('excluded.population'),
             elevation: eb.ref('excluded.elevation'),
-            numbeo_reference: eb.ref('excluded.numbeo_reference'),
+            numbeo_reference: eb.ref('place.numbeo_reference'),
           })),
         )
         .execute()
@@ -290,7 +290,7 @@ const processGeonamesCompletely = async (
           admin4_code: eb.ref('excluded.admin4_code'),
           population: eb.ref('excluded.population'),
           elevation: eb.ref('excluded.elevation'),
-          numbeo_reference: eb.ref('excluded.numbeo_reference'),
+          numbeo_reference: eb.ref('place.numbeo_reference'),
         })),
       )
       .execute()

@@ -7,16 +7,19 @@ import {
 } from '@3rd-party-clients/s3'
 import { format, startOfMonth, subDays } from 'date-fns'
 
-export const getPreviousDay = () => format(subDays(new Date(), 1), 'yyyy-MM-dd')
+export const getPreviousDay = (now?: Date) =>
+  format(subDays(now ?? new Date(), 1), 'yyyy-MM-dd')
 
-export const getTheDayBeforePreviousDay = () =>
-  format(subDays(new Date(), 2), 'yyyy-MM-dd')
+export const getTheDayBeforePreviousDay = (now?: Date) =>
+  format(subDays(now ?? new Date(), 2), 'yyyy-MM-dd')
 
-export const getCurrentDay = () => format(new Date(), 'yyyy-MM-dd')
+export const getCurrentDay = (now?: Date) =>
+  format(now ?? new Date(), 'yyyy-MM-dd')
 
-export const getCurrentMonth = () => format(new Date(), 'yyyy-MM')
+export const getCurrentMonth = (now?: Date) =>
+  format(now ?? new Date(), 'yyyy-MM')
 
-export const getStartOfMonth = () => startOfMonth(new Date())
+export const getStartOfMonth = (now?: Date) => startOfMonth(now ?? new Date())
 
 export type RefType = 'fs' | 's3'
 export type FileSystemRef = { type: 'fs'; path: string }
