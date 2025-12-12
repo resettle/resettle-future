@@ -1,4 +1,4 @@
-import type { S3Client } from '@3rd-party-clients/s3'
+import type { S3Client } from '@aws-sdk/client-s3'
 import type { IntelligenceDatabase } from '@resettle/database/intelligence'
 import type { CurrencyCode } from '@resettle/schema'
 import { sql, type Kysely } from 'kysely'

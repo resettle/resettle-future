@@ -1,14 +1,14 @@
 import { processExchangeRates } from '@resettle/processors/intelligence-node'
 import { Command } from 'commander'
 
-import { getIntelligenceDB, getR2 } from '../../_common/context'
+import { getIntelligenceDB, getR2AWS } from '../../_common/context'
 
 export const exchangeRateCommand = new Command()
   .name('exchange-rate')
   .description('Inject latest exchange rate data')
   .option('--directory <directory>', 'The local directory containing the files')
   .action(async (options: { directory?: string }) => {
-    const r2 = getR2(process.env)
+    const r2 = getR2AWS(process.env)
     const { db, pool } = getIntelligenceDB(process.env)
 
     try {
