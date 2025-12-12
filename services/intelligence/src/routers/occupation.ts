@@ -4,14 +4,10 @@ import {
   INTELLIGENCE_API_SCHEMAS,
 } from '@resettle/api/intelligence'
 import {
-  exactSearchOccupationCodes,
-  fuzzySearchOccupationCodes,
   listOccupationCodes,
+  searchOccupationCodes,
 } from '@resettle/database/intelligence'
-import type {
-  OccupationCode,
-  OccupationCodeClassification,
-} from '@resettle/schema/intelligence'
+import type { OccupationCodeClassification } from '@resettle/schema/intelligence'
 import { queryValidator } from '@services/_common'
 import { Hono } from 'hono'
 import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi'
@@ -189,22 +185,11 @@ occupationRouter.get(
     const db = ctx.get('db')
     const { q, classification, fuzzy, limit = 100 } = ctx.req.valid('query')
 
-    let results: OccupationCode[]
-
-    if (!fuzzy) {
-      results = await exactSearchOccupationCodes(db, {
-        limit,
-        orderByDirection: 'desc',
-        orderBy: 'id',
-        where: { q, classification },
-      })
-    } else {
-      results = await fuzzySearchOccupationCodes(db, {
-        limit,
-        orderByDirection: 'desc',
-        where: { q, classification },
-      })
-    }
+    const results = await searchOccupationCodes(db, {
+      limit,
+      orderByDirection: 'desc',
+      where: { q, fuzzy, classification },
+    })
 
     return apiSuccessResponse(
       INTELLIGENCE_API_SCHEMAS.occupation.search.responseData,

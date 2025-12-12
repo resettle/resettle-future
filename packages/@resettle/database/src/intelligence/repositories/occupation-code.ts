@@ -8,80 +8,50 @@ import { sql, type Kysely } from 'kysely'
 import { executeWithCursorPagination } from '../../_common'
 import type { IntelligenceDatabase } from '../database'
 
-/**
- * Exact search for occupation codes
- * @param db - The database
- * @param opts - The options
- * @param opts.limit - The limit
- * @param opts.orderBy - The order by
- * @param opts.orderByDirection - The order by direction
- * @param opts.where - The where
- * @param opts.where.q - The query
- * @param opts.where.classification - The classification
- * @returns The occupation codes
- */
-export const exactSearchOccupationCodes = async (
+export const searchOccupationCodes = async (
   db: Kysely<IntelligenceDatabase>,
   opts: {
     limit: number
-    orderBy: 'id'
     orderByDirection: 'asc' | 'desc'
     where: {
       q: string
+      fuzzy?: boolean
       classification?: OccupationCodeClassification
     }
   },
-): Promise<OccupationCode[]> => {
+) => {
   return await db
     .selectFrom('occupation_code')
     .selectAll()
-    .where('label', 'like', `%${opts.where.q}%`)
-    .$if(opts.where.classification !== undefined, qb =>
-      qb.where('classification', '=', opts.where.classification!),
-    )
-    .orderBy(opts.orderBy, opts.orderByDirection)
-    .limit(opts.limit)
-    .execute()
-}
-
-/**
- * Fuzzy search for occupation codes
- * @param db - The database
- * @param opts - The options
- * @param opts.limit - The limit
- * @param opts.orderByDirection - The order by direction
- * @param opts.where - The where
- * @param opts.where.q - The query
- * @param opts.where.classification - The classification
- * @returns The occupation codes
- */
-export const fuzzySearchOccupationCodes = async (
-  db: Kysely<IntelligenceDatabase>,
-  opts: {
-    limit: number
-    orderByDirection: 'asc' | 'desc'
-    where: {
-      q: string
-      classification?: OccupationCodeClassification
-    }
-  },
-): Promise<OccupationCode[]> => {
-  return await db
-    .selectFrom('occupation_code')
-    .select([
-      'classification',
-      'code',
-      'id',
-      'label',
-      sql<number>`similarity(${sql.ref('label')}, ${sql.lit(opts.where.q)})`.as(
-        'score',
+    .$if(Boolean(opts.where.fuzzy), qb =>
+      qb.where(
+        sql<number>`lower(label) <<-> lower(${sql.lit(opts.where.q)})`,
+        '<',
+        0.3,
       ),
-    ])
-    .where('label', '%' as any, opts.where.q)
+    )
+    .$if(!Boolean(opts.where.fuzzy), qb =>
+      qb.where(
+        sql`lower(label)`,
+        'like',
+        sql<string>`lower(${sql.lit(`%${opts.where.q}%`)})`,
+      ),
+    )
     .$if(opts.where.classification !== undefined, qb =>
       qb.where('classification', '=', opts.where.classification!),
     )
-    .orderBy('score', opts.orderByDirection)
+    .$if(Boolean(opts.where.fuzzy), qb =>
+      qb.orderBy(
+        sql<number>`lower(label) <<-> lower(${sql.lit(opts.where.q)})`,
+        opts.orderByDirection,
+      ),
+    )
+    .$if(!Boolean(opts.where.fuzzy), qb =>
+      qb.orderBy(
+        sql<number>`lower(label) like lower(${sql.lit(`%${opts.where.q}%`)})`,
+        opts.orderByDirection,
+      ),
+    )
     .limit(opts.limit)
     .execute()
 }
