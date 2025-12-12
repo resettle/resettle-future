@@ -36,6 +36,13 @@ export default function Index() {
       <footer className="z-10 mt-8 py-8">
         <div className="flex items-center justify-center gap-6 text-sm text-gray-600">
           <Link
+            to="/blog"
+            className="transition-colors hover:text-gray-900 hover:underline"
+          >
+            Blog
+          </Link>
+          <span className="text-gray-400">·</span>
+          <Link
             to="/dev"
             className="transition-colors hover:text-gray-900 hover:underline"
           >

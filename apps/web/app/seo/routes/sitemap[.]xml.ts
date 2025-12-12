@@ -1,7 +1,15 @@
-export const loader = () => {
-  return new Response('User-agent: *\nDisallow: /', {
+import { generateSitemap } from '../libs/sitemap.server'
+
+export async function loader({ request }: { request: Request }) {
+  const url = new URL(request.url)
+  const baseUrl = `${url.protocol}//${url.host}`
+
+  const sitemap = await generateSitemap(baseUrl)
+
+  return new Response(sitemap, {
     headers: {
-      'Content-Type': 'text/plain',
+      'Content-Type': 'application/xml',
+      'Cache-Control': 'public, max-age=3600',
     },
   })
 }

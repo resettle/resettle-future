@@ -1,2 +1,1 @@
-export * from './blog-post'
-export * from './blog-tag'
+export * from './blog-article'

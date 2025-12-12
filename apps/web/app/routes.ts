@@ -20,6 +20,8 @@ export default [
   layout('common/components/NavigationLayout.tsx', [
     index('landing/routes/_index.tsx'),
     route(PAGE_ROUTES.dev.path, 'landing/routes/dev.tsx'),
+    route(PAGE_ROUTES.blog.path, 'blog/routes/blog.tsx'),
+    route(PAGE_ROUTES.blog.slug.path, 'blog/routes/blog.[slug].tsx'),
   ]),
 
   /**

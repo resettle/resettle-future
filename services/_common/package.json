@@ -37,7 +37,7 @@
     "zod": ">=4.0.0"
   },
   "devDependencies": {
-    "@types/node": "25.0.0",
+    "@types/node": "25.0.1",
     "@types/pg": "8.16.0",
     "@types/zeptomail": "workspace:^",
     "typescript": "5.9.3"

@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/markdown-it": "14.1.2",
-    "@types/node": "25.0.0",
+    "@types/node": "25.0.1",
     "@types/pg": "8.16.0",
     "@types/slug": "5.0.9",
     "@types/unzipper": "0.10.11",

@@ -21,7 +21,7 @@
     "test:integration": "pnpm --filter '*' test:integration"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.51.1",
+    "@dotenvx/dotenvx": "1.51.2",
     "@dotenvx/dotenvx-cloudflare": "workspace:^",
     "@dotenvx/dotenvx-typegen": "workspace:^",
     "prettier": "3.7.4",

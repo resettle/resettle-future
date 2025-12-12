@@ -1,5 +1,7 @@
 import type { Config } from '@react-router/dev/config'
 
+import { getBlogArticles } from './app/blog/handlers/blog-article'
+
 export default {
   ssr: true,
   future: {
@@ -8,6 +10,11 @@ export default {
     unstable_optimizeDeps: true,
   },
   async prerender() {
+    const blogArticles = await getBlogArticles({})
+    const blogArticlePaths = blogArticles.map(
+      article => `/blog/${article.slug}`,
+    )
+
     return [
       /**
        * SEO Routes
@@ -26,6 +33,8 @@ export default {
        */
       '/',
       '/dev',
+      '/blog',
+      ...blogArticlePaths,
     ]
   },
 } satisfies Config

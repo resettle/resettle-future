@@ -9,7 +9,7 @@
     "commander": "14.0.2"
   },
   "devDependencies": {
-    "@types/node": "25.0.0",
+    "@types/node": "25.0.1",
     "typescript": "5.9.3"
   }
 }

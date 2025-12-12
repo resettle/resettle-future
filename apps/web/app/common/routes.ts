@@ -8,7 +8,7 @@ export const PAGE_ROUTES = {
     signOut: route('sign-out'),
   }),
   blog: route('blog', {
-    id: route(':blogId'),
+    slug: route(':slug'),
     page: route('page', {
       page: route(':page'),
     }),
