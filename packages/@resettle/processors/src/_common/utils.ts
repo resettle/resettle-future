@@ -6,6 +6,7 @@ import {
   type S3Client,
 } from '@3rd-party-clients/s3'
 import { format, startOfMonth, subDays } from 'date-fns'
+import mime from 'mime'
 
 export const getPreviousDay = (now?: Date) =>
   format(subDays(now ?? new Date(), 1), 'yyyy-MM-dd')
@@ -175,9 +176,9 @@ export const conditionalInMemoryDownloadS3 = async (
       )
     }
 
-    resp.body
-
-    await saveToS3(s3, ref, resp.body, {})
+    await saveToS3(s3, ref, resp.body, {
+      contentType: mime.getType(url) ?? undefined,
+    })
     const secondResult = await loadFromS3(s3, ref, { stream: false })
     if (!secondResult.success) {
       throw new Error(`Error loading ${url}`)

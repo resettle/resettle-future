@@ -43,6 +43,7 @@ const processDeletes = async (
     )
   ).toString('utf-8')
   for (const row of content.split('\n')) {
+    if (row.length === 0) continue
     const parts = row.split('\t')
     const id = parseInt(parts[0])
     const deleting = await ctx.db
@@ -76,6 +77,7 @@ const processModifications = async (
   ).toString('utf-8')
 
   for (const row of content.split('\n')) {
+    if (row.length === 0) continue
     const parts = row.split('\t')
     const id = parseInt(parts[0])
     const name = parts[1]

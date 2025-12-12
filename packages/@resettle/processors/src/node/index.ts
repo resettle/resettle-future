@@ -5,6 +5,7 @@ import {
   type ListObjectsV2Output,
   type S3Client,
 } from '@aws-sdk/client-s3'
+import mime from 'mime'
 import { createReadStream, createWriteStream, existsSync } from 'node:fs'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -290,7 +291,10 @@ export const conditionalInMemoryDownload = async (
       )
     }
 
-    await saveFile({ s3 }, ref, resp.body, {})
+    await saveFile({ s3 }, ref, resp.body, {
+      contentType: mime.getType(url) ?? undefined,
+      contentLength: Number(resp.headers.get('content-length') ?? '0'),
+    })
     const secondResult = await loadFile({ s3 }, ref, { stream: false })
     if (!secondResult.success) {
       throw new Error(`Error loading ${url}`)
