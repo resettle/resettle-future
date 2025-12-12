@@ -164,8 +164,5 @@ export const processGeonames = async (
     'Geonames is one version older than the latest version, updating by delta...',
   )
   await processGeonamesIncrementally(ctx, ref)
-  await ctx.db.schema
-    .refreshMaterializedView('place_name_or_alias')
-    .concurrently()
-    .execute()
+  await ctx.db.schema.refreshMaterializedView('place_name_or_alias').execute()
 }

@@ -19,6 +19,5 @@ cpu_ms = 5000
 
 # Scheduled triggers for the data fetcher worker
 # "0 0 * * *" - Daily at midnight UTC
-# "0 0 * * 7" - Weekly on Sunday at midnight UTC
 [triggers]
-crons = ["0 0 * * *", "0 0 * * 7"]
+crons = ["0 0 * * *"]

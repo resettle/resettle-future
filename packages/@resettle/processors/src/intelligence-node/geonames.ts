@@ -320,10 +320,7 @@ export const processGeonames = async (
       'Geonames is multiple versions older than the latest version, updating by whole...',
     )
     await processGeonamesCompletely(ctx, ref, tempFile)
-    await ctx.db.schema
-      .refreshMaterializedView('place_name_or_alias')
-      .concurrently()
-      .execute()
+    await ctx.db.schema.refreshMaterializedView('place_name_or_alias').execute()
   } else if (
     isSameDay(metadata[0].geonames_updated_at, theDayBeforePreviousDay)
   ) {
@@ -331,10 +328,7 @@ export const processGeonames = async (
       'Geonames is one version older than the latest version, updating by delta...',
     )
     await processGeonamesIncrementally(ctx, ref)
-    await ctx.db.schema
-      .refreshMaterializedView('place_name_or_alias')
-      .concurrently()
-      .execute()
+    await ctx.db.schema.refreshMaterializedView('place_name_or_alias').execute()
   } else {
     console.log('Geonames is already of the latest version, skipping...')
   }
