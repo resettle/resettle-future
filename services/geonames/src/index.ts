@@ -8,7 +8,10 @@ const notify = async (env: Cloudflare.Env, bot: Bot, message: string) => {
     return
   }
 
-  await bot.api.sendMessage(env.TELEGRAM_GROUP_CHAT_ID, message)
+  await bot.api.sendMessage(
+    env.TELEGRAM_GROUP_CHAT_ID,
+    `[${env.ENV}] ${message}`,
+  )
 }
 
 export default {

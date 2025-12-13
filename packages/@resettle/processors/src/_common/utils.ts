@@ -178,6 +178,7 @@ export const conditionalInMemoryDownloadS3 = async (
 
     await saveToS3(s3, ref, resp.body, {
       contentType: mime.getType(url) ?? undefined,
+      contentLength: Number(resp.headers.get('content-length') ?? '0'),
     })
     const secondResult = await loadFromS3(s3, ref, { stream: false })
     if (!secondResult.success) {
@@ -205,6 +206,9 @@ export const conditionalStreamDownloadS3 = async (
       )
     }
 
-    await saveToS3(s3, ref, resp.body, { contentType: 'application/zip' })
+    await saveToS3(s3, ref, resp.body, {
+      contentType: 'application/zip',
+      contentLength: Number(resp.headers.get('content-length') ?? '0'),
+    })
   }
 }
