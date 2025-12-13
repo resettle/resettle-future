@@ -20,6 +20,10 @@ export class DirectusClient {
    * @returns The response from the Directus API
    */
   async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+    console.log('[directus-client] requesting', `${this.baseURL}${path}`)
+    console.log('[directus-client] token', this.token)
+    console.log()
+
     const response = await fetch(`${this.baseURL}${path}`, {
       ...options,
       headers: {
